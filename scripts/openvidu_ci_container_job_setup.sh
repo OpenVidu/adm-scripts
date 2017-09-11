@@ -5,8 +5,8 @@
 [ -z "$CONTAINER_IMAGE" ] && exit 1
 
 export WORKSPACE=/opt
-MAVEN_OPTIONS+="-DskipTests=true"
-CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
+export MAVEN_OPTIONS+="-DskipTests=true"
+export CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 
 docker run \
   --name openvidu-build \
