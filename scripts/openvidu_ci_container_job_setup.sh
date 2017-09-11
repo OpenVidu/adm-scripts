@@ -10,7 +10,6 @@ CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 
 docker run \
   --name openvidu-build \
-  -d \
   --rm \
   -e MAVEN_OPTIONS=$MAVEN_OPTIONS \
   -e OPENVIDU_GIT_REPOSITORY=$OPENVIDU_GIT_REPOSITORY \
