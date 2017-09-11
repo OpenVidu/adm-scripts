@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-[ -z "$OPENVIDU_GIT_REPOSITORY" ] && exit 1
+[ -z "$OPENVIDU_GIT_REPOSITORY" ] && OPENVIDU_GIT_REPOSITORY=$GIT_URL
 [ -z "$BUILD_COMMAND" ] && exit 1
 [ -z "$CONTAINER_IMAGE" ] && exit 1
 
