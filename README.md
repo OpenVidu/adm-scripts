@@ -1,0 +1,2 @@
+# adm-scripts
+Administration scripts
