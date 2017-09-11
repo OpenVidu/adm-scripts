@@ -5,13 +5,13 @@
 [ -z "$CONTAINER_IMAGE" ] && exit 1
 
 export WORKSPACE=/opt
-export MAVEN_OPTIONS+="-DskipTests=true"
-export CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
+MAVEN_OPTIONS+="-DskipTests=true"
+CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 
 docker run \
   --name openvidu-build \
   --rm \
-  -e MAVEN_OPTIONS=$MAVEN_OPTIONS \
+  -e "MAVEN_OPTIONS=$MAVEN_OPTIONS" \
   -e OPENVIDU_GIT_REPOSITORY=$OPENVIDU_GIT_REPOSITORY \
   -v $OPENVIDU_ADM_SCRIPTS_HOME:$CONTAINER_ADM_SCRIPTS \
   -v ${PWD}:$WORKSPACE \
