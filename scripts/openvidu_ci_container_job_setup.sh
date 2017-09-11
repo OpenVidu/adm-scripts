@@ -6,6 +6,7 @@
 
 export WORKSPACE=/opt
 MAVEN_OPTIONS+="-DskipTests=true"
+CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 
 docker run \
   --name openvidu-build \
@@ -13,10 +14,11 @@ docker run \
   --rm \
   -e MAVEN_OPTIONS=$MAVEN_OPTIONS \
   -e OPENVIDU_GIT_REPOSITORY=$OPENVIDU_GIT_REPOSITORY \
+  -v $OPENVIDU_ADM_SCRIPTS_HOME:$CONTAINER_ADM_SCRIPTS \
   -v ${PWD}:$WORKSPACE \
   -w /opt \
   $CONTAINER_IMAGE \
-  /opt/openvidu_ci_container_entrypoint.sh $BUILD_COMMAND
+  /opt/adm-scripts/openvidu_ci_container_entrypoint.sh $BUILD_COMMAND
 status=$?
 
 # Change worspace ownership to avoid permission errors caused by docker usage of root
