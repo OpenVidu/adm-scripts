@@ -9,7 +9,8 @@ MAVEN_OPTIONS+="-DskipTests=true"
 
 docker run \
   --name openvidu-build \
-  -ti \
+  -d \
+  --rm \
   -e MAVEN_OPTIONS=$MAVEN_OPTIONS \
   -e OPENVIDU_GIT_REPOSITORY=$OPENVIDU_GIT_REPOSITORY \
   -v ${PWD}:$WORKSPACE \
