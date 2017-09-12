@@ -32,7 +32,7 @@ mvn package -DskipTests=true
 cd ..
 
 echo "Copy .jar in docker build path"
-cp openvidu-server/target/openvidu-server-$OV_SERVER_VERSION.jar ../openvidu-server.jar
+cp openvidu-server/target/openvidu-server-$OV_SERVER_VERSION.jar ../openvidu-insecure-js/docker/openvidu-server.jar
 
 
 
