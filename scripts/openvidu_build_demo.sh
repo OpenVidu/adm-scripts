@@ -2,8 +2,16 @@
 
 echo "##################### EXECUTE: openvidu_build_demo #####################"
 
+[ -z "$OV_SERVER_VERSION" ] exit 1
+
 echo "Cloning openvidu server"
 git clone https://github.com/openvidu/openvidu
+
+echo "First compilation"
+cd openvidu
+mvn compile -DskipTests=true
+mvn install -DskipTests=true
+cd ..
 
 echo "Removing unnecessary pieces"
 rm -rf openvidu/{angular,static}
@@ -20,11 +28,11 @@ cp -a ../web/. ./openvidu-server/src/main/resources/static/
 
 echo "Build and package maven project"
 cd openvidu-server
-mvn clean compile package -DskipTests=true
+mvn package -DskipTests=true
 cd ..
 
 echo "Copy .jar in docker build path"
-cp openvidu-server/target/openvidu-server-*.jar ../openvidu-server.jar
+cp openvidu-server/target/openvidu-server-$OV_SERVER_VERSION.jar ../openvidu-server.jar
 
 
 
