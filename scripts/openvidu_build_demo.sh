@@ -2,7 +2,7 @@
 
 echo "##################### EXECUTE: openvidu_build_demo #####################"
 
-[ -z "$OV_SERVER_VERSION" ] exit 1
+[ -z "$OV_SERVER_VERSION" ] && exit 1
 
 echo "Cloning openvidu server"
 git clone https://github.com/openvidu/openvidu
