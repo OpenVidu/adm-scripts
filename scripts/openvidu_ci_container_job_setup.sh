@@ -9,7 +9,7 @@ MAVEN_OPTIONS+="-DskipTests=true"
 CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 
 docker run \
-  --name openvidu-build \
+  --name $BUILD_TAG-JOB_SETUP-$(date +"%s") \
   --rm \
   -e "MAVEN_OPTIONS=$MAVEN_OPTIONS" \
   -e OPENVIDU_GIT_REPOSITORY=$OPENVIDU_GIT_REPOSITORY \
