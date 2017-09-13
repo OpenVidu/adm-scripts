@@ -7,6 +7,6 @@ echo "##################### EXECUTE: openvidu_download_release #################
 
 DOWNLOAD_URL=$(curl -s $RELEASE_URL | grep browser_download_url | cut -d '"' -f 4 | grep $RELEASE)
 
-curl -L -o ${RELEASE}.jar $DOWNLOAD_URL
+curl -L -o $OUTPUT $DOWNLOAD_URL
 
 
