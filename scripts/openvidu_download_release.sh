@@ -2,9 +2,11 @@
 
 echo "##################### EXECUTE: openvidu_download_release #####################"
 
-OV_RELEASE=openvidu-server
-OV_RELEASE_URL=$(curl -s https://api.github.com/repos/openvidu/openvidu/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep $OV_RELEASE)
+[ -z "$RELEASE" ] && exit 1
+[ -z "$RELEASE_URL" ] && exit 1
 
-curl -L -o openvidu-server.jar $OV_RELEASE_URL
+DOWNLOAD_URL=$(curl -s $RELEASE_URL | grep browser_download_url | cut -d '"' -f 4 | grep $RELEASE)
+
+curl -L -o openvidu-server.jar $DOWNLOAD_URL
 
 
