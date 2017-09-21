@@ -5,7 +5,7 @@
 [ -z "$CONTAINER_IMAGE" ] && exit 1
 
 export WORKSPACE=/opt
-MAVEN_OPTIONS+="-DskipTests=true"
+MAVEN_OPTIONS+="-DskipTests=false"
 CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 
 docker run \
