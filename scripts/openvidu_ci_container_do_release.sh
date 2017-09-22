@@ -5,13 +5,12 @@ echo "##################### EXECUTE: openvidu_ci_container_do_release ##########
 # Verify mandatory parameters
 [ -z "$OV_VERSION" ] || exit 1
 [ -z "$BASE_NAME" ] && BASE_NAME=$OPENVIDU_PROJECT
-[ -z "$SUB_PROJECT_NAME" ] || exit 1
-[ -z "$GITHUB_TOKEN" ] || exit 1
+[ -z "$GITHUB_TOKEN" ] && exit 1
 
 export PATH=$PATH:$CONTAINER_ADM_SCRIPTS
 
 git clone $OPENVIDU_GIT_REPOSITORY
-case $SUB_PROJECT_NAME in
+case $OPENVIDU_PROJECT in
 
   openvidu-server)
     cd openvidu/openvidu-server/src/angular/frontend
