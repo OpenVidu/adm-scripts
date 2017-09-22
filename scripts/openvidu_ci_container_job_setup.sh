@@ -9,6 +9,7 @@ echo "##################### EXECUTE: openvidu_ci_container_job_setup ###########
 export WORKSPACE=/opt
 MAVEN_OPTIONS+="-DskipTests=false"
 CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
+CONTAINER_PRIVATE_RSA_KEY=/opt/git_id_rsa
 
 docker run \
   --name $BUILD_TAG-JOB_SETUP-$(date +"%s") \
@@ -16,6 +17,7 @@ docker run \
   -e "MAVEN_OPTIONS=$MAVEN_OPTIONS" \
   -e OPENVIDU_GIT_REPOSITORY=$OPENVIDU_GIT_REPOSITORY \
   -v $OPENVIDU_ADM_SCRIPTS_HOME:$CONTAINER_ADM_SCRIPTS \
+  $([ -f "$GITHUB_PRIVATE_RSA_KEY" ] && echo "-v $GITHUB_PRIVATE_RSA_KEY:$CONTAINER_GITHUB_PRIVATE_RSA_KEY") \
   $([ "${OPENVIDU_GITHUB_TOKEN}x" != "x" ] && echo "-e GITHUB_KEY=$OPENVIDU_GITHUB_TOKEN") \
   -v ${PWD}:$WORKSPACE \
   -w /opt \
