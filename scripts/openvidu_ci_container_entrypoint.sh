@@ -8,6 +8,8 @@ BUILD_COMMAND=$@
 DIST=$(lsb_release -c)
 DIST=$(echo ${DIST##*:} | tr -d ' ' | tr -d '\t')
 
+env
+
 # Configure SSH keys
 if [ -f "$CONTAINER_PRIVATE_RSA_KEY" ]; then
     mkdir -p /root/.ssh
