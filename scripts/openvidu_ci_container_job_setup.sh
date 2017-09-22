@@ -21,6 +21,7 @@ docker run \
   $([ "${OPENVIDU_GITHUB_TOKEN}x" != "x" ] && echo "-e GITHUB_KEY=$OPENVIDU_GITHUB_TOKEN" ) \
   -e "GITHUB_PRIVATE_RSA_KEY=$CONTAINER_PRIVATE_RSA_KEY" \
   -e "OPENVIDU_PROJECT=$OPENVIDU_PROJECT" \
+  -e "GITHUB_TOKEN=$OPENVIDU_GITHUB_TOKEN" \
   -w $WORKSPACE \
   $CONTAINER_IMAGE \
   /opt/adm-scripts/openvidu_ci_container_entrypoint.sh $BUILD_COMMAND
