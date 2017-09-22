@@ -9,6 +9,8 @@ echo "##################### EXECUTE: openvidu_ci_container_do_release ##########
 
 export PATH=$PATH:$ADM_SCRIPTS
 
+OPENVIDU_REPO=$(echo $OPENVIDU_GIT_REPOSITORY | cut -d"/" -f2 | cut -d"." -f 1)
+
 git clone $OPENVIDU_GIT_REPOSITORY
 case $OPENVIDU_PROJECT in
 
@@ -24,7 +26,7 @@ case $OPENVIDU_PROJECT in
 
     DESC=$(git log -1 --pretty=%B)
     TAG=$OPENVIDU_VERSION
-    openvidu_github_release.go release --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --description "$DESC"
+    openvidu_github_release.go release --user openvidu --repo  --tag $TAG --description "$DESC"
     openvidu_github_release.go upload  --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --name openvidu-server-${TAG}.jar -f openvidu-server/target/openvidu-server-${TAG}.jar
     ;;
 
