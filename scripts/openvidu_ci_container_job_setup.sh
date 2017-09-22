@@ -1,12 +1,12 @@
 #!/bin/bash -xe
 
-echo "##################### EXECUTE:  #####################"
+echo "##################### EXECUTE: openvidu_ci_container_job_setup #####################"
 
 [ -z "$OPENVIDU_GIT_REPOSITORY" ] && OPENVIDU_GIT_REPOSITORY=$GIT_URL
 [ -z "$BUILD_COMMAND" ] && exit 1
 [ -z "$CONTAINER_IMAGE" ] && exit 1
 
-export WORKSPACE=/opt/openvidu
+export WORKSPACE=/opt
 MAVEN_OPTIONS+="-DskipTests=false"
 CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 
@@ -16,7 +16,7 @@ docker run \
   -e "MAVEN_OPTIONS=$MAVEN_OPTIONS" \
   -e OPENVIDU_GIT_REPOSITORY=$OPENVIDU_GIT_REPOSITORY \
   -v $OPENVIDU_ADM_SCRIPTS_HOME:$CONTAINER_ADM_SCRIPTS \
-  $([ -f "$GITHUB_TOKEN" ] && echo "-v $GIT_KEY:$CONTAINER_GIT_KEY" ) \
+  $([ -f "$GITHUB_TOKEN" ] && echo "-v $GIT_HUB_TOKEN:$GITHUB_TOKEN" ) \
   -v ${PWD}:$WORKSPACE \
   -w /opt \
   $CONTAINER_IMAGE \
