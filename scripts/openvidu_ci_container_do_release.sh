@@ -24,8 +24,8 @@ case $OPENVIDU_PROJECT in
 
     DESC=$(git log -1 --pretty=%B)
     TAG=$OPENVIDU_VERSION
-    openvidu-github-release.go release --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --description $DESC
-    openvidu-github-release.go upload  --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --name openvidu-server-${TAG}.jar -f openvidu-server/target/openvidu-server-${TAG}.jar
+    openvidu_github_release.go release --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --description $DESC
+    openvidu_github_release.go upload  --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --name openvidu-server-${TAG}.jar -f openvidu-server/target/openvidu-server-${TAG}.jar
     ;;
 
   *)
