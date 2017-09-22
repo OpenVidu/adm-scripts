@@ -7,7 +7,7 @@ echo "##################### EXECUTE: openvidu_ci_container_do_release ##########
 [ -z "$BASE_NAME" ] && BASE_NAME=$OPENVIDU_PROJECT
 [ -z "$GITHUB_TOKEN" ] && exit 1
 
-export PATH=$PATH:$CONTAINER_ADM_SCRIPTS
+export PATH=$PATH:$ADM_SCRIPTS
 
 git clone $OPENVIDU_GIT_REPOSITORY
 case $OPENVIDU_PROJECT in
