@@ -3,7 +3,7 @@
 echo "##################### EXECUTE: openvidu_ci_container_do_release #####################"
 
 # Verify mandatory parameters
-[ -z "$OV_VERSION" ] || exit 1
+[ -z "$OV_VERSION" ] && exit 1
 [ -z "$BASE_NAME" ] && BASE_NAME=$OPENVIDU_PROJECT
 [ -z "$GITHUB_TOKEN" ] && exit 1
 

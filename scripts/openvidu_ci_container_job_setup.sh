@@ -23,6 +23,7 @@ docker run \
   -e "OPENVIDU_PROJECT=$OPENVIDU_PROJECT" \
   -e "GITHUB_TOKEN=$OPENVIDU_GITHUB_TOKEN" \
   -e "ADM_SCRIPTS=$CONTAINER_ADM_SCRIPTS" \
+  -e "OPENVIDU_VERSION=$OV_VERSION" \
   -w $WORKSPACE \
   $CONTAINER_IMAGE \
   /opt/adm-scripts/openvidu_ci_container_entrypoint.sh $BUILD_COMMAND
