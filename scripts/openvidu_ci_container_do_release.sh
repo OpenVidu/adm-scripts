@@ -3,7 +3,7 @@
 echo "##################### EXECUTE: openvidu_ci_container_do_release #####################"
 
 # Verify mandatory parameters
-[ -z "$OV_VERSION" ] && exit 1
+[ -z "$OPENVIDU_VERSION" ] && exit 1
 [ -z "$BASE_NAME" ] && BASE_NAME=$OPENVIDU_PROJECT
 [ -z "$GITHUB_TOKEN" ] && exit 1
 
@@ -23,9 +23,9 @@ case $OPENVIDU_PROJECT in
     mvn clean compile package
 
     DESC=$(git log -1 --pretty=%B)
-    TAG=$OV_VERSION
+    TAG=$OPENVIDU_VERSION
     openvidu-github-release.go release --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --description $DESC
-    openvidu-github-release.go upload  --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --name openvidu-server-${OV_VERSION}.jar -f openvidu-server/target/openvidu-server-${OV_VERSION}.jar
+    openvidu-github-release.go upload  --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --name openvidu-server-${TAG}.jar -f openvidu-server/target/openvidu-server-${TAG}.jar
     ;;
 
   *)
