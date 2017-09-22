@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash -x
 
 echo "##################### EXECUTE: openvidu_ci_container_do_release #####################"
 
