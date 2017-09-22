@@ -9,7 +9,7 @@ DIST=$(lsb_release -c)
 DIST=$(echo ${DIST##*:} | tr -d ' ' | tr -d '\t')
 
 echo $GITHUB_PRIVATE_RSA_KEY "1"
-echo $GITHUB_PRIVATE_RSA_KEY "2"
+echo $CONTAINER_PRIVATE_RSA_KEY "2"
 
 # Configure SSH keys
 if [ -f "$GITHUB_PRIVATE_RSA_KEY" ]; then
