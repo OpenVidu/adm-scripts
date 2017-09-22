@@ -19,8 +19,7 @@ docker run \
   -v $OPENVIDU_ADM_SCRIPTS_HOME:$CONTAINER_ADM_SCRIPTS \
   $([ -f "$GITHUB_PRIVATE_RSA_KEY" ] && echo "-v $GITHUB_PRIVATE_RSA_KEY:$CONTAINER_PRIVATE_RSA_KEY" ) \
   $([ "${OPENVIDU_GITHUB_TOKEN}x" != "x" ] && echo "-e GITHUB_KEY=$OPENVIDU_GITHUB_TOKEN" ) \
-  -v ${PWD}:$WORKSPACE \
-  -w /opt \
+  -w $WORKSPACE \
   $CONTAINER_IMAGE \
   /opt/adm-scripts/openvidu_ci_container_entrypoint.sh $BUILD_COMMAND
 status=$?
