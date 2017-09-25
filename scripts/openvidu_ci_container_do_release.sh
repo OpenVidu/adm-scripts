@@ -21,15 +21,15 @@ case $OPENVIDU_PROJECT in
     ng build --output-path ../../main/resources/static
 
     cd /opt/openvidu
-    pom-vbump.py -i -v $OV_VERSION openvidu-server/pom.xml || exit 1
+    pom-vbump.py -i -v $OPENVIDU_VERSION openvidu-server/pom.xml || exit 1
     mvn clean compile package
 
     DESC=$(git log -1 --pretty=%B)
     TAG=$OPENVIDU_VERSION
     openvidu_github_release.go release --user openvidu --repo openvidu --tag "$TAG" --description "$DESC"
-    openvidu_github_release.go upload  --user openvidu --repo openvidu --tag "$TAG" --name openvidu-server-${TAG}.jar -f /${PWD}/openvidu-server/target/openvidu-server-${TAG}.jar
+    openvidu_github_release.go upload  --user openvidu --repo openvidu --tag "$TAG" --name openvidu-server-${TAG}.jar -f ${PWD}/openvidu-server/target/openvidu-server-${TAG}.jar
     echo $PWD
-    ls -lh 
+    ls -lh openvidu-server/target
     ;;
 
   *)
