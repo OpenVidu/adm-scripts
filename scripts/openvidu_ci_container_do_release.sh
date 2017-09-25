@@ -11,13 +11,11 @@ echo "##################### EXECUTE: openvidu_ci_container_do_release ##########
 export PATH=$PATH:$ADM_SCRIPTS
 
 OPENVIDU_REPO=$(echo $OPENVIDU_GIT_REPOSITORY | cut -d"/" -f2 | cut -d"." -f 1)
-
+echo $OPENVIDU_PROJECT
 case $OPENVIDU_PROJECT in
 
   openvidu)
     
-    git clone $OPENVIDU_GIT_REPOSITORY
-
     # Openvidu Server
     cd $OPENVIDU_REPO/openvidu-server/src/angular/frontend
 
@@ -49,9 +47,19 @@ case $OPENVIDU_PROJECT in
 
   openvidu-java-client)
 
-    sleep 3000   
+    echo "Building openvidu-java-client"
+    cd openvidu-java-client
+    pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION pom.xml || exit 1
+    
+    mvn clean compile package
+    mvn -DperformRelease=true clean compile package
+    mvn -DperformRelease=true clean deploy
+    mvn release:clean
+    mvn release:prepare
+    mvn release:perform
+
     ;;
 
   *)
-    sleep 3000
+    sleep 300
 esac
