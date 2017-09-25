@@ -51,15 +51,25 @@ case $OPENVIDU_PROJECT in
     cd openvidu-java-client
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     
-    mvn clean compile package
-    mvn -DperformRelease=true clean compile package
-    mvn -DperformRelease=true clean deploy
-    mvn release:clean
-    mvn release:prepare
+    mvn clean compile package && \
+    mvn -DperformRelease=true clean compile package && \
+    mvn -DperformRelease=true clean deploy && \
+    mvn release:clean && \
+    mvn release:prepare && \
     mvn release:perform
 
     ;;
 
+  openvidu-node-client)
+
+    echo "Building $OPENVIDU_PROJECT"
+    cd $OPENVIDU_PROJECT
+    PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
+    sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" package.json
+    npm run build || exit 1
+    npm publish
+
   *)
-    sleep 300
+    echo "No project specified"
+    exit 1
 esac
