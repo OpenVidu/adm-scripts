@@ -38,6 +38,7 @@ sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_BROWSER_VE
 npm install
 npm run updatetsc && VERSION=$OPENVIU_BROWSER_VERSION npm run browserify && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify-prod
 
+ls -l static/js
 openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js     -f static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js
 openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js -f static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js
 
