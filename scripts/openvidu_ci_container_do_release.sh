@@ -52,4 +52,6 @@ case $OPENVIDU_PROJECT in
     sleep 3000   
     ;;
 
+  *)
+    sleep 3000
 esac
