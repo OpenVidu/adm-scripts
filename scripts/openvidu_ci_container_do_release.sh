@@ -49,7 +49,7 @@ case $OPENVIDU_PROJECT in
 
     echo "Building openvidu-java-client"
     cd openvidu-java-client
-    pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION pom.xml || exit 1
+    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     
     mvn clean compile package
     mvn -DperformRelease=true clean compile package
