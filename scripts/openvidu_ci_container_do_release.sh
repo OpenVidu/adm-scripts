@@ -28,7 +28,8 @@ case $OPENVIDU_PROJECT in
     TAG=$OPENVIDU_VERSION
 #    openvidu_github_release.go release --user openvidu --repo openvidu --tag "$TAG" --description "$DESC"
 #    openvidu_github_release.go upload  --user $OPENVIDU_PROJECT --repo $BASE_NAME --tag $TAG --name openvidu-server-${TAG}.jar -f openvidu-server/target/openvidu-server-${TAG}.jar
-     find / -name openvidu-server-${TAG}.jar
+    echo $PWD
+    ls -lh 
     ;;
 
   *)
