@@ -26,6 +26,7 @@ docker run \
   -e "OPENVIDU_VERSION=$OV_VERSION" \
   -e "OPENVIDU_SERVER_VERSION=$OV_SERVER_VERSION" \
   -e "OPENVIDU_BROWSER_VERSION=$OV_BROWSER_VERSION" \
+  -v "${PWD}:$WORKSPACE" \
   -w $WORKSPACE \
   $CONTAINER_IMAGE \
   /opt/adm-scripts/openvidu_ci_container_entrypoint.sh $BUILD_COMMAND
