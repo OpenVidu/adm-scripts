@@ -17,7 +17,7 @@ case $OPENVIDU_PROJECT in
   openvidu)
     
     # Openvidu Server
-    ls -l
+    echo $PWD
     pushd openvidu-server/src/angular/frontend || exit 1
 
     npm install
@@ -32,6 +32,7 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload  --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_SERVER_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_SERVER_VERSION}.jar
 
     # Openvidu Browser
+    ls -l
     pom-vbump.py -i -v $OPENVIDU_BROWSER_VERSION openvidu-browser/pom.xml || exit 1
 
     pushd /opt/$OPENVIDU_REPO/openvidu-browser/src/main/resources
