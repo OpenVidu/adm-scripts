@@ -84,7 +84,7 @@ case $OPENVIDU_PROJECT in
   openvidu-mvc-java)
 
     echo "Building openvidu-mvc-java"
-    pushd $OPENVIDU_REPO
+    pushd $OPENVIDU_PROJECT
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     mvn $MAVEN_OPTIONS clean compile package
     DESC=$(git log -1 --pretty=%B)
