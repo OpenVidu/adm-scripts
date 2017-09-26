@@ -32,13 +32,9 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload  --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_SERVER_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_SERVER_VERSION}.jar
 
     # Openvidu Browser
-    ls -l
-    ls -l openvidu-browser/
-    pom-vbump.py -i -v $OPENVIDU_BROWSER_VERSION openvidu-browser/pom.xml || exit 1
-
-    pushd /opt/$OPENVIDU_REPO/openvidu-browser/src/main/resources
     PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
-    sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_BROWSER_VERSION\",/" package.json
+    sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" openvidu-browser/package.json
+
     npm install
     npm run updatetsc && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify-prod
 
