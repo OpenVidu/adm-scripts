@@ -24,11 +24,11 @@ case $OPENVIDU_PROJECT in
 
     cd /opt/openvidu
     pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION openvidu-server/pom.xml || exit 1
-    mvn clean compile package
+    mvn $MAVEN_OPTIONS clean compile package
 
     DESC=$(git log -1 --pretty=%B)
     openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --description "$DESC"
-    openvidu_github_release.go upload  --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_SERVER_VERSION}.jar -f openvidu-server/target/openvidu-server-${OPENVIDU_SERVER_VERSION}.jar
+    openvidu_github_release.go upload  --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_SERVER_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_SERVER_VERSION}.jar
 
     # Openvidu Browser
     cd /opt/$OPENVIDU_REPO
@@ -40,8 +40,8 @@ case $OPENVIDU_PROJECT in
     npm install
     npm run updatetsc && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify-prod
 
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js     -f static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js -f static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js --file static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js --file static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js
     ;;
 
   openvidu-java-client)
@@ -50,7 +50,7 @@ case $OPENVIDU_PROJECT in
     cd /opt/$OPENVIDU_REPO
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     
-    mvn clean compile package && \
+    mvn $MAVEN_OPTIONS clean compile package && \
     mvn -DperformRelease=true clean compile package && \
     mvn -DperformRelease=true clean deploy && \
     mvn --settings $MAVEN_SETTINGS release:clean && \
@@ -73,8 +73,10 @@ case $OPENVIDU_PROJECT in
     echo "Building openvidu-js-java"
     cd /opt/$OPENVIDU_REPO
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
-    mvn clean compile package
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar -f target/openvidu-js-java-${OPENVIDU_VERSION}.jar
+    mvn $MAVEN_OPTIONS clean compile package
+    DESC=$(git log -1 --pretty=%B)
+    openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --description "$DESC"
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar --file target/openvidu-js-java-${OPENVIDU_VERSION}.jar
     ;;
 
   openvidu-mvc-java)
@@ -82,8 +84,10 @@ case $OPENVIDU_PROJECT in
     echo "Building openvidu-mvc-java"
     cd /opt/$OPENVIDU_REPO
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
-    mvn clean compile package
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar -f target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
+    mvn $MAVEN_OPTIONS clean compile package
+    DESC=$(git log -1 --pretty=%B)
+    openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --description "$DESC"
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
     ;;
 
   *)
