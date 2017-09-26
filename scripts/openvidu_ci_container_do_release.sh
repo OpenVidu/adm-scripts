@@ -33,6 +33,7 @@ case $OPENVIDU_PROJECT in
 
     # Openvidu Browser
     ls -l
+    ls -l openvidu-browser/
     pom-vbump.py -i -v $OPENVIDU_BROWSER_VERSION openvidu-browser/pom.xml || exit 1
 
     pushd /opt/$OPENVIDU_REPO/openvidu-browser/src/main/resources
