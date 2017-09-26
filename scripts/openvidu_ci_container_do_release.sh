@@ -64,6 +64,7 @@ case $OPENVIDU_PROJECT in
     cd $OPENVIDU_PROJECT
     PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" package.json
+    npm install
     npm run build || exit 1
     npm publish
     ;;
