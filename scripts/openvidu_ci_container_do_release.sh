@@ -53,10 +53,9 @@ case $OPENVIDU_PROJECT in
     mvn clean compile package && \
     mvn -DperformRelease=true clean compile package && \
     mvn -DperformRelease=true clean deploy && \
-    mvn release:clean && \
-    mvn release:prepare && \
-    mvn release:perform
-
+    mvn --settings $MAVEN_SETTINGS release:clean && \
+    mvn --settings $MAVEN_SETTINGS release:prepare && \
+    mvn --settings $MAVEN_SETTINGS release:perform
     ;;
 
   openvidu-node-client)
