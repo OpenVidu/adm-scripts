@@ -48,7 +48,7 @@ case $OPENVIDU_PROJECT in
   openvidu-java-client)
 
     echo "Building openvidu-java-client"
-    cd openvidu-java-client
+    cd /opt/$OPENVIDU_REPO
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     
     mvn clean compile package && \
@@ -68,6 +68,25 @@ case $OPENVIDU_PROJECT in
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" package.json
     npm run build || exit 1
     npm publish
+    ;;
+
+  openvidu-js-java)
+
+    echo "Building openvidu-js-java"
+    cd /opt/$OPENVIDU_REPO
+    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
+    mvn clean compile package
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar -f target/openvidu-js-java-${OPENVIDU_VERSION}.jar
+    ;;
+
+  openvidu-mvc-java)
+
+    echo "Building openvidu-mvc-java"
+    cd /opt/$OPENVIDU_REPO
+    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
+    mvn clean compile package
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar -f target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
+    ;;
 
   *)
     echo "No project specified"
