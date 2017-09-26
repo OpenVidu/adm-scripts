@@ -11,6 +11,7 @@ MAVEN_OPTIONS+="-DskipTests=true"
 CONTAINER_MAVEN_SETTINGS=/opt/openvidu-settings.xml
 CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 CONTAINER_PRIVATE_RSA_KEY=/opt/git_id_rsa
+CONTAINER_NPM_CONFIG=/root/.npmrc
 
 docker run \
   --name $BUILD_TAG-JOB_SETUP-$(date +"%s") \
@@ -21,6 +22,7 @@ docker run \
   $([ -f "$GITHUB_PRIVATE_RSA_KEY" ] && echo "-v $GITHUB_PRIVATE_RSA_KEY:$CONTAINER_PRIVATE_RSA_KEY" ) \
   $([ "${OPENVIDU_GITHUB_TOKEN}x" != "x" ] && echo "-e GITHUB_KEY=$OPENVIDU_GITHUB_TOKEN" ) \
   $([ -f "$MAVEN_SETTINGS" ] && echo "-v $MAVEN_SETTINGS:$CONTAINER_MAVEN_SETTINGS") \
+  $([ -f "$NPM_CONFIG" ] && echo "-v $NPM_CONFIG:$CONTAINER_NPM_CONFIG") \
   -e "GITHUB_PRIVATE_RSA_KEY=$CONTAINER_PRIVATE_RSA_KEY" \
   -e "OPENVIDU_PROJECT=$OV_PROJECT" \
   -e "GITHUB_TOKEN=$OPENVIDU_GITHUB_TOKEN" \
