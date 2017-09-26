@@ -25,6 +25,10 @@ EOF
     fi
 fi
 
+if [ -f "$GPG_PRIVATE_BLOCK" ]; then
+  gpg --import $GPG_PRIVATE_BLOCK
+fi
+
 for CMD in $BUILD_COMMAND; do
   echo "Running command: $CMD"
   $CMD || exit 1
