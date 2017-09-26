@@ -17,7 +17,8 @@ case $OPENVIDU_PROJECT in
   openvidu)
     
     # Openvidu Server
-    cd /opt/$OPENVIDU_REPO/openvidu-server/src/angular/frontend
+    ls -l
+    cd /opt/$OPENVIDU_REPO/openvidu-server/src/angular/frontend || exit 1
 
     npm install
     ng build --output-path ../../main/resources/static
