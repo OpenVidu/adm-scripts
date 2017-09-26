@@ -11,7 +11,7 @@ echo "##################### EXECUTE: openvidu_ci_container_do_release ##########
 export PATH=$PATH:$ADM_SCRIPTS
 
 OPENVIDU_REPO=$(echo $OPENVIDU_GIT_REPOSITORY | cut -d"/" -f2 | cut -d"." -f 1)
-echo $OPENVIDU_PROJECT
+
 case $OPENVIDU_PROJECT in
 
   openvidu)
@@ -40,7 +40,6 @@ case $OPENVIDU_PROJECT in
     npm install
     npm run updatetsc && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify-prod
 
-    ls -l static/js
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js     -f static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js -f static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js
     ;;
