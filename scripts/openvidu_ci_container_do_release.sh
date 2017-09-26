@@ -18,12 +18,12 @@ case $OPENVIDU_PROJECT in
     
     # Openvidu Server
     ls -l
-    cd /opt/$OPENVIDU_REPO/openvidu-server/src/angular/frontend || exit 1
+    pushd openvidu-server/src/angular/frontend || exit 1
 
     npm install
     ng build --output-path ../../main/resources/static
+    popd
 
-    cd /opt/openvidu
     pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION openvidu-server/pom.xml || exit 1
     mvn $MAVEN_OPTIONS clean compile package
 
@@ -32,10 +32,9 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload  --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_SERVER_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_SERVER_VERSION}.jar
 
     # Openvidu Browser
-    cd /opt/$OPENVIDU_REPO
     pom-vbump.py -i -v $OPENVIDU_BROWSER_VERSION openvidu-browser/pom.xml || exit 1
 
-    cd /opt/$OPENVIDU_REPO/openvidu-browser/src/main/resources
+    pushd /opt/$OPENVIDU_REPO/openvidu-browser/src/main/resources
     PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_BROWSER_VERSION\",/" package.json
     npm install
@@ -43,6 +42,7 @@ case $OPENVIDU_PROJECT in
 
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js --file static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js --file static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js
+    popd
     ;;
 
   openvidu-java-client)
