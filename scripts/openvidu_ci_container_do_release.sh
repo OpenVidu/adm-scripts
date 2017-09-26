@@ -84,12 +84,13 @@ case $OPENVIDU_PROJECT in
   openvidu-mvc-java)
 
     echo "Building openvidu-mvc-java"
-    cd /opt/$OPENVIDU_REPO
+    pushd $OPENVIDU_REPO
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     mvn $MAVEN_OPTIONS clean compile package
     DESC=$(git log -1 --pretty=%B)
     openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --description "$DESC"
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
+    popd
     ;;
 
   *)
