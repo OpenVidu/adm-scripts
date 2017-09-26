@@ -4,7 +4,7 @@ echo "##################### EXECUTE: openvidu_ci_container_do_release ##########
 
 # Verify mandatory parameters
 [ -z "$OPENVIDU_VERSION" ] && exit 1
-[ -z "$OPENVIDU_SERVER_VERSION" ] || OPENVIDU_SERVER_VERSION=$OPENVIDU_VERSION
+[ -z "$OPENVIDU_SERVER_VERSION" ] && OPENVIDU_SERVER_VERSION=$OPENVIDU_VERSION
 [ -z "$OPENVIDU_BROWSER_VERSION" ] && OPENVIDU_BROWSER_VERSION=$OPENVIDU_VERSION
 [ -z "$GITHUB_TOKEN" ] && exit 1
 
