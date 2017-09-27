@@ -7,7 +7,7 @@ echo "##################### EXECUTE: openvidu_ci_container_job_setup ###########
 [ -z "$CONTAINER_IMAGE" ] && exit 1
 
 WORKSPACE=/opt
-MAVEN_OPTIONS+="-DskipTests=false"
+MAVEN_OPTIONS="--batch mode --settings /opt/openvidu-settings.xml -DskipTests=false"
 CONTAINER_MAVEN_SETTINGS=/opt/openvidu-settings.xml
 CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 CONTAINER_PRIVATE_RSA_KEY=/opt/git_id_rsa
