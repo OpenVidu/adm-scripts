@@ -51,10 +51,10 @@ case $OPENVIDU_PROJECT in
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     
     mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package && \
-    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy 
-    #mvn --settings $MAVEN_SETTINGS release:clean && \
-    #mvn --settings $MAVEN_SETTINGS release:prepare && \
-    #mvn --settings $MAVEN_SETTINGS release:perform
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy && \
+    mvn $MAVEN_OPTIONS release:clean && \
+    mvn $MAVEN_OPTIONS release:prepare && \
+    mvn $MAVEN_OPTIONS release:perform
     popd
     ;;
 
