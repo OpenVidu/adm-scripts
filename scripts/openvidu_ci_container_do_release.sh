@@ -49,8 +49,7 @@ case $OPENVIDU_PROJECT in
     echo "Building openvidu-java-client"
     cd /opt/$OPENVIDU_REPO
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
-    alias gpg='gpg --no-tty '
-    mvn --batch-mode $MAVEN_OPTIONS clean compile package && \
+    
     mvn --batch-mode -DperformRelease=true clean compile package && \
     mvn --batch-mode -DperformRelease=true clean deploy 
     #mvn --settings $MAVEN_SETTINGS release:clean && \
