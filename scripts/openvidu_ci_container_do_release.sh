@@ -47,7 +47,7 @@ case $OPENVIDU_PROJECT in
   openvidu-java-client)
 
     echo "Building openvidu-java-client"
-    cd $OPENVIDU_PROJECT
+    pushd $OPENVIDU_PROJECT
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     
     mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package && \
@@ -55,17 +55,19 @@ case $OPENVIDU_PROJECT in
     #mvn --settings $MAVEN_SETTINGS release:clean && \
     #mvn --settings $MAVEN_SETTINGS release:prepare && \
     #mvn --settings $MAVEN_SETTINGS release:perform
+    popd
     ;;
 
   openvidu-node-client)
 
     echo "Building $OPENVIDU_PROJECT"
-    cd $OPENVIDU_PROJECT
+    pushd $OPENVIDU_PROJECT
     PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" package.json
     npm install
     npm run build || exit 1
     npm publish
+    popd
     ;;
 
   openvidu-js-java)
