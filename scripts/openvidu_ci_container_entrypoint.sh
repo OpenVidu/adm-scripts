@@ -26,7 +26,6 @@ EOF
 fi
 
 if [ -f "$GPG_PRIVATE_BLOCK" ]; then
-  gpg --import $GPG_PUBLIC_BLOCK
   gpg --import $GPG_PRIVATE_BLOCK
 fi
 
