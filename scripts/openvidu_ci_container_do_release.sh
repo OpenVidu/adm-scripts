@@ -50,9 +50,9 @@ case $OPENVIDU_PROJECT in
     cd /opt/$OPENVIDU_REPO
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || exit 1
     alias gpg='gpg --no-tty '
-    mvn $MAVEN_OPTIONS clean compile package && \
-    mvn -DperformRelease=true clean compile package && \
-    mvn -DperformRelease=true clean deploy 
+    mvn --batch-mode $MAVEN_OPTIONS clean compile package && \
+    mvn --batch-mode -DperformRelease=true clean compile package && \
+    mvn --batch-mode -DperformRelease=true clean deploy 
     #mvn --settings $MAVEN_SETTINGS release:clean && \
     #mvn --settings $MAVEN_SETTINGS release:prepare && \
     #mvn --settings $MAVEN_SETTINGS release:perform
