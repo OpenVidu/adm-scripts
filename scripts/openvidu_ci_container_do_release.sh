@@ -70,7 +70,7 @@ case $OPENVIDU_PROJECT in
     popd
     ;;
 
-  openvidu-js-java)
+  openvidu-js-java
   openvidu-mvc-java)
 
     echo "Building openvidu-js-java"
