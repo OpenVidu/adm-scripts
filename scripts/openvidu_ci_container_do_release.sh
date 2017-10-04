@@ -20,14 +20,14 @@ case $OPENVIDU_PROJECT in
     pushd openvidu-server/src/angular/frontend || exit 1
 
     npm install
-    ng build --output-path ../../main/resources/static
+    ng build --output-path ../../main/resources/static || { echo "Failed to compile frontend"; exit 1 }
     popd
 
-    pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION openvidu-server/pom.xml || exit 1
-    PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
-    sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" openvidu-browser/package.json
+    pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION openvidu-server/pom.xml || { echo "Failed to bump openvidu-server version"; exit 1 }
+    PROJECT_VERSION=$(grep version openvidu-browser/package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
+    sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" openvidu-browser/package.json || { echo "Failed to bump openvidu-browser version"; exit 1 }
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    git push
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1 }
     mvn $MAVEN_OPTIONS clean compile package
 
     DESC="Release v$OPENVIDU_VERSION"
