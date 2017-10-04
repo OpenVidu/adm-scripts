@@ -24,16 +24,18 @@ case $OPENVIDU_PROJECT in
     popd
 
     pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION openvidu-server/pom.xml || exit 1
+    PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
+    sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" openvidu-browser/package.json
+    git commit -a -m "Update to version v$OPENVIDU_VERSION"
+    git push
     mvn $MAVEN_OPTIONS clean compile package
 
-    DESC=$(git log -1 --pretty=%B)
+    DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --description "$DESC"
     openvidu_github_release.go upload  --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_SERVER_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_SERVER_VERSION}.jar
 
     # Openvidu Browser
     pushd openvidu-browser
-    PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
-    sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" package.json
 
     npm install
     npm run updatetsc && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify && VERSION=$OPENVIDU_BROWSER_VERSION npm run browserify-prod
