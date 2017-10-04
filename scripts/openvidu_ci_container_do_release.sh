@@ -20,7 +20,7 @@ case $OPENVIDU_PROJECT in
     pushd openvidu-server/src/angular/frontend || exit 1
 
     npm install
-    ng build --output-path ../../main/resources/static || { echo "Failed to compile frontend"; exit 1}
+    ng build --output-path ../../main/resources/static || echo "Failed to compile frontend"; exit 1
     popd
 
     pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION openvidu-server/pom.xml 
