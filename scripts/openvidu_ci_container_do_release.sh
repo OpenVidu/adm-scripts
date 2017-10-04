@@ -17,7 +17,6 @@ case $OPENVIDU_PROJECT in
   openvidu)
     
     # Openvidu Server
-    echo $PWD
     pushd openvidu-server/src/angular/frontend || exit 1
 
     npm install
