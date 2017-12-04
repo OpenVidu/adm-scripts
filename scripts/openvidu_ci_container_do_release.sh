@@ -27,7 +27,7 @@ case $OPENVIDU_PROJECT in
     PROJECT_VERSION=$(grep version openvidu-browser/package.json | cut -d ":" -f 2 | cut -d "\"" -f 2) || (echo "Failed to bump openvidu-browser version"; exit 1)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" openvidu-browser/package.json || (echo "Failed to bump openvidu-browser version"; exit 1)
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || echo "Failed to push to Github"; exit 1
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
     mvn $MAVEN_OPTIONS clean compile package
 
     DESC="Release v$OPENVIDU_VERSION"
