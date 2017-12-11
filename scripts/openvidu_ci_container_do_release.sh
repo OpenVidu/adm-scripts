@@ -27,8 +27,6 @@ case $OPENVIDU_PROJECT in
     PROJECT_VERSION=$(grep version openvidu-browser/package.json | cut -d ":" -f 2 | cut -d "\"" -f 2) || (echo "Failed to bump openvidu-browser version"; exit 1)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" openvidu-browser/package.json || (echo "Failed to bump openvidu-browser version"; exit 1)
     mvn $MAVEN_OPTIONS -DskipTests=true clean compile package
-    git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
@@ -45,6 +43,11 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js --file static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.js || (echo "Failed to upload the archifact to Github"; exit 1)
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js --file static/js/openvidu-browser-${OPENVIDU_BROWSER_VERSION}.min.js || (echo "Failed to upload the archifact to Github"; exit 1)
     npm publish
+    
+    # GitHub commit and push
+    git commit -a -m "Update to version v$OPENVIDU_VERSION"
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    
     popd
     ;;
 
