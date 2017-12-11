@@ -34,6 +34,8 @@ case $OPENVIDU_PROJECT in
 
     # Openvidu Browser
     pushd openvidu-browser || exit 1
+    
+    rm static/js/*
 
     npm install
     npm run updatetsc || exit 1
@@ -45,6 +47,7 @@ case $OPENVIDU_PROJECT in
     npm publish
     
     # GitHub commit and push
+    git add static/js/*
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
     
