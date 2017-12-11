@@ -26,9 +26,9 @@ case $OPENVIDU_PROJECT in
     pom-vbump.py -i -v $OPENVIDU_SERVER_VERSION openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
     PROJECT_VERSION=$(grep version openvidu-browser/package.json | cut -d ":" -f 2 | cut -d "\"" -f 2) || (echo "Failed to bump openvidu-browser version"; exit 1)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" openvidu-browser/package.json || (echo "Failed to bump openvidu-browser version"; exit 1)
+    mvn $MAVEN_OPTIONS -DskipTests=true clean compile package
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
-    mvn $MAVEN_OPTIONS clean compile package
 
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
