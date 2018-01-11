@@ -1,4 +1,5 @@
 #!/bin/bash -x
+set -e
 
 echo "##################### EXECUTE: openvidu_ci_container_do_release #####################"
 
@@ -15,6 +16,7 @@ case $OPENVIDU_PROJECT in
   openvidu)
     
     # Openvidu Browser
+    npm-version.py || (echo "Faile to bump packages.json versions"; exit 1)
     pushd openvidu-browser || exit 1
     
     rm static/js/*
@@ -25,7 +27,6 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || (echo "Failed to link npm"; exit 1)
-    npm-version.py || (echo "Faile to bump packages.json versions"; exit 1)
     npm publish
 
     # Openvidu Server
