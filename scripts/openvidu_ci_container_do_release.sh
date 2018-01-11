@@ -25,7 +25,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || (echo "Failed to link npm"; exit 1)
-
+    npm-version.py || (echo "Faile to bump packages.json versions"; exit 1)
     npm publish
 
     # Openvidu Server
@@ -37,7 +37,6 @@ case $OPENVIDU_PROJECT in
     popd
 
     pom-vbump.py -i -v $OPENVIDU_VERSION openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
-    npm-version.py || (echo "Faile to bump packages.json versions"; exit 1)
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
