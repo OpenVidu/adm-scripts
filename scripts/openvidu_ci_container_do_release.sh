@@ -64,9 +64,9 @@ case $OPENVIDU_PROJECT in
     #mvn $MAVEN_OPTIONS release:clean
     #mvn $MAVEN_OPTIONS release:update-version || (echo "Failed to prepare"; exit 1)
     #mvn $MAVEN_OPTIONS release:perform || (echo "Failed to perform"; exit 1)
-    mvn release:clean || (echo "Failed to clean"; exit 1)
-    mvn release:prepare -DupdateWorkingCopyVersions=false -DremoteTagging=false -DreleaseVersion=${OPENVIDU_VERSION} || (echo "Failed to prepare"; exit 1)
-    mvn release:perform || (echo "Failed to perform"; exit 1)
+    mvn $MAVEN_OPTIONS release:clean || (echo "Failed to clean"; exit 1)
+    mvn $MAVEN_OPTIONS release:prepare -DupdateWorkingCopyVersions=false -DremoteTagging=false -DreleaseVersion=${OPENVIDU_VERSION} || (echo "Failed to prepare"; exit 1)
+    mvn $MAVEN_OPTIONS release:perform || (echo "Failed to perform"; exit 1)
     popd
     ;;
 
