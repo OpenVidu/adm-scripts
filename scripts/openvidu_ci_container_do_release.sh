@@ -9,7 +9,7 @@ echo "##################### EXECUTE: openvidu_ci_container_do_release ##########
 
 export PATH=$PATH:$ADM_SCRIPTS
 
-OPENVIDU_REPO=$(echo $OPENVIDU_GIT_REPOSITORY | cut -d"/" -f2 | cut -d"." -f 1)
+OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1)
 
 case $OPENVIDU_PROJECT in
 
@@ -37,7 +37,7 @@ case $OPENVIDU_PROJECT in
     ng build --output-path ../../main/resources/static || (echo "Failed to compile frontend"; exit 1)
     popd
 
-    pom-vbump.py -i -v $OPENVIDU_VERSION openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
+    pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
@@ -46,30 +46,30 @@ case $OPENVIDU_PROJECT in
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
     DESC="Release v$OPENVIDU_VERSION"
-    openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the archifact to Github"; exit 1)
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || (echo "Failed to upload the archifact to Github"; exit 1)
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || (echo "Failed to upload the archifact to Github"; exit 1)
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the archifact to Github"; exit 1)
+    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || (echo "Failed to upload the archifact to Github"; exit 1)
+    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || (echo "Failed to upload the archifact to Github"; exit 1)
     ;;
 
   openvidu-java-client)
 
     echo "Building openvidu-java-client"
-    pushd $OPENVIDU_PROJECT
+    pushd "$OPENVIDU_PROJECT"
     
-    mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION}-SNAPSHOT || (echo "Failed to bump version"; exit 1)
-    mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package && \
-    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy && \
-    mvn $MAVEN_OPTIONS release:clean && \
-    mvn $MAVEN_OPTIONS release:prepare && \
-    mvn $MAVEN_OPTIONS release:perform
+    mvn "$MAVEN_OPTIONS" versions:set -DnewVersion=${OPENVIDU_VERSION}-SNAPSHOT || (echo "Failed to bump version"; exit 1)
+    mvn "$MAVEN_OPTIONS" -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
+    mvn "$MAVEN_OPTIONS" -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
+    mvn "$MAVEN_OPTIONS" release:clean 
+    mvn "$MAVEN_OPTIONS" release:prepare || (echo "Failed to prepare"; exit 1)
+    mvn "$MAVEN_OPTIONS" release:perform || (echo "Failed to perform"; exit 1)
     popd
     ;;
 
   openvidu-node-client)
 
     echo "Building $OPENVIDU_PROJECT"
-    pushd $OPENVIDU_PROJECT
+    pushd "$OPENVIDU_PROJECT"
     PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" package.json
     npm install
