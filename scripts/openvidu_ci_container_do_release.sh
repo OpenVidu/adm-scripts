@@ -57,7 +57,8 @@ case $OPENVIDU_PROJECT in
     echo "Building openvidu-java-client"
     pushd "$OPENVIDU_PROJECT"
     
-    mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION}-SNAPSHOT || (echo "Failed to bump version"; exit 1)
+    #mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION}-SNAPSHOT || (echo "Failed to bump version"; exit 1)
+    pom-vbump.py -i -v ${OPENVIDU_VERSION}-SNAPSHOT pom.xml || (echo "Failed to bump version"; exit 1)
     mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
     mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
     mvn $MAVEN_OPTIONS release:clean 
