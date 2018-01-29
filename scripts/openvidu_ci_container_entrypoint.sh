@@ -25,6 +25,12 @@ EOF
     fi
 fi
 
+# Configure GitHub Credentials
+if [ -f "$CONTAINER_GIT_CONFIG" ]; then 
+    cp $CONTAINER_GIT_CONFIG /root/.gitconfig
+fi
+
+
 if [ -f "$GPG_PRIVATE_BLOCK" ]; then
   gpg --import $GPG_PRIVATE_BLOCK
 fi
