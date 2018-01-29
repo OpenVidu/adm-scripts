@@ -57,16 +57,16 @@ case $OPENVIDU_PROJECT in
     echo "Building openvidu-java-client"
     pushd "$OPENVIDU_PROJECT"
     
-    #mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION}-SNAPSHOT || (echo "Failed to bump version"; exit 1)
-    pom-vbump.py -i -v ${OPENVIDU_VERSION}-SNAPSHOT pom.xml || (echo "Failed to bump version"; exit 1)
-    #mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
-    #mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
+    mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
+    #pom-vbump.py -i -v ${OPENVIDU_VERSION}-SNAPSHOT pom.xml || (echo "Failed to bump version"; exit 1)
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
     #mvn $MAVEN_OPTIONS release:clean
     #mvn $MAVEN_OPTIONS release:update-version || (echo "Failed to prepare"; exit 1)
     #mvn $MAVEN_OPTIONS release:perform || (echo "Failed to perform"; exit 1)
-    mvn $MAVEN_OPTIONS release:clean || (echo "Failed to clean"; exit 1)
-    mvn $MAVEN_OPTIONS release:prepare -DupdateWorkingCopyVersions=false -DremoteTagging=false -DreleaseVersion=${OPENVIDU_VERSION} || (echo "Failed to prepare"; exit 1)
-    mvn $MAVEN_OPTIONS release:perform || (echo "Failed to perform"; exit 1)
+    #mvn $MAVEN_OPTIONS release:clean || (echo "Failed to clean"; exit 1)
+    #mvn $MAVEN_OPTIONS release:prepare -DupdateWorkingCopyVersions=false -DremoteTagging=false -DreleaseVersion=${OPENVIDU_VERSION} || (echo "Failed to prepare"; exit 1)
+    #mvn $MAVEN_OPTIONS release:perform || (echo "Failed to perform"; exit 1)
     popd
     ;;
 
