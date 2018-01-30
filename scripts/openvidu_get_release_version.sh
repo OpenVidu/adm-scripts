@@ -1,5 +1,7 @@
 #!/bin/bash -x
+set -e
 
-RELEASE_URL="https://api.github.com/repos/openvidu/openvidu-cloud-devops/releases/latest"
+[ ! -z "$RELEASE_URL" ] || exit 1
+
 echo $(curl "$RELEASE_URL" | jq --raw-output '.tag_name')
 
