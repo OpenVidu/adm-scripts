@@ -27,7 +27,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || (echo "Failed to link npm"; exit 1)
-    npm publish
+    # npm publish
     popd
     # Openvidu Server
     pushd openvidu-server/src/angular/frontend || exit 1
