@@ -27,7 +27,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || (echo "Failed to link npm"; exit 1)
-    #npm publish
+    npm publish
     popd
     # Openvidu Server
     pushd openvidu-server/src/angular/frontend || exit 1
@@ -41,9 +41,9 @@ case $OPENVIDU_PROJECT in
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
-    #git add openvidu-browser/static/js/*
-    #git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    #git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git add openvidu-browser/static/js/*
+    git commit -a -m "Update to version v$OPENVIDU_VERSION"
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
@@ -62,9 +62,9 @@ case $OPENVIDU_PROJECT in
     mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
     
     # Github release: commit and push
-    #git add pom.xml
-    #git commit -a -m "Update openvidu-java-client to version v$OPENVIDU_VERSION"
-    #git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git add pom.xml
+    git commit -a -m "Update openvidu-java-client to version v$OPENVIDU_VERSION"
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
     
     popd
     ;;
@@ -80,9 +80,9 @@ case $OPENVIDU_PROJECT in
     npm publish
     
     # Github release: commit and push
-    #git add package.json
-    #git commit -a -m "Update openvidu-node-client to version v$OPENVIDU_VERSION"
-    #git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git add package.json
+    git commit -a -m "Update openvidu-node-client to version v$OPENVIDU_VERSION"
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
     
     popd
     ;;
