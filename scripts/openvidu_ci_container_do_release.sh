@@ -62,9 +62,9 @@ case $OPENVIDU_PROJECT in
     mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
     
     # Github release: commit and push
-    git add pom.xml
-    git commit -a -m "Update openvidu-java-client to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    #git add pom.xml
+    #git commit -a -m "Update openvidu-java-client to version v$OPENVIDU_VERSION"
+    #git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
     
     popd
     ;;
@@ -80,9 +80,9 @@ case $OPENVIDU_PROJECT in
     npm publish
     
     # Github release: commit and push
-    git add package.json
-    git commit -a -m "Update openvidu-node-client to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    #git add package.json
+    #git commit -a -m "Update openvidu-node-client to version v$OPENVIDU_VERSION"
+    #git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
     
     popd
     ;;
