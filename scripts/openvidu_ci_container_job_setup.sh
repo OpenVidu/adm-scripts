@@ -17,6 +17,7 @@ CONTAINER_GIT_CONFIG=/root/.gitconfig
 
 docker run \
   --name $BUILD_TAG-JOB_SETUP-$(date +"%s") \
+  --volumes-from codeurjc-forge-jenkins \
   --rm \
   -e "MAVEN_OPTIONS=$MAVEN_OPTIONS" \
   -e OPENVIDU_GIT_REPOSITORY=$OPENVIDU_GIT_REPOSITORY \
