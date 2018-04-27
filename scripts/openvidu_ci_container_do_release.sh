@@ -22,7 +22,7 @@ case $OPENVIDU_PROJECT in
     rm static/js/*
 
     npm install
-    npm run updatetsc || exit 1
+    npm run build || exit 1
     VERSION=$OPENVIDU_VERSION npm run browserify || exit 1
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
