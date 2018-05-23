@@ -4,6 +4,7 @@ set -eu -o pipefail
 EIP=$(aws ec2 allocate-address)
 IP=$(echo $EIP |  jq --raw-output '.PublicIp')
 DOMAIN_NAME=$(pwgen -A -0 10 1)
+WD=$(pwd)
 
 cat >file.json<<EOF
 {
@@ -27,7 +28,7 @@ cat >file.json<<EOF
 EOF
 
 aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-  --change-batch file:////home/nordri/sandbox/AWS/CF-EIP-Route53/file.json
+  --change-batch file:////${PWD}/file.json
 
 rm file.json
 sleep 60
@@ -35,7 +36,7 @@ sleep 60
 aws cloudformation create-stack \
   --stack-name Openvidu-${DOMAIN_NAME} \
   --template-url https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-latest.json \
-  --parameters '[{"ParameterKey":"KeyName","ParameterValue":"nordri-aws-urjc"}, {"ParameterKey":"MyDomainName","ParameterValue":"'${DOMAIN_NAME}'.k8s.codeurjc.es"},{"ParameterKey":"PublicElasticIP","ParameterValue":"'$IP'"},{"ParameterKey":"WhichCert","ParameterValue":"letsencrypt"},{"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},{"ParameterKey":"WantToSendInfo","ParameterValue":"false"},{"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},{"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"}]' 
+  --parameters '[{"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"}, {"ParameterKey":"MyDomainName","ParameterValue":"'${DOMAIN_NAME}'.k8s.codeurjc.es"},{"ParameterKey":"PublicElasticIP","ParameterValue":"'$IP'"},{"ParameterKey":"WhichCert","ParameterValue":"letsencrypt"},{"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},{"ParameterKey":"WantToSendInfo","ParameterValue":"false"},{"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},{"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"}]' 
 
 aws cloudformation wait stack-create-complete --stack-name Openvidu-${DOMAIN_NAME}
 
@@ -74,7 +75,7 @@ cat >file.json<<EOF
 EOF
 
 aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-  --change-batch file:////home/nordri/sandbox/AWS/CF-EIP-Route53/file.json
+  --change-batch file:////${PWD}/file.json
 
 rm file.json
 
