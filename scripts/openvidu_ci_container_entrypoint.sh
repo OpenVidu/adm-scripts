@@ -30,11 +30,12 @@ if [ -f "$CONTAINER_GIT_CONFIG" ]; then
     cp $CONTAINER_GIT_CONFIG /root/.gitconfig
 fi
 
-
+# GPG Block
 if [ -f "$GPG_PRIVATE_BLOCK" ]; then
   gpg --import $GPG_PRIVATE_BLOCK
 fi
 
+# AWS region
 if [ -f "$AWS_CONFIG" ]; then
   mkdir -p /root/.aws
   cp $AWS_CONFIG /root/.aws/config
