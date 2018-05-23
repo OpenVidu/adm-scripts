@@ -28,7 +28,7 @@ cat >file.json<<EOF
 EOF
 
 aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-  --change-batch file:////${PWD}/file.json
+  --change-batch file:///${PWD}/file.json
 
 rm file.json
 sleep 60
@@ -75,7 +75,7 @@ cat >file.json<<EOF
 EOF
 
 aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-  --change-batch file:////${PWD}/file.json
+  --change-batch file:///${PWD}/file.json
 
 rm file.json
 
