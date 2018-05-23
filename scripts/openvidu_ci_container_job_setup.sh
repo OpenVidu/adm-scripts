@@ -14,6 +14,7 @@ CONTAINER_PRIVATE_RSA_KEY=/opt/git_id_rsa
 CONTAINER_NPM_CONFIG=/root/.npmrc
 CONTAINER_GPG_PRIVATE_BLOCK=/root/.gpgpriv
 CONTAINER_GIT_CONFIG=/root/.gitconfig
+CONTAINER_AWS_CONFIG=/root/.aws/config
 
 docker run \
   --name $BUILD_TAG-JOB_SETUP-$(date +"%s") \
@@ -27,6 +28,7 @@ docker run \
   $([ -f "$NPM_CONFIG" ] && echo "-v $NPM_CONFIG:$CONTAINER_NPM_CONFIG") \
   $([ -f "$GPG_PRIVATE_BLOCK" ] && echo "-v $GPG_PRIVATE_BLOCK:$CONTAINER_GPG_PRIVATE_BLOCK") \
   $([ -f "$GIT_CONFIG" ] && echo "-v $GIT_CONFIG:$CONTAINER_GIT_CONFIG") \
+  $([ -f "$AWS_CONFIG" ] && echo "-v $AWS_CONFIG:$CONTAINER_AWS_CONFIG") \
   -e "AWS_ACCESS_KEY_ID=$OPENVIDU_AWS_ACCESS_KEY" \
   -e "AWS_SECRET_ACCESS_KEY=$OPENVIDU_AWS_SECRET_KEY" \
   -e "GITHUB_PRIVATE_RSA_KEY=$CONTAINER_PRIVATE_RSA_KEY" \
