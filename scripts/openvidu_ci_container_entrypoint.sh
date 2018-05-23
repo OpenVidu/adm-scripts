@@ -35,6 +35,11 @@ if [ -f "$GPG_PRIVATE_BLOCK" ]; then
   gpg --import $GPG_PRIVATE_BLOCK
 fi
 
+if [ -f "$AWS_CONFIG" ]; then
+  mkdir -p /root/.aws
+  cp $AWS_CONFIG /root/.aws/config
+fi
+
 for CMD in $BUILD_COMMAND; do
   echo "Running command: $CMD"
   $CMD || exit 1
