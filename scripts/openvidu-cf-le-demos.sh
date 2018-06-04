@@ -6,7 +6,7 @@ DATESTAMP=$(date +%s)
 aws cloudformation create-stack \
   --stack-name Openvidu-${DATESTAMP} \
   --template-url https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-Demos-latest.json \
-  --parameters '[{"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},{"ParameterKey":"WantToSendInfo","ParameterValue":"false"},{"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},{"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"}]' 
+  --parameters '[{"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},{"ParameterKey":"WantToSendInfo","ParameterValue":"false"},{"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},{"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},{"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},{"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},{"ParameterKey":"MyDomainName","ParameterValue":"Nil"}]' 
 
 aws cloudformation wait stack-create-complete --stack-name Openvidu-${DATESTAMP}
 
@@ -23,3 +23,5 @@ if [ $RES == 200 ]; then
 else
 	exit $RES
 fi
+
+{"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},{"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},{"ParameterKey":"MyDomainName","ParameterValue":"Nil"}
