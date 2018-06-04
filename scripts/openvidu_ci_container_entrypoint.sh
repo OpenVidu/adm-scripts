@@ -41,6 +41,12 @@ if [ -f "$AWS_CONFIG" ]; then
   cp $AWS_CONFIG /root/.aws/config
 fi
 
+if [ ! -z "$AWS_ACCESS_KEY_ID" ]; then
+  echo "[default]" > /root/.aws/Credentials
+  echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> /root/.aws/Credentials
+  echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> /root/.aws/Credentials
+fi
+
 for CMD in $BUILD_COMMAND; do
   echo "Running command: $CMD"
   $CMD || exit 1
