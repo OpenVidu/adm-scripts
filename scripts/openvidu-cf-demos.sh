@@ -13,7 +13,7 @@ aws cloudformation wait stack-create-complete --stack-name Openvidu-${DATESTAMP}
 echo "Extracting service URL..."
 URL=$(aws cloudformation describe-stacks --stack-name Openvidu-${DATESTAMP} | jq '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURL")) | .OutputValue' | tr -d \")
 
-RES=$(curl --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
+RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
 
 # Cleaning up
 aws cloudformation delete-stack --stack-name Openvidu-${DOMAIN_NAME}
