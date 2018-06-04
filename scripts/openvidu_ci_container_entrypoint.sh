@@ -41,7 +41,7 @@ if [ -f "$AWS_CONFIG" ]; then
   cp $AWS_CONFIG /root/.aws/config
 fi
 
-
+export PATH=$PATH:ADM_SCRIPTS
 
 for CMD in $BUILD_COMMAND; do
   echo "Running command: $CMD"
