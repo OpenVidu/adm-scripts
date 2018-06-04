@@ -16,12 +16,10 @@ URL=$(aws cloudformation describe-stacks --stack-name Openvidu-${DATESTAMP} | jq
 RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
 
 # Cleaning up
-aws cloudformation delete-stack --stack-name Openvidu-${DOMAIN_NAME}
+aws cloudformation delete-stack --stack-name Openvidu-${DATESTAMP}
 
 if [ $RES == 200 ]; then
 	exit 0
 else
 	exit $RES
 fi
-
-{"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},{"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},{"ParameterKey":"MyDomainName","ParameterValue":"Nil"}
