@@ -4,9 +4,9 @@ set -eu -o pipefail
 EIP=$(aws ec2 allocate-address)
 IP=$(echo $EIP |  jq --raw-output '.PublicIp')
 DOMAIN_NAME=$(pwgen -A -0 10 1)
-WD=$(pwd)
+TEMPFILE=$(mktemp -t file-XXX --suffix .json)
 
-cat >file.json<<EOF
+cat >$TEMPFILE<<EOF
 {
   "Comment": "Testing OpenVidu Server Lets Encrypt Certificate.",
   "Changes": [
@@ -28,9 +28,8 @@ cat >file.json<<EOF
 EOF
 
 aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-  --change-batch file:///${PWD}/file.json
+  --change-batch file:///$TEMPFILE
 
-rm file.json
 sleep 60
 
 aws cloudformation create-stack \
@@ -53,7 +52,7 @@ sleep 60
 ALLOCATION_ID=$(aws ec2 describe-addresses --public-ips ${IP} | jq -c ' .Addresses[0] | .AllocationId' | tr -d \")
 aws ec2 release-address --allocation-id ${ALLOCATION_ID} 
 
-cat >file.json<<EOF
+cat >$TEMPFILE<<EOF
 {
   "Comment": "Deleting OpenVidu Server Lets Encrypt Certificate.",
   "Changes": [
@@ -75,9 +74,9 @@ cat >file.json<<EOF
 EOF
 
 aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-  --change-batch file:///${PWD}/file.json
+  --change-batch file:///$TEMPFILE
 
-rm file.json
+rm $TEMPFILE
 
 if [ $RES == 200 ]; then
 	exit 0
