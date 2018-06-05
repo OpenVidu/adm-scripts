@@ -1,9 +1,4 @@
 #!/bin/bash -x
-
-# cambiar profile
-# cambiar la ruta Route53
-# cambiar la key ssh
-
 set -eu -o pipefail
 
 EIP=$(aws ec2 allocate-address)
@@ -33,7 +28,7 @@ cat >$TEMPFILE<<EOF
 EOF
 
 aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-  --change-batch file:////$TEMPFILE
+  --change-batch file:///$TEMPFILE
 
 sleep 60
 
@@ -80,7 +75,7 @@ cat >$TEMPFILE<<EOF
 EOF
 
 aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-  --change-batch file:////$TEMPFILE
+  --change-batch file:///$TEMPFILE
 
 rm $TEMPFILE
 
