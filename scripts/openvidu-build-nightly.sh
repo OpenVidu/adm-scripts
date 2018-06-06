@@ -13,9 +13,10 @@ mvn $MAVEN_OPTIONS install || exit 1
 cd openvidu-server
 mvn $MAVEN_OPTIONS package || exit 1
 
-OV_VERSION=$(get_version_from_pom-xml.py )
+OV_VERSION=$(get_version_from_pom-xml.py)
+cp openvidu-server-${OV_VERSION}.jar openvidu-server-latest.jar
 
 FILES="target/openvidu-server-${OV_VERSION}.jar:upload/openvidu/nightly/${DATESTAMP}/openvidu-server-${OV_VERSION}.jar"
-FILES="$FILES target/openvidu-server-${OV_VERSION}.jar:upload/openvidu/nightly/latest/openvidu-server-${OV_VERSION}.jar"
+FILES="$FILES target/openvidu-server-latest.jar:upload/openvidu/nightly/latest/openvidu-server-latest.jar"
 FILES=$FILES openvidu_http_publish.sh
 
