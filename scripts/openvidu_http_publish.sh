@@ -30,6 +30,6 @@ for FILE in $FILES
 do
 	SRC_FILE=$(echo $FILE|cut -d":" -f 1)
 	DST_FILE=$(echo $FILE|cut -d":" -f 2)
-  [ -z "$UNCOMPRESS" ] &&  UNCOMPRESS=0
-  [ -f $SRC_FILE ] && $CURL -X POST https://$BUILDS_HOST/$DST_FILE --data-binary @$SRC_FILE
+    UNCOMPRESS=0 # needed for backward compativility
+    [ -f $SRC_FILE ] && $CURL -X POST https://$BUILDS_HOST/$DST_FILE --data-binary @$SRC_FILE
 done
