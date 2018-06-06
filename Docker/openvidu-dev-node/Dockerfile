@@ -5,10 +5,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends git curl build-essential zip
 
 # Installing nodejs
-RUN curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && \
-    bash nodesource_setup.sh && \
-    apt-get install -y nodejs && \
-    rm nodesource_setup.sh
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+    apt-get install -y nodejs
 
 # Cleaning the house
 RUN apt-get clean && \
