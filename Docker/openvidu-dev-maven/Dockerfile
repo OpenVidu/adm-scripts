@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 MAINTAINER Fede Diaz nordri@gmail.com
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git curl maven openjdk-8-jdk python
+    apt-get install -y --no-install-recommends git curl maven openjdk-8-jdk python curl
 
 # Cleaning the house
 RUN apt-get clean && \
