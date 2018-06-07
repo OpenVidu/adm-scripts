@@ -13,7 +13,6 @@ docker run \
   -p 4445:4444 \
   -p 5901:5900 \
   --shm-size=1g \
-  --net openvidu_test \
   elastest/eus-browser-firefox:3.7.1
 
 # Get Firefox Docker IP
@@ -27,7 +26,6 @@ docker run \
   -p 4444:4444 \
   -p 5900:5900 \
   --shm-size=1g \
-  --net openvidu_test \
   selenium/standalone-chrome-debug:latest
 
 # Get Chrome Docker IP
@@ -45,8 +43,7 @@ docker run \
   -e MY_UID=$(id -u $USER) \
   -e openvidu.recording.path=/opt/openvidu/recordings \
   -e openvidu.recording.public-access=true \
-  --net openvidu_test \
-  openvidu/testapp-nightly:${DATESTAMP}
+  openvidu/testapp:nightly-${DATESTAMP}
 
 # Get Testapp Docker IP
 TESTAPP_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' testapp-${DATESTAMP})
@@ -57,7 +54,6 @@ docker run \
   -d \
   --name kms-${DATESTAMP} \
   -p 8888:8888 \
-  --net openvidu_test \
   kurento/kurento-media-server:6.7.2-xenial
 
 # Get KMS Docker IP
@@ -70,9 +66,6 @@ docker run \
   --name openvidu-${DATESTAMP} \
   -p 4443:4443 \
   -e kms.uris=[\"ws://$KMS_IP:8888/kurento\"] \
-  -e MAVEN_OPTS="-Dopenvidu.publicurl=https://10.0.0.100:4443/" \
-  --net openvidu_test \
-  --ip 10.0.0.100 \
   openvidu/openvidu-server:nightly-${DATESTAMP}
 
 # Get OpenVidu Docker IP
@@ -93,7 +86,6 @@ docker run \
   --name maven-${DATESTAMP} \
   -v "$(pwd)":/workdir \
   -w /workdir \
-  --net openvidu_test \
   maven:3.3-jdk-8 mvn -DAPP_URL=https://${TESTAPP_IP}:5000/ -DOPENVIDU_URL=https://${OPENVIDU_IP}:4443/ -DREMOTE_URL_CHROME=http://${CHROME_IP}:4444/wd/hub/ -DREMOTE_URL_FIREFOX=http://${FIREFOX_IP}:4444/wd/hub/ test
 
 # Cleaning the house
