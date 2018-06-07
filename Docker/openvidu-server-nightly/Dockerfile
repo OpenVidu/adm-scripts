@@ -18,4 +18,5 @@ EXPOSE 4443
 EXPOSE 8888
 
 # Exec supervisord
-CMD [ "/bin/bash", "-c", "java", "-jar", "-Dspring.profiles.active=docker", "/openvidu-server.jar" ]
+#CMD [ "/usr/bin/java", "-jar", "-Dspring.profiles.active=docker", "/openvidu-server.jar" ]
+CMD [ "/bin/ls", "-l", "-a", "/etc"]
