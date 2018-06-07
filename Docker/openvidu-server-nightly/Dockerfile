@@ -13,10 +13,10 @@ RUN apt-get clean && \
 
 # Copy OpenVidu Server
 COPY openvidu-server.jar /
+COPY run.sh /run.sh
 
 EXPOSE 4443
 EXPOSE 8888
 
-# Exec supervisord
-#CMD [ "/usr/bin/java", "-jar", "-Dspring.profiles.active=docker", "/openvidu-server.jar" ]
-CMD [ "/bin/ls", "-l", "-a", "/etc"]
+CMD [ "/run.sh" ]
+
