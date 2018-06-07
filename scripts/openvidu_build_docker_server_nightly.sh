@@ -14,5 +14,5 @@ docker build --no-cache --rm=true -t openvidu/openvidu-server:nightly-${DATESTAM
 
 # Upload the image
 docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
-docker push openvidu/openvidu-server:nightly-${DATESTAMP} .
+docker push openvidu/openvidu-server:nightly-${DATESTAMP} 
 docker logout
