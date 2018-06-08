@@ -93,7 +93,7 @@ echo \$? > res.out
 EOF
 chmod +x run.sh
 docker run \
-  -it \
+  -t \
   --rm \
   --name maven-${DATESTAMP} \
   -v "$(pwd)":/workdir \
