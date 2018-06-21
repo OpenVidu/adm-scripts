@@ -5,16 +5,24 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 [ -n $PUSH_IMAGES ] || PUSH_IMAGES='no'
 [ -n $DOCKERHUB_REPO ] || exit 1
 [ -n "$IMAGE_NAME" ] || exit 1
-[ -n "$TAG" ] || exit 1
+[ -n "$TAGS" ] || exit 1
 
-docker build --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME:$TAG -f Dockerfile . || exit 1
-docker tag $DOCKERHUB_REPO/$IMAGE_NAME:$TAG $DOCKERHUB_REPO/$IMAGE_NAME:latest
+TAGS="$TAGS latest"
+
+docker build --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f Dockerfile . || exit 1
+
+for TAG in $(echo $TAGS)
+do
+  docker tag $DOCKERHUB_REPO/$IMAGE_NAME $DOCKERHUB_REPO/$IMAGE_NAME:$TAG
+done
 
 if [ "$PUSH_IMAGES" == "yes" ]; then
   docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
-
-  docker push $DOCKERHUB_REPO/$IMAGE_NAME:$TAG
-  docker push $DOCKERHUB_REPO/$IMAGE_NAME:latest
+  
+  for TAG in $(echo $TAGS)
+  do
+    docker push $DOCKERHUB_REPO/$IMAGE_NAME:$TAG
+  done
 
   docker logout
 fi
