@@ -41,7 +41,7 @@ cat >run.sh<<EOF
 cd front/openvidu-call/
 npm install
 ./node_modules/protractor/bin/protractor ./e2e/protractor.conf.js --baseUrl=\${APP_URL}
-echo \$? > res.out
+echo \$? > /workdir/res.out
 EOF
 chmod +x run.sh
 
