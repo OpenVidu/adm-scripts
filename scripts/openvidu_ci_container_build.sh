@@ -11,7 +11,7 @@ TAGS="$TAGS latest"
 
 docker build --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f Dockerfile . || exit 1
 
-for TAG in "$TAGS"
+for TAG in $(echo $TAGS)
 do
   docker tag $DOCKERHUB_REPO/$IMAGE_NAME $DOCKERHUB_REPO/$IMAGE_NAME:$TAG
 done
@@ -19,7 +19,7 @@ done
 if [ "$PUSH_IMAGES" == "yes" ]; then
   docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
   
-  for TAG in "$TAGS"
+  for TAG in $(echo $TAGS)
   do
     docker push $DOCKERHUB_REPO/$IMAGE_NAME:$TAG
   done
