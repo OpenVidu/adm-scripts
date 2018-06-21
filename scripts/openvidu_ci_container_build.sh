@@ -13,7 +13,7 @@ docker build --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f Dockerfile .
 
 for TAG in "$TAGS"
 do
-  docker tag $DOCKERHUB_REPO/$IMAGE_NAME:$TAG $DOCKERHUB_REPO/$IMAGE_NAME:$TAG
+  docker tag $DOCKERHUB_REPO/$IMAGE_NAME $DOCKERHUB_REPO/$IMAGE_NAME:$TAG
 done
 
 if [ "$PUSH_IMAGES" == "yes" ]; then
