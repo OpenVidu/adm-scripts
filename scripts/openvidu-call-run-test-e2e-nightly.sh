@@ -35,7 +35,7 @@ do
 done
 
 # Configure the environment
-cat >openvidu-call/front/openvidu-call/src/environments/environment.ci.ts<<EOF
+cat >front/openvidu-call/src/environments/environment.ci.ts<<EOF
 export const environment = {
   production: true,
   openvidu_url: 'https://${OV_URL}:4443',
@@ -46,7 +46,7 @@ EOF
 # Compile the code
 cat >run.sh<<EOF
 #!/bin/bash -x
-cd openvidu-call/front/openvidu-call
+cd front/openvidu-call
 npm install
 ./node_modules/\@angular/cli/bin/ng build -c=ci --output-path=/workdir/web
 EOF
@@ -61,6 +61,7 @@ docker run \
   openvidu/openvidu-dev-node:10.x ./run.sh
 
 # Put the app inside the nginx container
+mkdir -p nginx
 openssl req -subj '/CN=localhost' -x509 -newkey rsa:4096 -nodes -keyout nginx/key.pem -out nginx/cert.pem -days 365
 
 cat >nginx/default.conf<<EOF
@@ -84,22 +85,22 @@ docker run \
   --rm \
   --name nginx-${DATESTAMP} \
   -p 443:443 \
-  -v ${PWD}/web:/usr/share/nginx/html \
-  -v ${PWD}/nginx:/etc/nginx/conf.d \
+  -v ${WORKSPACE}/web:/usr/share/nginx/html \
+  -v ${WORKSPACE}/nginx:/etc/nginx/conf.d \
   nginx
 
 APP_URL=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx-${DATESTAMP})
 
 until $(curl --insecure --output /dev/null --silent --head --fail https://${APP_URL}/)
 do
-  echo "Waiting for openvidu-server...";
+  echo "Waiting for nginx...";
   sleep 5;
 done
 
 # Run the test
 cat >run.sh<<EOF
 #!/bin/bash -x
-cd openvidu-call/front/openvidu-call/
+cd front/openvidu-call/
 npm install
 ./node_modules/protractor/bin/protractor ./e2e/protractor.conf.js --baseUrl=\${APP_URL}
 echo \$? > /workdir/res.out
@@ -112,7 +113,7 @@ docker run \
   --name openvidu-call-test-${DATESTAMP} \
   -e APP_URL=https://${APP_URL} \
   -e SELENIUM_URL=http://${SELENIUM_URL}:4444/wd/hub/ \
-  -v ${PWD}:/workdir \
+  -v ${WORKSPACE}:/workdir \
   -w /workdir \
   openvidu/openvidu-dev-node:10.x ./run.sh
 
