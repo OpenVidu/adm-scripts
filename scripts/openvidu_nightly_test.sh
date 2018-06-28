@@ -61,6 +61,12 @@ docker run \
   -p 4443:4443 \
   -e kms.uris=[\"ws://$KMS_IP:8888/kurento\"] \
   -e openvidu.publicurl=docker \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /opt/openvidu/recordings/:/opt/openvidu/recordings/ \
+  -e openvidu.recording=true \
+  -e MY_UID=$(id -u $USER) \
+  -e openvidu.recording.path=/opt/openvidu/recordings/ \
+  -e openvidu.recording.public-access=true \
   openvidu/openvidu-server:nightly-${DATESTAMP}
 
 # Get OpenVidu Docker IP
