@@ -117,7 +117,7 @@ case $OPENVIDU_PROJECT in
     npm-vbump.py 
     npm install
     rm ../../main/resources/static/*
-    ./node_modules/\@angular/cli/bin/ng build --output-path ./main/resources/static
+    ./node_modules/\@angular/cli/bin/ng build --output-path ../../main/resources/static
     ls -l ../../main/resources/static
     
     ;;
