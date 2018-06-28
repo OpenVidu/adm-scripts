@@ -32,6 +32,6 @@ unzip openvidu-testapp-latest.zip -d web
 docker build --no-cache --rm=true -t openvidu/testapp:nightly-${DATESTAMP} .
 
 # Upload the image
-#docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
-#docker push openvidu/testapp:nightly-${DATESTAMP} 
-#docker logout
+docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
+docker push openvidu/testapp:nightly-${DATESTAMP} 
+docker logout
