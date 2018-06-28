@@ -113,30 +113,33 @@ case $OPENVIDU_PROJECT in
   classroom-front)
 
     echo "## Building classroom-front"
+    echo $PWD
+    exit 0
+    BASEDIR=/var/lib/openvidu/workspace/Release/openvidu/classroom-release
     cd src/angular/frontend
     npm-vbump.py 
     npm install
-    rm ../../main/resources/static/*
-    ./node_modules/\@angular/cli/bin/ng build --output-path ../../main/resources/static
+    rm $BASEDIR/main/resources/static/*
+    ./node_modules/\@angular/cli/bin/ng build --output-path $BASEDIR/main/resources/static
     
     ;;
 
   classroom-back)
 
     echo "## Building classroom-back"
+    echo $PWD
+    exit 0
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
     mvn clean compile package -DskipTest=true || (echo "Failed compiling"; exit 1)
-
-    find
     
     # Github release: commit and push
-    # git add ./main/resources/static/*
-    # git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    # git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git add ./main/resources/static/*
+    git commit -a -m "Update to version v$OPENVIDU_VERSION"
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
-    # DESC="Release v$OPENVIDU_VERSION"
-    # openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    # openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file target/classroom-demo-${OPENVIDU_VERSION}.war || (echo "Failed to upload the archifact to Github"; exit 1)
+    DESC="Release v$OPENVIDU_VERSION"
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file target/classroom-demo-${OPENVIDU_VERSION}.war || (echo "Failed to upload the archifact to Github"; exit 1)
     ;;
 
   *)
