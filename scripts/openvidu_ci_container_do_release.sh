@@ -112,7 +112,7 @@ case $OPENVIDU_PROJECT in
 
   classroom-front)
 
-    echo "## Building openvidu-js-java"
+    echo "## Building classroom-front"
     cd src/angular/frontend
     npm-vbump.py 
     npm install
