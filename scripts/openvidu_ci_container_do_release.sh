@@ -97,8 +97,8 @@ case $OPENVIDU_PROJECT in
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
     mvn $MAVEN_OPTIONS clean compile package || (echo "Failed to compile openvidu-js-java"; exit 1)
     DESC=$(git log -1 --pretty=%B)
-    openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar --file target/openvidu-js-java-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the archifact"; exit 1)
+    openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar --file target/openvidu-js-java-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the archifact"; exit 1)
     popd
 
     echo "## Building openvidu-mvc-java"
@@ -106,7 +106,7 @@ case $OPENVIDU_PROJECT in
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
     mvn $MAVEN_OPTIONS clean compile package || (echo "Failed to compile openvidu-mvc-java"; exit 1)
     DESC=$(git log -1 --pretty=%B)
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
     popd
     ;;
 
