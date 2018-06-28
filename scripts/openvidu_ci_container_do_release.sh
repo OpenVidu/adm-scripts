@@ -114,11 +114,11 @@ case $OPENVIDU_PROJECT in
 
     echo "## Building classroom-front"
     cd src/angular/frontend
-    #npm-vbump.py 
-    #npm install
-    find
-    #./node_modules/\@angular/cli/bin/ng build --output-path ./main/resources/static
-    #ls -1 ./main/resources/static
+    npm-vbump.py 
+    npm install
+    ls -1 ../../main/resources/static
+    ./node_modules/\@angular/cli/bin/ng build --output-path ./main/resources/static
+    ls -1 ../../main/resources/static
     
     ;;
 
