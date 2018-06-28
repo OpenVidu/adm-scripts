@@ -16,6 +16,7 @@ case $OPENVIDU_PROJECT in
   openvidu)
     
     # Openvidu Browser
+    echo "## Building openvidu-browser"
     npm-version.py || (echo "Faile to bump packages.json versions"; exit 1)
     pushd openvidu-browser || exit 1
     
@@ -29,7 +30,9 @@ case $OPENVIDU_PROJECT in
     npm link || (echo "Failed to link npm"; exit 1)
     npm publish
     popd
+
     # Openvidu Server
+    echo "## Building openvidu Server"
     pushd openvidu-server/src/angular/frontend || exit 1
 
     npm install
@@ -54,7 +57,7 @@ case $OPENVIDU_PROJECT in
 
   openvidu-java-client)
 
-    echo "Building openvidu-java-client"
+    echo "## Building openvidu-java-client"
     pushd "$OPENVIDU_PROJECT"
     
     mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
@@ -71,7 +74,7 @@ case $OPENVIDU_PROJECT in
 
   openvidu-node-client)
 
-    echo "Building $OPENVIDU_PROJECT"
+    echo "## Building $OPENVIDU_PROJECT"
     pushd "$OPENVIDU_PROJECT"
     PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" package.json
@@ -89,7 +92,7 @@ case $OPENVIDU_PROJECT in
 
   openvidu-js-java|openvidu-mvc-java)
 
-    echo "Building openvidu-js-java"
+    echo "## Building openvidu-js-java"
     pushd openvidu-js-java
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
     mvn $MAVEN_OPTIONS clean compile package || (echo "Failed to compile openvidu-js-java"; exit 1)
@@ -98,13 +101,25 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar --file target/openvidu-js-java-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the archifact"; exit 1)
     popd
 
-    echo "Building openvidu-mvc-java"
+    echo "## Building openvidu-mvc-java"
     pushd openvidu-mvc-java
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
     mvn $MAVEN_OPTIONS clean compile package || (echo "Failed to compile openvidu-mvc-java"; exit 1)
     DESC=$(git log -1 --pretty=%B)
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
     popd
+    ;;
+
+  classroom-front)
+
+    echo "## Building openvidu-js-java"
+    cd src/angular/frontend
+    npm-vbump.py 
+    npm install
+    ls -1 ./main/resources/static
+    ./node_modules/\@angular/cli/bin/ng build --output-path ./main/resources/static
+    ls -1 ./main/resources/static
+    find
     ;;
 
   *)
