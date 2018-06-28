@@ -114,10 +114,10 @@ case $OPENVIDU_PROJECT in
 
     echo "## Building classroom-front"
     cd src/angular/frontend
-    npm-vbump.py 
-    npm install
-    rm /opt/main/resources/static/*
-    ./node_modules/\@angular/cli/bin/ng build --output-path /opt/main/resources/static
+    npm-vbump.py || (echo "Failed to bump version"; exit 1)
+    npm install || (echo "Failed to install dependencies"; exit 1)
+    rm /opt/src/main/resources/static/* || (echo "Cleaning"; exit 1)
+    ./node_modules/\@angular/cli/bin/ng build --output-path /opt/src/main/resources/static || (echo "Failed compiling"; exit 1)
     
     ;;
 
@@ -128,7 +128,7 @@ case $OPENVIDU_PROJECT in
     mvn clean compile package -DskipTest=true || (echo "Failed compiling"; exit 1)
     
     # Github release: commit and push
-    git add /opt/main/resources/static/*
+    git add /opt/src/main/resources/static/*
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
