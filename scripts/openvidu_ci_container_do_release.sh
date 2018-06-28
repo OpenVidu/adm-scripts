@@ -116,10 +116,19 @@ case $OPENVIDU_PROJECT in
     cd src/angular/frontend
     npm-vbump.py 
     npm install
-    ls -1 ../../main/resources/static
+    ls -l ../../main/resources/static
     ./node_modules/\@angular/cli/bin/ng build --output-path ./main/resources/static
-    ls -1 ../../main/resources/static
+    ls -l ../../main/resources/static
     
+    ;;
+
+  classroom-back)
+
+    echo "## Building classroom-back"
+    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
+    mvn clean compile package -DskipTest=true
+    cp -v target/classroom-demo-${OPENVIDU_VERSION}.war classroom-demo.war
+
     ;;
 
   *)
