@@ -1,10 +1,10 @@
 #!/bin/bash -x
-set -e
+set -eu -o pipefail
 
 echo "##################### EXECUTE: openvidu_ci_container_do_release #####################"
 
 # Verify mandatory parameters
-[ -z "$OPENVIDU_VERSION" ] && exit 1
+[ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
 [ -z "$GITHUB_TOKEN" ] && exit 1
 
 export PATH=$PATH:$ADM_SCRIPTS
