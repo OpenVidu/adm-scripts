@@ -137,6 +137,31 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file /opt/target/classroom-demo-${OPENVIDU_VERSION}.war || (echo "Failed to upload the archifact to Github"; exit 1)
     ;;
 
+  openvidu-call)
+
+    echo "## Building classroom-call"
+    [ -z "$OPENVIDU_CALL_VERSION" ] && exit 1
+    OPENVIDU_VERSION=$OPENVIDU_CALL_VERSION
+    popd front/openvidu-call || (echo "Failed to change folder"; exit 1)
+    npm-vbump || (echo "Failed to bump version"; exit 1)
+    npm install || exit 1
+    ./node_modules/\@angular/cli/bin/ng -v || exit 1
+    ./node_modules/\@angular/cli/bin/ng build --base-href=/ || exit 1
+
+    cd dist/openvidu-call
+    tar czf /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz *
+
+    # Github release: commit and push
+    #git commit -a -m "Update to version v$OPENVIDU_CALL_VERSION"
+    #git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+
+    DESC="Release v$OPENVIDU_CALL_VERSION"
+    #openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+    #openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload the archifact to Github"; exit 1)
+    
+    echo $OPENVIDU_REPO
+    ;;
+
   *)
     echo "No project specified"
     exit 1
