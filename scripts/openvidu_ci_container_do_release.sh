@@ -155,6 +155,11 @@ case $OPENVIDU_PROJECT in
     cd dist/openvidu-call
     tar czf /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz *
 
+    cd ../..
+    ./node_modules/\@angular/cli/bin/ng build --base-href=/openvidu-call/ || exit 1
+    cd dist/openvidu-call
+    tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *
+
     # Github release: commit and push
     git commit -a -m "Update to version v$OPENVIDU_CALL_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
@@ -162,6 +167,7 @@ case $OPENVIDU_PROJECT in
     DESC="Release v$OPENVIDU_CALL_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload the archifact to Github"; exit 1)
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload the archifact to Github"; exit 1)
     
     echo $OPENVIDU_REPO
     ;;
