@@ -4,7 +4,6 @@ set -eu -o pipefail
 echo "##################### EXECUTE: openvidu_ci_container_do_release #####################"
 
 # Verify mandatory parameters
-[ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
 [ -z "$GITHUB_TOKEN" ] && exit 1
 
 export PATH=$PATH:$ADM_SCRIPTS
@@ -16,6 +15,7 @@ case $OPENVIDU_PROJECT in
   openvidu)
     
     # Openvidu Browser
+    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     echo "## Building openvidu-browser"
     npm-version.py || (echo "Faile to bump packages.json versions"; exit 1)
     pushd openvidu-browser || exit 1
@@ -58,6 +58,7 @@ case $OPENVIDU_PROJECT in
   openvidu-java-client)
 
     echo "## Building openvidu-java-client"
+    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     pushd "$OPENVIDU_PROJECT"
     
     mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
@@ -75,6 +76,7 @@ case $OPENVIDU_PROJECT in
   openvidu-node-client)
 
     echo "## Building $OPENVIDU_PROJECT"
+    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     pushd "$OPENVIDU_PROJECT"
     PROJECT_VERSION=$(grep version package.json | cut -d ":" -f 2 | cut -d "\"" -f 2)
     sed -i "s/\"version\": \"$PROJECT_VERSION\",/\"version\": \"$OPENVIDU_VERSION\",/" package.json
@@ -93,6 +95,7 @@ case $OPENVIDU_PROJECT in
   openvidu-js-java|openvidu-mvc-java)
 
     echo "## Building openvidu-js-java"
+    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     pushd openvidu-js-java
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
     mvn $MAVEN_OPTIONS clean compile package || (echo "Failed to compile openvidu-js-java"; exit 1)
@@ -113,8 +116,9 @@ case $OPENVIDU_PROJECT in
   classroom-front)
 
     echo "## Building classroom-front"
+    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     cd src/angular/frontend
-    npm-vbump.py || (echo "Failed to bump version"; exit 1)
+    npm-vbump.py --envvar OV_VERSION || (echo "Failed to bump version"; exit 1)
     npm install || (echo "Failed to install dependencies"; exit 1)
     rm /opt/src/main/resources/static/* || (echo "Cleaning"; exit 1)
     ./node_modules/\@angular/cli/bin/ng build --output-path /opt/src/main/resources/static || (echo "Failed compiling"; exit 1)
@@ -124,6 +128,7 @@ case $OPENVIDU_PROJECT in
   classroom-back)
 
     echo "## Building classroom-back"
+    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
     mvn clean compile package -DskipTest=true || (echo "Failed compiling"; exit 1)
     
@@ -141,9 +146,8 @@ case $OPENVIDU_PROJECT in
 
     echo "## Building classroom-call"
     [ -z "$OPENVIDU_CALL_VERSION" ] && exit 1
-    OPENVIDU_VERSION=$OPENVIDU_CALL_VERSION
     popd front/openvidu-call || (echo "Failed to change folder"; exit 1)
-    npm-vbump || (echo "Failed to bump version"; exit 1)
+    npm-vbump.py --envvar OVC_VERSION || (echo "Failed to bump version"; exit 1)
     npm install || exit 1
     ./node_modules/\@angular/cli/bin/ng -v || exit 1
     ./node_modules/\@angular/cli/bin/ng build --base-href=/ || exit 1
