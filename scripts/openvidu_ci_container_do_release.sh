@@ -144,7 +144,7 @@ case $OPENVIDU_PROJECT in
 
   openvidu-call)
 
-    echo "## Building classroom-call"
+    echo "## Building openvidu-call"
     [ -z "$OPENVIDU_CALL_VERSION" ] && exit 1
     pushd front/openvidu-call || (echo "Failed to change folder"; exit 1)
     npm-vbump.py --envvar OPENVIDU_CALL_VERSION || (echo "Failed to bump version"; exit 1)
