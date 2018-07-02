@@ -21,8 +21,8 @@ def main():
 
 	parser.add_argument("--envvar",
 		                metavar = "envvar",
-		                help = "OV_VERSION or OVC_VERSION",
-		                default = "OV_VERSION")
+		                help = "OPENVIDU_VERSION or OPENVIDU_CALL_VERSION",
+		                default = "OPENVIDU_VERSION")
 
 	args = parser.parse_args()
 
