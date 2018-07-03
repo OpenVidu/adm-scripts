@@ -48,7 +48,7 @@ EOF
 
 aws cloudformation create-stack \
   --stack-name Openvidu-${DOMAIN_NAME} \
-  --template-url https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-latest.json \
+  --template-url https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-dev.json \
   --parameters file:///$TEMPJSON \
   --disable-rollback
 
