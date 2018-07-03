@@ -43,7 +43,7 @@ TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
 
 cat > $TEMPJSON<<EOF
   [
-    { "ParameterKey": "KeyName","ParameterValue":"kms-aws-share-key" },
+    {"ParameterKey": "KeyName","ParameterValue":"kms-aws-share-key" },
     {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.k8s.codeurjc.es"},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"owncert"},
@@ -54,7 +54,10 @@ cat > $TEMPJSON<<EOF
   ]
 EOF
 
-aws cloudformation create-stack   --stack-name Openvidu-${DOMAIN_NAME}   --template-url https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-Demos-latest.json   --parameters file:///$TEMPJSON
+aws cloudformation create-stack \
+  --stack-name Openvidu-${DOMAIN_NAME} \
+  --template-url https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-Demos-latest.json \
+  --parameters file:///$TEMPJSON
 
 aws cloudformation wait stack-create-complete --stack-name Openvidu-${DOMAIN_NAME}
 

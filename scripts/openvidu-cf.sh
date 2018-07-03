@@ -2,11 +2,25 @@
 set -eu -o pipefail
 
 DATESTAMP=$(date +%s)
+TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
+
+cat > $TEMPJSON<<EOF
+  [
+    {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
+    {"ParameterKey":"WantToSendInfo","ParameterValue":"false"},
+    {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
+    {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
+    {"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},
+    {"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},
+    {"ParameterKey":"MyDomainName","ParameterValue":"Nil"}
+  ]
+EOF
 
 aws cloudformation create-stack \
   --stack-name Openvidu-${DATESTAMP} \
   --template-url https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-latest.json \
-  --parameters '[{"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},{"ParameterKey":"WantToSendInfo","ParameterValue":"false"},{"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},{"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},{"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},{"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},{"ParameterKey":"MyDomainName","ParameterValue":"Nil"}]' 
+  --parameters file:///$TEMPJSON \
+  --disable-rollback
 
 aws cloudformation wait stack-create-complete --stack-name Openvidu-${DATESTAMP}
 
@@ -17,6 +31,8 @@ RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --s
 
 # Cleaning up
 aws cloudformation delete-stack --stack-name Openvidu-${DATESTAMP}
+
+rm $TEMPJSON
 
 if [ $RES == 200 ]; then
 	exit 0
