@@ -92,7 +92,8 @@ case $OPENVIDU_PROJECT in
     popd
     ;;
 
-  openvidu-js-java|openvidu-mvc-java)
+  # OpenVidu Tutorials
+  tutorials)
 
     echo "## Building openvidu-js-java"
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
