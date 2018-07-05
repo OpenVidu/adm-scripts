@@ -1,12 +1,9 @@
-#!/bin/bash -xe
+#!/bin/bash -x
+set -eu -o pipefail
 
 echo "##################### EXECUTE: openvidu_download_release #####################"
 
-[ -z "$RELEASE" ] && exit 1
-[ -z "$RELEASE_URL" ] && exit 1
+wget -O openvidu-server.jar https://github.com/OpenVidu/openvidu/releases/download/v$1/openvidu-server-$1.jar
 
-DOWNLOAD_URL=$(curl -s $RELEASE_URL | grep browser_download_url | cut -d '"' -f 4 | grep $RELEASE)
-
-curl -L -o $OUTPUT $DOWNLOAD_URL
 
 
