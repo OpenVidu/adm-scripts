@@ -162,7 +162,7 @@ case $OPENVIDU_PROJECT in
     tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *
 
     # Github release: commit and push
-    git commit -m "Update to version v$OPENVIDU_CALL_VERSION" packages.json
+    git commit -m "Update to version v$OPENVIDU_CALL_VERSION" package.json
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
     DESC="Release v$OPENVIDU_CALL_VERSION"
