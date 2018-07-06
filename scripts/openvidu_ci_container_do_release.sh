@@ -157,6 +157,7 @@ case $OPENVIDU_PROJECT in
     tar czf /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz *
 
     cd ../..
+    rm -rf dist/openvidu-call
     ./node_modules/\@angular/cli/bin/ng build --base-href=/openvidu-call/ || exit 1
     cd dist/openvidu-call
     tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *
