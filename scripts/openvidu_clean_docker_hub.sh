@@ -1,6 +1,18 @@
 #!/bin/bash  
 set -eu -o pipefail
 
+# This script is intended to remove old tags
+# in Docker Hub. Right now, older than 7 days
+#
+# Basically, get the token from Docker Hub using
+# your credentials, then lock up for nightly tag
+# and remove those ones older than seven days. 
+#
+# It knows the date because we tag our nightly repo
+# in this way:
+#
+# openvidu/openvidu-server:nightly-20180101
+
 DOCKER_HUB_USERNAME=${DH_UNAME}
 DOCKER_HUB_PASSWORD=${DH_UPASS}
 DOCKER_HUB_ORGANIZATION=${DH_ORG}
