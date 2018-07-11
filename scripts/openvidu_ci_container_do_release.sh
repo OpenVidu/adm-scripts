@@ -17,9 +17,10 @@ case $OPENVIDU_PROJECT in
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     echo "## Building openvidu-browser"
+    npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
     pushd openvidu-browser || exit 1
     npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Faile to bump package.json version"; exit 1)
-    
+
     rm static/js/*
 
     npm install
