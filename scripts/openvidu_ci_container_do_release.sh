@@ -29,7 +29,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || (echo "Failed to link npm"; exit 1)
-    npm publish
+    # npm publish
     popd
 
     # Openvidu Server
@@ -45,6 +45,7 @@ case $OPENVIDU_PROJECT in
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
+    git add openvidu-server/src/main/resources/static/*
     git add openvidu-browser/static/js/*
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
