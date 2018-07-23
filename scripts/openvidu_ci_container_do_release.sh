@@ -17,9 +17,9 @@ case $OPENVIDU_PROJECT in
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     echo "## Building openvidu-browser"
-    npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
+    # npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
     pushd openvidu-browser || exit 1
-    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Faile to bump package.json version"; exit 1)
+    # npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Faile to bump package.json version"; exit 1)
 
     rm static/js/*
 
@@ -41,7 +41,7 @@ case $OPENVIDU_PROJECT in
     ng build --prod --output-path ../../main/resources/static || (echo "Failed to compile frontend"; exit 1)
     popd
 
-    pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
+    # pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
