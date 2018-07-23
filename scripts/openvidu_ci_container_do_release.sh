@@ -45,11 +45,11 @@ case $OPENVIDU_PROJECT in
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
-    git add openvidu-server/src/main/resources/static/*
-    git add openvidu-browser/static/js/*
-    git add openvidu-browser/lib/*
-    git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    # git add openvidu-server/src/main/resources/static/*
+    # git add openvidu-browser/static/js/*
+    # git add openvidu-browser/lib/*
+    # git commit -a -m "Update to version v$OPENVIDU_VERSION"
+    # git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
