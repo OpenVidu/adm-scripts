@@ -17,9 +17,9 @@ case $OPENVIDU_PROJECT in
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     echo "## Building openvidu-browser"
-    # npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
+    npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
     pushd openvidu-browser || exit 1
-    # npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Faile to bump package.json version"; exit 1)
+    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Faile to bump package.json version"; exit 1)
 
     rm static/js/*
 
@@ -29,7 +29,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || (echo "Failed to link npm"; exit 1)
-    # npm publish
+    npm publish
     popd
 
     # Openvidu Server
@@ -41,15 +41,15 @@ case $OPENVIDU_PROJECT in
     ng build --prod --output-path ../../main/resources/static || (echo "Failed to compile frontend"; exit 1)
     popd
 
-    # pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
+    pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
-    # git add openvidu-server/src/main/resources/static/*
-    # git add openvidu-browser/static/js/*
-    # git add openvidu-browser/lib/*
-    # git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    # git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git add openvidu-server/src/main/resources/static/*
+    git add openvidu-browser/static/js/*
+    git add openvidu-browser/lib/*
+    git commit -a -m "Update to version v$OPENVIDU_VERSION"
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
