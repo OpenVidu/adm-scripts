@@ -124,7 +124,7 @@ case $OPENVIDU_PROJECT in
     npm-vbump.py --envvar OV_VERSION || (echo "Failed to bump version"; exit 1)
     npm install || (echo "Failed to install dependencies"; exit 1)
     rm /opt/src/main/resources/static/* || (echo "Cleaning"; exit 1)
-    ./node_modules/\@angular/cli/bin/ng build --output-path /opt/src/main/resources/static || (echo "Failed compiling"; exit 1)
+    ./node_modules/\@angular/cli/bin/ng build --prod --output-path /opt/src/main/resources/static || (echo "Failed compiling"; exit 1)
     
     ;;
 
