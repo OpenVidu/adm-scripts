@@ -121,7 +121,7 @@ case $OPENVIDU_PROJECT in
     echo "## Building classroom-front"
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     cd src/angular/frontend
-    npm-vbump.py --envvar OV_VERSION || (echo "Failed to bump version"; exit 1)
+    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump version"; exit 1)
     npm install || (echo "Failed to install dependencies"; exit 1)
     rm /opt/src/main/resources/static/* || (echo "Cleaning"; exit 1)
     ./node_modules/\@angular/cli/bin/ng build --prod --output-path /opt/src/main/resources/static || (echo "Failed compiling"; exit 1)
