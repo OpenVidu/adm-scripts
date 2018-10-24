@@ -178,6 +178,7 @@ case $OPENVIDU_PROJECT in
 
   openvidu-pro)
 
+    [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
     git clone https://github.com/OpenVidu/openvidu.git
 
     pushd openvidu
