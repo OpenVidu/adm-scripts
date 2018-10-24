@@ -177,6 +177,7 @@ case $OPENVIDU_PROJECT in
     ;;
 
   openvidu-pro)
+
     git clone https://github.com/OpenVidu/openvidu.git
 
     pushd openvidu
@@ -201,7 +202,7 @@ case $OPENVIDU_PROJECT in
     popd
 
     pushd openvidu-server-pro
-    pom-vbump.py -i -v "$OPENVIDU_PRO_VERSION" pom.xml || { echo "Failed to bump openvidu-server version"; exit 1 }
+    pom-vbump.py -i -v "$OPENVIDU_PRO_VERSION" pom.xml || { echo "Failed to bump openvidu-server version"; exit 1; }
     mvn clean  || { echo "openvidu-server-pro -> clean"; exit 1; }
     mvn compile || { echo "openvidu-server-pro -> compile"; exit 1; }
     mvn package || { echo "openvidu-server-pro -> package"; exit 1; }
