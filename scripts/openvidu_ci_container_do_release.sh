@@ -176,6 +176,44 @@ case $OPENVIDU_PROJECT in
     
     ;;
 
+  openvidu-pro)
+    git clone https://github.com/OpenVidu/openvidu.git
+
+    pushd openvidu
+    mvn -DskipTests=true compile || { echo "openvidu -> compile"; exit 1; }
+    mvn -DskipTests=true install || { echo "openvidu -> install"; exit 1; }
+    popd
+
+    pushd openvidu/openvidu-node-client
+    npm install || { echo "openvidu-node-client -> install"; exit 1; }
+    npm run build || { echo "openvidu-node-client -> build"; exit 1; }
+    npm link || { echo "openvidu-node-client -> link"; exit 1; }
+    popd
+     
+    pushd openvidu/openvidu-server
+    mvn -Pdependency install || { echo "openvidu-server -> install dependency"; exit 1; }
+    popd
+
+    pushd dashboard
+    npm install || { echo "dashboard -> install "; exit 1; }
+    npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
+    ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../openvidu-server-pro/src/main/resources/static || { echo "dashboard -> build for prod"; exit 1; }
+    popd
+
+    pushd openvidu-server-pro
+    pom-vbump.py -i -v "$OPENVIDU_VERSION" pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
+    mvn clean  || { echo "openvidu-server-pro -> clean"; exit 1; }
+    mvn compile || { echo "openvidu-server-pro -> compile"; exit 1; }
+    mvn package || { echo "openvidu-server-pro -> package"; exit 1; }
+    popd
+
+    pushd openvidu-server-pro/target
+    aws s3 cp openvidu-server-pro-*.jar s3://openvidu-pro/openvidu-server-pro-latest.jar
+    aws s3 cp openvidu-server-pro-*.jar s3://openvidu-pro/
+    popd
+
+    ;;
+
   *)
     echo "No project specified"
     exit 1
