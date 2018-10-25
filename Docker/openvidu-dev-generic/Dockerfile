@@ -2,7 +2,18 @@ FROM ubuntu:16.04
 MAINTAINER nordri@gmail.com
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y git curl jq python python-pip pwgen lsb-release maven awscli openjdk-8-jdk
+    && apt-get install --no-install-recommends -y \
+    git \
+    curl \
+    jq \
+    python \
+    python-pip \
+    pwgen \
+    lsb-release \
+    maven \
+    awscli \
+    openjdk-8-jdk \
+    python-lxml
 
 # Installing nodejs
 RUN curl -sLk https://deb.nodesource.com/setup_8.x | bash - && \
