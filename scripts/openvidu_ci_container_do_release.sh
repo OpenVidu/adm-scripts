@@ -222,9 +222,10 @@ case $OPENVIDU_PROJECT in
 
     # Publish openvidu-react library
     cd ../library
-    npm publish|| (echo "Failed to publish openvidu-react library"; exit 1)
+    npm publish || (echo "Failed to publish openvidu-react library"; exit 1)
 
     # Github commit and push
+    cd ..
     git commit -a -m "Update to version v$OPENVIDU_REACT_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
