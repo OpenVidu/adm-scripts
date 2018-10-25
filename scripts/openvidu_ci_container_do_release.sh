@@ -149,9 +149,15 @@ case $OPENVIDU_PROJECT in
 
     echo "## Building openvidu-call"
     [ -z "$OPENVIDU_CALL_VERSION" ] && exit 1
+
+    # Update npm dependencies
     npm-update-dep-call.py || (echo "Faile to update dependencies/bump version"; exit 1)
     pushd front/openvidu-call || (echo "Failed to change folder"; exit 1)
+
+    # Install npm dependencies
     npm install || exit 1
+
+    # openvidu-call production build
     ./node_modules/\@angular/cli/bin/ng -v || exit 1
     ./node_modules/\@angular/cli/bin/ng build --prod --base-href=/ || exit 1
 
@@ -192,6 +198,35 @@ case $OPENVIDU_PROJECT in
     
     # OpenVidu/openvidu repo (OpenVidu Web Component)
     openvidu_github_release.go upload  --user openvidu --repo "openvidu" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip --file /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip || (echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1)
+
+    ;;
+
+  openvidu-react)
+
+    #### git clone https://github.com/OpenVidu/openvidu-call-react.git
+    echo "## Building openvidu-react"
+    [ -z "$OPENVIDU_REACT_VERSION" ] && exit 1
+
+    # Update npm dependencies
+    npm-update-dep-call-react.py || (echo "Faile to update dependencies/bump version"; exit 1)
+
+    # Install npm dependencies
+    cd openvidu-call-react || (echo "Failed to change folder"; exit 1)
+    npm install || (echo "Failed to install dependencies in openvidu-call-react"; exit 1)
+    cd ../library
+    npm install || (echo "Failed to install dependencies in openvidu-react library"; exit 1)
+
+    # Build openvidu-react library
+    cd ../openvidu-call-react
+    npm run build:openvidu-react || (echo "Failed to build openvidu-react library"; exit 1)
+
+    # Publish openvidu-react library
+    cd ../library
+    npm publish|| (echo "Failed to publish openvidu-react library"; exit 1)
+
+    # Github commit and push
+    git commit -a -m "Update to version v$OPENVIDU_REACT_VERSION"
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
     ;;
 
