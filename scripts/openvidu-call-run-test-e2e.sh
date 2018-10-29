@@ -11,7 +11,7 @@ docker run \
   -p 4444:4444 \
   -p 5900:5900 \
   --shm-size=1g \
-  selenium/standalone-chrome-debug:latest
+  elastestbrowsers/firefox:latest-2.0.0
 
 SELENIUM_URL=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' chrome-${DATESTAMP})
 
