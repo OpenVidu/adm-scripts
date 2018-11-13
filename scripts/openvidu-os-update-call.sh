@@ -23,7 +23,7 @@ rm -rf /var/www/html/*
 
 # Deploying
 tar zxf /home/ubuntu/openvidu-call.tar.gz -C /var/www/html
-chmod -R www-data.www-data /var/www/html
+chown -R www-data.www-data /var/www/html
 rm /home/ubuntu/openvidu-call.tar.gz
 
 # Starting services
