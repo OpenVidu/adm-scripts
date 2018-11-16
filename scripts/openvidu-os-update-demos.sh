@@ -69,8 +69,8 @@ cp -rav web-demos-openvidu/* $TARGETDIR/
 systemctl start nginx
 systemctl start kurento-media-server
 supervisorctl start openvidu-server
-supervisorctl stop js-java
-supervisorctl stop classroom-demo
+supervisorctl start js-java
+supervisorctl start classroom-demo
 
 # Cleaning the house
 rm -rf $WORKDIR
