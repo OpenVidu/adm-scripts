@@ -13,8 +13,15 @@ RUN apt-get update \
     maven \
     awscli \
     openjdk-8-jdk \
-    python-lxml
+    python-lxml \
+    openssh-client
 
 # Installing nodejs
 RUN curl -sLk https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get install -y nodejs
+
+# Cleaning the house
+RUN apt-get clean && \
+    apt-get autoclean && \
+    rm -Rf /tmp/* && \
+    rm -Rf /var/lib/apt/lists/*
