@@ -22,6 +22,7 @@ docker run \
   --name kms-ov-ovc-${DATESTAMP} \
   -p 4200:4200 \
   -p 4443:4443 \
+  -p 8888:8888 \
   -e OV_PROFILE=docker \
   -e OV_PUBLIC_URL=docker \
   openvidu/openvidu-call

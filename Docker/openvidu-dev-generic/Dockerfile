@@ -6,6 +6,7 @@ RUN apt-get update \
     git \
     curl \
     jq \
+    zip \
     python \
     python-pip \
     pwgen \
