@@ -158,7 +158,7 @@ case $OPENVIDU_PROJECT in
     npm install || exit 1
 
     # openvidu-call production build
-    ./node_modules/\@angular/cli/bin/ng -v || exit 1
+    ./node_modules/\@angular/cli/bin/ng version || exit 1
     ./node_modules/\@angular/cli/bin/ng build --prod || exit 1
 
     # OpenVidu Web Component build and package
