@@ -13,6 +13,8 @@ OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1
 case $OPENVIDU_PROJECT in
 
   openvidu)
+  
+    npm -g install @angular/cli
     
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
