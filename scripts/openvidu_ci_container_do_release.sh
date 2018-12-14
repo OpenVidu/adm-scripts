@@ -180,7 +180,7 @@ case $OPENVIDU_PROJECT in
 
     # Github release: commit and push
     cd ../..
-    git commit -m "Update to version v$OPENVIDU_CALL_VERSION" package.json
+    git commit -a -m "Update to version v$OPENVIDU_CALL_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
     # OpenVidu/openvidu-call repo
