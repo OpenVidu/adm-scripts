@@ -13,9 +13,7 @@ OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1
 case $OPENVIDU_PROJECT in
 
   openvidu)
-  
-    npm -g install @angular/cli
-    
+
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     echo "## Building openvidu-browser"
@@ -31,7 +29,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || (echo "Failed to link npm"; exit 1)
-    # npm publish || (echo "Failed to publish to npm"; exit 1)
+    npm publish || (echo "Failed to publish to npm"; exit 1)
     popd
 
     # Openvidu Server
@@ -40,7 +38,7 @@ case $OPENVIDU_PROJECT in
 
     npm install
     npm link openvidu-browser 
-    ng build --prod --output-path ../../main/resources/static || (echo "Failed to compile frontend"; exit 1)
+    ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../../main/resources/static || (echo "Failed to compile frontend"; exit 1)
     popd
 
     pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
