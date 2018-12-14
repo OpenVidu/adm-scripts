@@ -200,7 +200,7 @@ case $OPENVIDU_PROJECT in
     [ -z "$OPENVIDU_REACT_VERSION" ] && exit 1
 
     # Update npm dependencies
-    npm-update-dep-call-react.py || (echo "Faile to update dependencies/bump version"; exit 1)
+    npm-update-dep-call-react.py || (echo "Failed to update dependencies/bump version"; exit 1)
 
     # Install npm dependencies
     cd openvidu-call-react || (echo "Failed to change folder"; exit 1)
