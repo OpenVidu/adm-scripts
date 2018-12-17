@@ -183,7 +183,7 @@ case $OPENVIDU_PROJECT in
 
     # npm release openvidu-angular
     cd ../openvidu-angular
-    # npm publish || (echo "Failed to publish openvidu-angular to npm"; exit 1)
+    npm publish || (echo "Failed to publish openvidu-angular to npm"; exit 1)
 
     # Github release: commit and push
     cd ../..
