@@ -13,9 +13,26 @@ aws s3 cp s3://openvidu-pro/openvidu-server-pro-latest.jar /opt/openvidu/openvid
 
 # Check if KMS is up to date
 if ! grep -q ${KMS_VERSION} /etc/apt/sources.list.d/kurento.list; then
+	
+	# Purge KMS
+	for pkg in \
+		'^(kms|kurento).*' \
+		ffmpeg \
+		'^gir1.2-gst.*1.5' \
+		'^(lib)?gstreamer.*1.5.*' \
+		'^lib(nice|s3-2|srtp|usrsctp).*' \
+		'^srtp-.*' \
+		'^openh264(-gst-plugins-bad-1.5)?' \
+		'^openwebrtc-gst-plugins.*' \
+		'^libboost-?(filesystem|log|program-options|regex|system|test|thread)?-dev' \
+		'^lib(glib2.0|glibmm-2.4|opencv|sigc++-2.0|soup2.4|ssl|tesseract|vpx)-dev' \
+		uuid-dev
+	do apt-get -y purge --auto-remove $pkg ; done
+	
+	# Install newer version of KMS
 	echo "deb [arch=amd64] http://ubuntu.openvidu.io/${KMS_VERSION} xenial kms6" > /etc/apt/sources.list.d/kurento.list
 	apt-get update
-	apt-get install --only-upgrade -y kurento-media-server
+	apt-get install -y kurento-media-server
 fi
 
 # Removing old version OpenVidu Call
