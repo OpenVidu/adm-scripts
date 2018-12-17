@@ -10,10 +10,9 @@ openssl req -subj '/CN=localhost' -x509 -newkey rsa:4096 -nodes -keyout nginx/ke
 
 cat >nginx/default.conf<<EOF
 server {
-    listen       443;
+    listen       443 ssl;
     server_name  localhost;
 
-    ssl on;
     ssl_certificate /etc/nginx/conf.d/cert.pem;
     ssl_certificate_key /etc/nginx/conf.d/key.pem;
 
