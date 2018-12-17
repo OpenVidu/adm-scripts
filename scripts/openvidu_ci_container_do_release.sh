@@ -173,6 +173,13 @@ case $OPENVIDU_PROJECT in
     # openvidu-call package
     cd dist/openvidu-call
     tar czf /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz *
+    
+    # openvidu-call-demos build and package	
+    cd ../..	
+    rm -rf dist/openvidu-call	
+    ./node_modules/\@angular/cli/bin/ng build --prod --base-href=/openvidu-call/ || exit 1	
+    cd dist/openvidu-call	
+    tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *	
 
     # npm release openvidu-angular
     cd ../openvidu-angular
@@ -187,6 +194,7 @@ case $OPENVIDU_PROJECT in
     DESC="Release v$OPENVIDU_CALL_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call artifact to Github"; exit 1)
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call-demos artifact to Github"; exit 1)
     
     # OpenVidu/openvidu repo (OpenVidu Web Component)
     openvidu_github_release.go upload  --user openvidu --repo "openvidu" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip --file /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip || (echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1)
