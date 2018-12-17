@@ -75,7 +75,7 @@ mkdir -p $TARGETDIR/openvidu-call
 rm -rf $TARGETDIR/openvidu-call/* || true
 wget https://github.com/OpenVidu/openvidu-call/releases/download/v${OVC_RELEASE}/openvidu-call-${OVC_RELEASE}.tar.gz -O $WORKDIR/ovc.tar.gz
 tar zxf $WORKDIR/ovc.tar.gz -C $TARGETDIR/openvidu-call
-cp ~/OpenViduCall-demos-config-file.json $TARGETDIR/openvidu-call
+cp ~/OpenViduCall-demos-config-file.json $TARGETDIR/openvidu-call/ov-settings.json
 
 # Web Page
 git clone https://github.com/OpenVidu/openvidu-cloud-devops
