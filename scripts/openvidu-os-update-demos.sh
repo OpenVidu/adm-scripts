@@ -41,6 +41,13 @@ if ! grep -q ${KMS_VERSION} /etc/apt/sources.list.d/kurento.list; then
 	apt-get install -y kurento-media-server
 fi
 
+# Configuring Media Server
+MY_IP=$(curl ifconfig.co)
+cat >/etc/kurento/modules/kurento/WebRtcEndpoint.conf.ini<<EOF
+stunServerAddress=${MY_IP}
+stunServerPort=3478
+EOF
+
 ## Common tasks
 # clone the repos
 cd $WORKDIR
