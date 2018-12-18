@@ -42,6 +42,7 @@ rm -rf /var/www/html/*
 tar zxf /home/ubuntu/openvidu-call.tar.gz -C /var/www/html
 chown -R www-data.www-data /var/www/html
 rm /home/ubuntu/openvidu-call.tar.gz
+cp ~/OpenViduCall-demos-config-file.json /var/www/html/ov_credentials.json
 
 # Starting services
 systemctl start kurento-media-server
