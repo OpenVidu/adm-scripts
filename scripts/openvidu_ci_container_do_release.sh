@@ -47,7 +47,6 @@ case $OPENVIDU_PROJECT in
     # Github release: commit and push
     git add openvidu-server/src/main/resources/static/*
     git add openvidu-browser/static/js/*
-    git add openvidu-browser/lib/*
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
