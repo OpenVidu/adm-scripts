@@ -167,7 +167,7 @@ case $OPENVIDU_PROJECT in
 
     # OpenVidu Web Component build and package
     echo "## Building openvidu WebComponent"
-    npm run build:openvidu-webcomponent -- $OPENVIDU_CALL_VERSION
+    npm run build:openvidu-webcomponent
     zip -r --junk-paths /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip openvidu-webcomponent
 
     # openvidu-angular build
