@@ -255,7 +255,13 @@ case $OPENVIDU_PROJECT in
     npm run build || { echo "openvidu-node-client -> build"; exit 1; }
     npm link || { echo "openvidu-node-client -> link"; exit 1; }
     popd
-     
+
+    pushd openvidu/openvidu-browser
+    npm install || { echo "openvidu-browser -> install"; exit 1; }
+    npm run build || { echo "openvidu-browser -> build"; exit 1; }
+    npm link || { echo "openvidu-browser -> link"; exit 1; }
+    popd
+
     pushd openvidu/openvidu-server
     mvn -Pdependency install || { echo "openvidu-server -> install dependency"; exit 1; }
     popd
@@ -263,6 +269,7 @@ case $OPENVIDU_PROJECT in
     pushd dashboard
     npm install || { echo "dashboard -> install "; exit 1; }
     npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
+    npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
     ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../openvidu-server-pro/src/main/resources/static || { echo "dashboard -> build for prod"; exit 1; }
     popd
 
