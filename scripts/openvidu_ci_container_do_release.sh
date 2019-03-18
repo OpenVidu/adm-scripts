@@ -47,7 +47,6 @@ case $OPENVIDU_PROJECT in
     # Github release: commit and push
     git add openvidu-server/src/main/resources/static/*
     git add openvidu-browser/static/js/*
-    git add openvidu-browser/lib/*
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
@@ -56,6 +55,7 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the artifact to Github"; exit 1)
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || (echo "Failed to upload the artifact to Github"; exit 1)
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || (echo "Failed to upload the artifact to Github"; exit 1)
+    
     ;;
 
   openvidu-java-client)
@@ -74,6 +74,7 @@ case $OPENVIDU_PROJECT in
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
     
     popd
+    
     ;;
 
   openvidu-node-client)
@@ -92,6 +93,7 @@ case $OPENVIDU_PROJECT in
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
     
     popd
+    
     ;;
 
   # OpenVidu Tutorials
@@ -114,6 +116,7 @@ case $OPENVIDU_PROJECT in
     DESC=$(git log -1 --pretty=%B)
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
     popd
+    
     ;;
 
   classroom-front)
@@ -143,6 +146,7 @@ case $OPENVIDU_PROJECT in
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file /opt/target/classroom-demo-${OPENVIDU_VERSION}.war || (echo "Failed to upload the artifact to Github"; exit 1)
+    
     ;;
 
   openvidu-call)
@@ -163,7 +167,7 @@ case $OPENVIDU_PROJECT in
 
     # OpenVidu Web Component build and package
     echo "## Building openvidu WebComponent"
-    npm run build:openvidu-webcomponent -- $OPENVIDU_CALL_VERSION
+    npm run build:openvidu-webcomponent
     zip -r --junk-paths /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip openvidu-webcomponent
 
     # openvidu-angular build
@@ -251,7 +255,13 @@ case $OPENVIDU_PROJECT in
     npm run build || { echo "openvidu-node-client -> build"; exit 1; }
     npm link || { echo "openvidu-node-client -> link"; exit 1; }
     popd
-     
+
+    pushd openvidu/openvidu-browser
+    npm install || { echo "openvidu-browser -> install"; exit 1; }
+    npm run build || { echo "openvidu-browser -> build"; exit 1; }
+    npm link || { echo "openvidu-browser -> link"; exit 1; }
+    popd
+
     pushd openvidu/openvidu-server
     mvn -Pdependency install || { echo "openvidu-server -> install dependency"; exit 1; }
     popd
@@ -259,6 +269,7 @@ case $OPENVIDU_PROJECT in
     pushd dashboard
     npm install || { echo "dashboard -> install "; exit 1; }
     npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
+    npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
     ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../openvidu-server-pro/src/main/resources/static || { echo "dashboard -> build for prod"; exit 1; }
     popd
 
