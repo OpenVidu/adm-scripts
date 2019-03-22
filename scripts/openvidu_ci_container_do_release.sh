@@ -275,9 +275,7 @@ case $OPENVIDU_PROJECT in
 
     pushd openvidu-server-pro
     mvn versions:set -DnewVersion="$OPENVIDU_PRO_VERSION" || { echo "Failed to bump openvidu-pro version"; exit 1; }
-    mvn clean  || { echo "openvidu-server-pro -> clean"; exit 1; }
-    mvn compile || { echo "openvidu-server-pro -> compile"; exit 1; }
-    mvn package || { echo "openvidu-server-pro -> package"; exit 1; }
+    mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
     pushd openvidu-server-pro/target
