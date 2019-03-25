@@ -76,6 +76,25 @@ case $OPENVIDU_PROJECT in
     popd
     
     ;;
+    
+  openvidu-test-browsers)
+
+    echo "## Building openvidu-test-browsers"
+    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    pushd "$OPENVIDU_PROJECT"
+    
+    mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
+    
+    # Github release: commit and push
+    git add pom.xml
+    git commit -a -m "Update openvidu-test-browsers to version v$OPENVIDU_VERSION"
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    
+    popd
+    
+    ;;
 
   openvidu-node-client)
 
