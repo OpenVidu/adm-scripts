@@ -1,13 +1,29 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
+if [ -z "$OV_NEW_VERSION" ]; then
+	echo "ERROR: variable OV_NEW_VERSION is not defined. You must call \"export OV_NEW_VERSION=2.8.0\" before running the script (use the desired version number)"
+	exit 1
+fi
+
+case $OV_NEW_VERSION in
+	2.6.0|2.7.0|2.8.0)
+		echo "Updating to OpenVidu $OV_NEW_VERSION" ;;
+	*)
+		echo "ERROR: variable OV_NEW_VERSION must be one of these values: [\"2.6.0\", \"2.7.0\", \"2.8.0\"]"
+		exit 1 ;;
+esac
+
 DISTRO=$(lsb_release -c | awk '{ print $2 }')
+
+declare -A OV_KMS_VERSION_COMPATIBILITY=(["2.6.0"]="6.8.0" ["2.7.0"]="6.8.1" ["2.8.0"]="6.9.0")
 
 # Find kurento source file
 pushd /etc/apt/sources.list.d
 
 KURENTO_APT_FILE=$(find | grep openvidu)
 KURENTO_CURRENT_VERSION=$(cat $KURENTO_APT_FILE | cut -d"/" -f4 | awk '{ print $1 }' )
+KURENTO_NEW_VERSION=${OV_KMS_VERSION_COMPATIBILITY[${OV_NEW_VERSION}]}
 
 if [ "${KURENTO_CURRENT_VERSION}" != "${KURENTO_NEW_VERSION}" ]; then
 
