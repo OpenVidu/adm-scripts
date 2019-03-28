@@ -13,7 +13,7 @@ if [[ -n ${OV_KMS_VERSION_COMPATIBILITY[$OV_NEW_VERSION]} ]]; then
 else
 	echo "ERROR: variable OV_NEW_VERSION must be one of the following values"
 	for key in "${!OV_KMS_VERSION_COMPATIBILITY[@]}"; do
-    	echo "$key"
+    		echo "$key"
 	done
 	exit 1
 fi
