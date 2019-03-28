@@ -35,13 +35,13 @@ if [ "${KURENTO_CURRENT_VERSION}" != "${KURENTO_NEW_VERSION}" ]; then
 		sed -i "s/${KURENTO_CURRENT_VERSION}/${KURENTO_NEW_VERSION}/" ./ubuntu_openvidu_io_${KURENTO_NEW_VERSION}.list
 	fi
 
-	apt update
+	apt-get update
 
-	echo "Purging KMS ${KURENTO_CURRENT_VERSION}..."
-	apt-get remove --purge --yes kurento-media-server
+	echo "Removing KMS ${KURENTO_CURRENT_VERSION}..."
+	apt-get remove --auto-remove --yes kurento-media-server
 
 	echo "Installing KMS ${KURENTO_NEW_VERSION}..."
-	apt-get install --yes kurento-media-server
+	apt-get install --yes -o Dpkg::Options::="--force-confold" kurento-media-server
 
 	systemctl enable kurento-media-server
 	systemctl start kurento-media-server
