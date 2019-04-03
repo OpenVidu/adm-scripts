@@ -6,7 +6,7 @@ if [ -z "$OV_NEW_VERSION" ]; then
 	exit 1
 fi
 
-declare -A OV_KMS_VERSION_COMPATIBILITY=(["2.6.0"]="6.8.0" ["2.7.0"]="6.8.1" ["2.8.0"]="6.9.0" ["2.9.0"]="6.10.0")
+declare -A OV_KMS_VERSION_COMPATIBILITY=(["2.6.0"]="6.8.1" ["2.7.0"]="6.8.1" ["2.8.0"]="6.9.0" ["2.9.0"]="6.10.0")
 
 if [[ -n ${OV_KMS_VERSION_COMPATIBILITY[$OV_NEW_VERSION]} ]]; then
 	echo "Updating to OpenVidu $OV_NEW_VERSION"
