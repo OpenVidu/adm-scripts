@@ -19,6 +19,8 @@ elif [ "$MODE" == "prod" ] && [ "$TYPE" == "server" ]; then
 	CF_FILE="https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-latest.json"
 elif [ "$MODE" == "prod" ] && [ "$TYPE" == "demos" ]; then	
 	CF_FILE="https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-Demos-latest.json"
+elif [ "$MODE" == "pro" ]; then
+  CF_FILE="https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CloudformationOpenViduPro.yaml"
 else
 	echo "Unknown combination"
 	exit 0
@@ -27,7 +29,23 @@ fi
 #############################
 ### Self signed certificate
 #############################
-cat > $TEMPJSON<<EOF
+if [ "$MODE" == "pro" ]; then
+  cat > $TEMPJSON<<EOF
+  [
+    {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
+    {"ParameterKey":"OpenViduSecret","ParameterValue":"MY_SECRET"},
+    {"ParameterKey":"KibanaPassword","ParameterValue":"MY_SECRET"},
+    {"ParameterKey":"HTTPSPort","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"SSHCidr","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"UDPRange","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"TCPRange","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
+    {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
+    {"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"}
+  ]
+EOF
+else
+  cat > $TEMPJSON<<EOF
   [
     {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
     {"ParameterKey":"WantToSendInfo","ParameterValue":"false"},
@@ -38,6 +56,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"MyDomainName","ParameterValue":"Nil"}
   ]
 EOF
+fi
 
 aws cloudformation create-stack \
   --stack-name Openvidu-selfsigned-${DOMAIN_NAME} \
@@ -91,7 +110,6 @@ aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
 
 sleep 60
 
-
 # Generate own certificate
 TEMPKEY=$(mktemp -t file-XXX --suffix .key)
 TEMPCRT=$(mktemp -t file-XXX --suffix .crt)
@@ -99,7 +117,26 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $TEMPKEY -out $TEMPC
 KEY=$(cat $TEMPKEY)
 CRT=$(cat $TEMPCRT)
 
-cat > $TEMPJSON<<EOF
+if [ "$MODE" == "pro" ]; then
+  cat > $TEMPJSON<<EOF
+  [
+    {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
+    {"ParameterKey":"WhichCert","ParameterValue":"owncert"},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.k8s.codeurjc.es"},
+    {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
+    {"ParameterKey":"OpenViduSecret","ParameterValue":"MY_SECRET"},
+    {"ParameterKey":"KibanaPassword","ParameterValue":"MY_SECRET"},
+    {"ParameterKey":"HTTPSPort","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"SSHCidr","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"UDPRange","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"TCPRange","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"OwnCertCRT","ParameterValue":"https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/nginx.crt"},
+    {"ParameterKey":"OwnCertKEY","ParameterValue":"https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/nginx.key"},
+    {"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"}
+  ]
+EOF
+else
+  cat > $TEMPJSON<<EOF
   [
     {"ParameterKey": "KeyName","ParameterValue":"kms-aws-share-key" },
     {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.k8s.codeurjc.es"},
@@ -111,6 +148,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OwnCertKEY","ParameterValue":"$(echo ${KEY})"}
   ]
 EOF
+fi
 
 aws cloudformation create-stack \
   --stack-name Openvidu-owncert-${DOMAIN_NAME} \
@@ -193,6 +231,25 @@ aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
 
 sleep 60
 
+if [ "$MODE" == "pro" ]; then
+  cat > $TEMPJSON<<EOF
+  [
+    {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
+    {"ParameterKey":"WhichCert","ParameterValue":"letsencrypt"},    
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.k8s.codeurjc.es"},
+    {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
+    {"ParameterKey":"OpenViduSecret","ParameterValue":"MY_SECRET"},
+    {"ParameterKey":"KibanaPassword","ParameterValue":"MY_SECRET"},
+    {"ParameterKey":"HTTPSPort","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"SSHCidr","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"UDPRange","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"TCPRange","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
+    {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
+    {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"}
+  ]
+EOF
+else
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
@@ -205,6 +262,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"}
   ]
 EOF
+fi
 
 aws cloudformation create-stack \
   --stack-name Openvidu-letsencrypt-${DOMAIN_NAME} \
