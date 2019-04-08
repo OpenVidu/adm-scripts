@@ -35,7 +35,7 @@ if [ "$MODE" == "pro" ]; then
     {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
     {"ParameterKey":"OpenViduSecret","ParameterValue":"MY_SECRET"},
     {"ParameterKey":"KibanaPassword","ParameterValue":"MY_SECRET"},
-    {"ParameterKey":"HTTPSPort","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"HTTPSAccess","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"SSHCidr","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"UDPRange","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"TCPRange","ParameterValue":"0.0.0.0/0"},
@@ -68,14 +68,24 @@ aws cloudformation wait stack-create-complete --stack-name Openvidu-selfsigned-$
 
 echo "Extracting service URL..."
 URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURL")) | .OutputValue')
-
 RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
+
+# Checking Kibana
+if [ "$MODE" == "pro" ]; then
+  KIBANA_URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("KibanaDashboard")) | .OutputValue')
+  RES_KIBANA=$(curl --insecure --location -u kibanaadmin:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${KIBANA_URL} | grep "200")
+fi
 
 # Cleaning up
 aws cloudformation delete-stack --stack-name Openvidu-selfsigned-${DOMAIN_NAME}
 
 if [ "$RES" != "200" ]; then
   echo "deployment failed"
+  exit 1
+fi
+
+if [ "$MODE" == "pro" ] && [ "$RES_KIBANA" != "200" ]; then
+  echo "Kibana failed"
   exit 1
 fi
 
@@ -126,7 +136,7 @@ if [ "$MODE" == "pro" ]; then
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"OpenViduSecret","ParameterValue":"MY_SECRET"},
     {"ParameterKey":"KibanaPassword","ParameterValue":"MY_SECRET"},
-    {"ParameterKey":"HTTPSPort","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"HTTPSAccess","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"SSHCidr","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"UDPRange","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"TCPRange","ParameterValue":"0.0.0.0/0"},
@@ -160,8 +170,13 @@ aws cloudformation wait stack-create-complete --stack-name Openvidu-owncert-${DO
 
 echo "Extracting service URL..."
 URL=$(aws cloudformation describe-stacks --stack-name Openvidu-owncert-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURLLE")) | .OutputValue')
-
 RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
+
+# Checking Kibana
+if [ "$MODE" == "pro" ]; then
+  KIBANA_URL=$(aws cloudformation describe-stacks --stack-name Openvidu-owncert-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("KibanaDashboardLE")) | .OutputValue')
+  RES_KIBANA=$(curl --insecure --location -u kibanaadmin:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${KIBANA_URL} | grep "200")
+fi
 
 # Cleaning up
 aws cloudformation delete-stack --stack-name Openvidu-owncert-${DOMAIN_NAME}
@@ -197,6 +212,11 @@ aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
 
 if [ "$RES" != "200" ]; then
   echo "deployment failed"
+  exit 1
+fi
+
+if [ "$MODE" == "pro" ] && [ "$RES_KIBANA" != "200" ]; then
+  echo "Kibana failed"
   exit 1
 fi
 
@@ -240,7 +260,7 @@ if [ "$MODE" == "pro" ]; then
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"OpenViduSecret","ParameterValue":"MY_SECRET"},
     {"ParameterKey":"KibanaPassword","ParameterValue":"MY_SECRET"},
-    {"ParameterKey":"HTTPSPort","ParameterValue":"0.0.0.0/0"},
+    {"ParameterKey":"HTTPSAccess","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"SSHCidr","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"UDPRange","ParameterValue":"0.0.0.0/0"},
     {"ParameterKey":"TCPRange","ParameterValue":"0.0.0.0/0"},
@@ -274,8 +294,13 @@ aws cloudformation wait stack-create-complete --stack-name Openvidu-letsencrypt-
 
 echo "Extracting service URL..."
 URL=$(aws cloudformation describe-stacks --stack-name Openvidu-letsencrypt-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURLLE")) | .OutputValue')
-
 RES=$(curl --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
+
+# Checking Kibana
+if [ "$MODE" == "pro" ]; then
+  KIBANA_URL=$(aws cloudformation describe-stacks --stack-name Openvidu-letsencrypt-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("KibanaDashboardLE")) | .OutputValue')
+  RES_KIBANA=$(curl --insecure --location -u kibanaadmin:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${KIBANA_URL} | grep "200")
+fi
 
 # Cleaning up
 aws cloudformation delete-stack --stack-name Openvidu-letsencrypt-${DOMAIN_NAME}
@@ -312,6 +337,10 @@ aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
 if [ "$RES" != "200" ]; then
   echo "deployment failed"
   exit 1
+fi
+
+if [ "$MODE" == "pro" ] && [ "$RES_KIBANA" != "200" ]; then
+  echo "Kibana failed"
 fi
 
 # Cleaning
