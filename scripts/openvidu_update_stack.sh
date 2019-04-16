@@ -6,16 +6,14 @@ if [ -z "$OV_NEW_VERSION" ]; then
 	exit 1
 fi
 
-declare -A OV_KMS_VERSION_COMPATIBILITY=(["2.6.0"]="6.8.1" ["2.7.0"]="6.8.1" ["2.8.0"]="6.9.0" ["2.9.0"]="6.10.0")
+OV_KURENTO_VERSIONS=$(curl --silent https://oudzlg0y3m.execute-api.eu-west-1.amazonaws.com/v1/ov_kms_matrix?ov=$OV_NEW_VERSION)
 
-if [[ -n ${OV_KMS_VERSION_COMPATIBILITY[$OV_NEW_VERSION]} ]]; then
-	echo "Updating to OpenVidu $OV_NEW_VERSION"
-else
-	echo "ERROR: variable OV_NEW_VERSION must be one of the following values"
-	for key in "${!OV_KMS_VERSION_COMPATIBILITY[@]}"; do
-    		echo "$key"
-	done
+if [ "$OV_KURENTO_VERSIONS" == "Not found" ]; then
+	echo "ERROR: wrong value for variable OV_NEW_VERSION"
 	exit 1
+else
+	KURENTO_NEW_VERSION=$(jq --raw-output '.[0] | .kms' <<< "$OV_KURENTO_VERSIONS")
+	echo "Updating to OpenVidu $OV_NEW_VERSION"
 fi
 
 DISTRO=$(lsb_release -c | awk '{ print $2 }')
@@ -25,7 +23,6 @@ pushd /etc/apt/sources.list.d
 
 KURENTO_APT_FILE=$(find | grep openvidu)
 KURENTO_CURRENT_VERSION=$(cat $KURENTO_APT_FILE | cut -d"/" -f4 | awk '{ print $1 }' )
-KURENTO_NEW_VERSION=${OV_KMS_VERSION_COMPATIBILITY[${OV_NEW_VERSION}]}
 
 if [ "${KURENTO_CURRENT_VERSION}" != "${KURENTO_NEW_VERSION}" ]; then
 
