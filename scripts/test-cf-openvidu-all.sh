@@ -67,7 +67,12 @@ aws cloudformation create-stack \
 aws cloudformation wait stack-create-complete --stack-name Openvidu-selfsigned-${DOMAIN_NAME}
 
 echo "Extracting service URL..."
-URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("OpenViduInspector")) | .OutputValue')
+if [ "$MODE" == "pro" ]; then 
+  URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("OpenViduInspector")) | .OutputValue')
+else
+  URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURL")) | .OutputValue')
+fi
+
 RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
 
 # Checking Kibana
@@ -169,7 +174,12 @@ aws cloudformation create-stack \
 aws cloudformation wait stack-create-complete --stack-name Openvidu-owncert-${DOMAIN_NAME}
 
 echo "Extracting service URL..."
-URL=$(aws cloudformation describe-stacks --stack-name Openvidu-owncert-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("OpenViduInspectorLE")) | .OutputValue')
+if [ "$MODE" == "pro" ]; then 
+  URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("OpenViduInspector")) | .OutputValue')
+else
+  URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURL")) | .OutputValue')
+fi
+
 RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
 
 # Checking Kibana
@@ -293,7 +303,12 @@ aws cloudformation create-stack \
 aws cloudformation wait stack-create-complete --stack-name Openvidu-letsencrypt-${DOMAIN_NAME}
 
 echo "Extracting service URL..."
-URL=$(aws cloudformation describe-stacks --stack-name Openvidu-letsencrypt-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("OpenViduInspectorLE")) | .OutputValue')
+if [ "$MODE" == "pro" ]; then 
+  URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("OpenViduInspector")) | .OutputValue')
+else
+  URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURL")) | .OutputValue')
+fi
+
 RES=$(curl --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
 
 # Checking Kibana
