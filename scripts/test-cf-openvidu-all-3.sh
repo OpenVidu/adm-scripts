@@ -29,6 +29,8 @@ fi
 #############################
 ### Self signed certificate
 #############################
+if [ "$MODE" == "dev" ]; then
+
 if [ "$TYPE" == "server" ]; then
 cat > $TEMPJSON<<EOF
   [
@@ -60,7 +62,7 @@ else
   exit 0
 fi  
 
-if [ "$MODE" == "dev" ]; then
+
   aws cloudformation create-stack \
     --stack-name Openvidu-selfsigned-${DOMAIN_NAME} \
     --template-url ${CF_FILE} \
@@ -91,7 +93,7 @@ fi
 if [ "$MODE" == "dev" ]; then
   EIP=$(aws ec2 allocate-address)
   IP=$(echo $EIP |  jq --raw-output '.PublicIp')
-fi
+
 
 cat >$TEMPFILE<<EOF
 {
@@ -114,12 +116,12 @@ cat >$TEMPFILE<<EOF
 }
 EOF
 
-if [ "$MODE" == "dev" ]; then
+
   aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
     --change-batch file:///$TEMPFILE
   
   sleep 60
-fi
+
 
 
 # Generate own certificate
@@ -165,7 +167,7 @@ else
   exit 0
 fi
 
-if [ "$MODE" == "dev" ]; then
+
   aws cloudformation create-stack \
     --stack-name Openvidu-owncert-${DOMAIN_NAME} \
     --template-url ${CF_FILE} \
