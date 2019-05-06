@@ -157,7 +157,7 @@ else
   exit 0
 fi
 
-if [ "$MODE" = "dev" ]; then
+if [ "$MODE" == "dev" ]; then
   aws cloudformation create-stack \
     --stack-name Openvidu-owncert-${DOMAIN_NAME} \
     --template-url ${CF_FILE} \
@@ -274,7 +274,7 @@ else
   exit 0
 fi
 
-if [ "$MODE" == "dev" ]; then
+if [ "$MODE" == "dev" ] || [ "$MODE" == "prod" ]; then
   aws cloudformation create-stack \
     --stack-name Openvidu-letsencrypt-${DOMAIN_NAME} \
     --template-url ${CF_FILE} \
