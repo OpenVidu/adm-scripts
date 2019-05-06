@@ -71,6 +71,7 @@ aws cloudformation wait stack-create-complete --stack-name Openvidu-selfsigned-$
 echo "Extracting service URL..."
 URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURL")) | .OutputValue')
 
+sleep 10
 RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
 
 # Cleaning up
