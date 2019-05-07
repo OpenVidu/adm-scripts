@@ -338,5 +338,8 @@ fi
 # Cleaning
 rm $TEMPFILE
 rm $TEMPJSON
-rm $TEMPCRT
-rm $TEMPKEY
+
+if [ "${MODE}" == "dev" ]; then
+  rm $TEMPCRT
+  rm $TEMPKEY
+fi
