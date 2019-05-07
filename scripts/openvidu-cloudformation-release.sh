@@ -14,9 +14,9 @@ OV_CALL_RELEASE=$(curl --silent "https://api.github.com/repos/openvidu/openvidu-
 [ ! -z "$OVC_VERSION" ] || OVC_VERSION=${OV_CALL_RELEASE}
 
 # CF Version
-sed -i "s/@CF_V@/${CF_VERSION}/" CF-OpenVidu-TEMPLATE.yaml
+sed "s/@CF_V@/${CF_VERSION}/" CF-OpenVidu-TEMPLATE.yaml > CF-OpenVidu-$OV_VERSION.yaml
 # OV Version
-sed "s/@OV_V@/${OV_VERSION}/" CF-OpenVidu-TEMPLATE.yaml > CF-OpenVidu-$OV_VERSION.yaml
+sed -i "s/@OV_V@/${OV_VERSION}/" CF-OpenVidu-$OV_VERSION.yaml
 # OV Demos Version
 sed -i "s/@OVD_V@/${OVD_VERSION}/" CF-OpenVidu-$OV_VERSION.yaml
 # OV Call Version
