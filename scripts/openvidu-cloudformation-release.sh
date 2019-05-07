@@ -5,7 +5,7 @@ cd cloudformation-openvidu
 
 CF_VERSION=$(date +"%Y%m%d%H%M%S")
 git tag ${CF_VERSION} || exit 1
-#git push --tags
+git push --tags
 
 TUTORIALS_RELEASE=$(curl --silent "https://api.github.com/repos/openvidu/openvidu-tutorials/releases/latest" | jq --raw-output '.tag_name' | cut -d"v" -f2)
 OV_CALL_RELEASE=$(curl --silent "https://api.github.com/repos/openvidu/openvidu-call/releases/latest" | jq --raw-output '.tag_name' | cut -d"v" -f2)
