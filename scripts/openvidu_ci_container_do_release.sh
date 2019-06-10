@@ -289,7 +289,7 @@ case $OPENVIDU_PROJECT in
     npm install || { echo "dashboard -> install "; exit 1; }
     npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
     npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
-    ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../openvidu-server-pro/src/main/resources/static || { echo "dashboard -> build for prod"; exit 1; }
+    npm run build-server-prod-aws  || { echo "dashboard -> build for prod"; exit 1; }
     popd
 
     pushd openvidu-server-pro
