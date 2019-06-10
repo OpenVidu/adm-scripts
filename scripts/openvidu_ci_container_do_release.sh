@@ -256,8 +256,6 @@ case $OPENVIDU_PROJECT in
 
   openvidu-pro)
 
-    export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
-    export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
     export AWS_DEFAULT_REGION=us-east-1
     
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
