@@ -299,8 +299,8 @@ case $OPENVIDU_PROJECT in
 
     # Upload the JAR to AWS S3 (CodeURJC)
     pushd openvidu-server-pro/target
-    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.pro/openvidu-server-pro-latest.jar
-    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.pro/
+    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.io/openvidu-server-pro-latest.jar
+    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.io/
 
     # Do the same in Naeva
     export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
