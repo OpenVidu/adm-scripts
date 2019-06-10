@@ -299,8 +299,6 @@ case $OPENVIDU_PROJECT in
 
     # Upload the JAR to AWS S3 (CodeURJC)
     pushd openvidu-server-pro/target
-    export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-    export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.pro/openvidu-server-pro-latest.jar
     aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.pro/
 
