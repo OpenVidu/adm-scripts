@@ -9,7 +9,7 @@ systemctl stop nginx
 supervisorctl stop openvidu-server
 
 # Get the tarball
-aws s3 cp s3://openvidu-pro/openvidu-server-pro-latest.jar /opt/openvidu/openvidu-server.jar
+aws s3 cp s3://aws.openvidu.io/openvidu-server-pro-latest.jar /opt/openvidu/openvidu-server.jar
 
 # Check if KMS is up to date
 if ! grep -q ${KMS_VERSION} /etc/apt/sources.list.d/kurento.list; then
