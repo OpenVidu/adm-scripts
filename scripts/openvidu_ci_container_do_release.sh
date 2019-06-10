@@ -297,7 +297,16 @@ case $OPENVIDU_PROJECT in
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
+    # Upload the JAR to AWS S3 (CodeURJC)
     pushd openvidu-server-pro/target
+    export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.pro/openvidu-server-pro-latest.jar
+    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.pro/
+
+    # Do the same in Naeva
+    export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
+    export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
     aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://naeva-openvidu-pro/openvidu-server-pro-latest.jar
     aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://naeva-openvidu-pro/
     popd
