@@ -257,6 +257,9 @@ case $OPENVIDU_PROJECT in
   openvidu-pro)
 
     export AWS_DEFAULT_REGION=us-east-1
+
+    echo "Temp solution..."
+    git checkout 0b22c295eed8b7ea1bdf9052a63c1320c8077806
     
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
 
