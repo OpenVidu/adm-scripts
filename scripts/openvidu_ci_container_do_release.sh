@@ -263,8 +263,6 @@ case $OPENVIDU_PROJECT in
     git clone https://github.com/OpenVidu/openvidu.git
 
     pushd openvidu
-    echo "Temp solution..."
-    git checkout 0b22c295eed8b7ea1bdf9052a63c1320c8077806
     mvn -DskipTests=true compile || { echo "openvidu -> compile"; exit 1; }
     mvn -DskipTests=true install || { echo "openvidu -> install"; exit 1; }
     popd
