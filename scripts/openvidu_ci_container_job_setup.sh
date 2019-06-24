@@ -55,6 +55,7 @@ docker run \
   -e "HTTP_KEY=$CONTAINER_HTTP_KEY" \
   -e "MODE=$CF_MODE" \
   -e "TYPE=$CF_TYPE" \
+  -e "KURENTO_JAVA_SNAPSHOT=${KURENTO_JAVA_SNAPSHOT}" \
   -v "${PWD}:$WORKSPACE" \
   -w $WORKSPACE \
   $CONTAINER_IMAGE \
