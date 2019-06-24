@@ -21,6 +21,8 @@ case $CI_JOB in
     aws s3 cp cfn-OpenViduServerPro-cluster-$OPENVIDU_VERSION.yaml s3://aws.openvidu.io --acl public-read 
     aws s3 cp cfn-OpenViduServerPro-cluster-latest.yaml            s3://aws.openvidu.io --acl public-read 
 
+    ;;
+
   cloudformation_free)
 
     cd cloudformation-openvidu
@@ -48,6 +50,8 @@ case $CI_JOB in
 
     aws s3 cp CF-OpenVidu-$OPENVIDU_VERSION.yaml s3://aws.openvidu.io --acl public-read 
     aws s3 cp CF-OpenVidu-latest.yaml s3://aws.openvidu.io --acl public-read 
+
+    ;;
 
   *)
     echo "No project specified"
