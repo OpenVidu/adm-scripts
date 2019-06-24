@@ -23,7 +23,7 @@ case $OPENVIDU_PROJECT in
 
     ;;
 
-  cloudformation_free)
+  cloudformation_ov_server)
 
     cd cloudformation-openvidu
 
