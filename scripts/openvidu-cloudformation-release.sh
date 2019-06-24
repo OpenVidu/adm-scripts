@@ -14,7 +14,7 @@ case $OPENVIDU_PROJECT in
     # CF Version
     sed "s/@CF_RELEASE@/${CF_VERSION}/" cfn-OpenViduServerPro-cluster.yaml.template > cfn-OpenViduServerPro-cluster-$OPENVIDU_VERSION.yaml
     # OV Version
-    sed -i "s/@OV_V@/${OPENVIDU_VERSION}/" CF-OpenVidu-$OPENVIDU_VERSION.yaml
+    sed -i "s/@OV_V@/${OPENVIDU_VERSION}/" cfn-OpenViduServerPro-cluster-$OPENVIDU_VERSION.yaml
 
     cp -v cfn-OpenViduServerPro-cluster-$OPENVIDU_VERSION.yaml cfn-OpenViduServerPro-cluster-latest.yaml
 
