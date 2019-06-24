@@ -1,7 +1,7 @@
 #!/bin/bash -x
 set -e -o pipefail
 
-case $CI_JOB in
+case $OPENVIDU_PROJECT in
 
   cloudformation_ov_cluster_free)
 
