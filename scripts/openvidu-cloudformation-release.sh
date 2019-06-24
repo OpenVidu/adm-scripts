@@ -12,7 +12,7 @@ case $OPENVIDU_PROJECT in
     git push --tags
 
     # CF Version
-    sed "s/@CF_RELEASE@/${CF_VERSION}/" cfn-OpenViduServerPro-cluster.yaml.templatel > cfn-OpenViduServerPro-cluster-$OPENVIDU_VERSION.yaml
+    sed "s/@CF_RELEASE@/${CF_VERSION}/" cfn-OpenViduServerPro-cluster.yaml.template > cfn-OpenViduServerPro-cluster-$OPENVIDU_VERSION.yaml
     # OV Version
     sed -i "s/@OV_V@/${OPENVIDU_VERSION}/" CF-OpenVidu-$OPENVIDU_VERSION.yaml
 
