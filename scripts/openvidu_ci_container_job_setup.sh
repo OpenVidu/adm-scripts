@@ -17,6 +17,7 @@ CONTAINER_GIT_CONFIG=/root/.gitconfig
 CONTAINER_AWS_CONFIG=/root/.aws/config
 CONTAINER_HTTP_CERT=/opt/http.crt
 CONTAINER_HTTP_KEY=/opt/http.key
+CONTAINER_EXTRA_RSA_KEY=/opt/id_rsa.key
 
 docker run \
   --name $BUILD_TAG-JOB_SETUP-$(date +"%s") \
@@ -33,6 +34,7 @@ docker run \
   $([ -f "$AWS_CONFIG" ] && echo "-v $AWS_CONFIG:$CONTAINER_AWS_CONFIG") \
   $([ -f "$HTTP_CERT" ] && echo "-v $HTTP_CERT:$CONTAINER_HTTP_CERT") \
   $([ -f "$HTTP_KEY" ] && echo "-v $HTTP_KEY:$CONTAINER_HTTP_KEY") \
+  $([ -f "$KEY_PUB" ] && echo "-v $KEY_PUB:$CONTAINER_EXTRA_RSA_KEY") \
   -e "AWS_ACCESS_KEY_ID=$OPENVIDU_AWS_ACCESS_KEY" \
   -e "AWS_SECRET_ACCESS_KEY=$OPENVIDU_AWS_SECRET_KEY" \
   $([ "${NAEVA_AWS_ACCESS_KEY_ID}x" != "x" ] && echo "-e NAEVA_AWS_ACCESS_KEY_ID=$NAEVA_AWS_ACCESS_KEY_ID" ) \

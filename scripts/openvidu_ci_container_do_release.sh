@@ -306,7 +306,7 @@ case $OPENVIDU_PROJECT in
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
-    # Upload the JAR to AWS S3 (CodeURJC)
+    # Upload the JAR to https://pro.openvidu.io (CodeURJC)
     pushd openvidu-server-pro/target
     aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.io/openvidu-server-pro-latest.jar --acl public-read
     aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.io/ --acl public-read
