@@ -308,8 +308,11 @@ case $OPENVIDU_PROJECT in
 
     # Upload the JAR to https://pro.openvidu.io (CodeURJC)
     pushd openvidu-server-pro/target
-    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.io/openvidu-server-pro-latest.jar --acl public-read
-    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://aws.openvidu.io/ --acl public-read
+    chmod 0400 /opt/id_rsa.key
+    scp -o StrictHostKeyChecking=no \
+      -i /opt/id_rsa.key \
+      openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar \
+      ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
 
     # Do the same in Naeva
     export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
