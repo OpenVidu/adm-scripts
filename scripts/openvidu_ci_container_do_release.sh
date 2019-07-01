@@ -302,7 +302,12 @@ case $OPENVIDU_PROJECT in
     popd
 
     pushd openvidu-server-pro
-    mvn versions:set -DnewVersion="$OPENVIDU_PRO_VERSION" || { echo "Failed to bump openvidu-pro version"; exit 1; }
+    if [ "${OPENVIDU_PRO_IS_SNAPSHOT}" == true ]; then
+        OVP_VERSION=${OPENVIDU_PRO_VERSION}-SNAPSHOT
+    else
+        OVP_VERSION=${OPENVIDU_PRO_VERSION}
+    fi
+    mvn versions:set -DnewVersion=${OVP_VERSION} || { echo "Failed to bump openvidu-pro version"; exit 1; }
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
@@ -317,7 +322,6 @@ case $OPENVIDU_PROJECT in
     # Do the same in Naeva
     export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
     export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
-    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://naeva-openvidu-pro/openvidu-server-pro-latest.jar
     aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://naeva-openvidu-pro/
     popd
 
