@@ -316,13 +316,13 @@ case $OPENVIDU_PROJECT in
     chmod 0400 /opt/id_rsa.key
     scp -o StrictHostKeyChecking=no \
       -i /opt/id_rsa.key \
-      openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar \
+      openvidu-server-pro-${OVP_VERSION}.jar \
       ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
 
     # Do the same in Naeva
     export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
     export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
-    aws s3 cp openvidu-server-pro-$OPENVIDU_PRO_VERSION.jar s3://naeva-openvidu-pro/
+    aws s3 cp openvidu-server-pro-${OVP_VERSION}.jar s3://naeva-openvidu-pro/
     popd
 
     ;;
