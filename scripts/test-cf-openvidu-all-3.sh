@@ -41,7 +41,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},
     {"ParameterKey":"MyDomainName","ParameterValue":"Nil"},
-    {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"}
+    {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
+    {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
 elif [ "$TYPE" == "demos" ]; then
@@ -54,7 +57,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},
     {"ParameterKey":"MyDomainName","ParameterValue":"Nil"},
-    {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"}
+    {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
+    {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
 else
@@ -145,7 +151,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"WantToSendInfo","ParameterValue":"false"}, 
     {"ParameterKey":"OwnCertCRT","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.crt"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.key"},
-    {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"}
+    {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
+    {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
 elif [ "$TYPE" == "demos" ]; then
@@ -159,7 +168,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"WantToSendInfo","ParameterValue":"false"}, 
     {"ParameterKey":"OwnCertCRT","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.crt"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.key"},
-    {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"}
+    {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
+    {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
 else
@@ -262,7 +274,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"WantToSendInfo","ParameterValue":"false"},
     {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
-    {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"}
+    {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
+    {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
 elif [ "$TYPE" == "demos" ]; then
@@ -276,7 +291,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"WantToSendInfo","ParameterValue":"false"},
     {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
-    {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"}
+    {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
+    {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
 else
