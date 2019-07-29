@@ -29,7 +29,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || (echo "Failed to link npm"; exit 1)
-    npm publish || (echo "Failed to publish to npm"; exit 1)
+    # npm publish || (echo "Failed to publish to npm"; exit 1)
     popd
 
     # Openvidu Server
@@ -62,6 +62,9 @@ case $OPENVIDU_PROJECT in
 
     echo "## Building openvidu-java-client"
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    
+    mvn $MAVEN_OPTIONS versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to update version"; exit 1)
+    
     pushd "$OPENVIDU_PROJECT"
     
     mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
