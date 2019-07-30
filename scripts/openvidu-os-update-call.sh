@@ -8,11 +8,12 @@ systemctl stop kurento-media-server
 systemctl stop nginx
 supervisorctl stop openvidu-server
 
-# Get the tarball
-aws s3 cp s3://aws.openvidu.io/openvidu-server-pro-latest.jar /opt/openvidu/openvidu-server.jar
+# Get the jar
+curl -o /opt/openvidu/openvidu-server.jar -u ${OPENVIDU_PRO_USERNAME}:${OPENVIDU_PRO_PASSWORD} https://pro.openvidu.io/openvidu-server-pro-${OPENVIDU_PRO_VERSION}.jar
 
 # Check if KMS is up to date
-if ! grep -q ${KMS_VERSION} /etc/apt/sources.list.d/kurento.list; then
+KMS_VERSION=$(curl --silent https://oudzlg0y3m.execute-api.eu-west-1.amazonaws.com/v1/ov_kms_matrix?ov=${OPENVIDU_PRO_VERSION} | jq --raw-output '.[0] | .kms' )
+if ! grep -q ${} /etc/apt/sources.list.d/kurento.list; then
 	
 	# Purge KMS
 	for pkg in \
