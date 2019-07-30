@@ -18,6 +18,7 @@ case $OPENVIDU_PROJECT in
     git add cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
     git commit -m "New Release ${OPENVIDU_PRO_VERSION}" cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
     git push --tags
+    git push
 
     aws s3 cp cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml s3://aws.openvidu.io --acl public-read 
     aws s3 cp cfn-OpenViduServerPro-cluster-latest.yaml                  s3://aws.openvidu.io --acl public-read 
