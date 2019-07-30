@@ -13,7 +13,7 @@ curl -o /opt/openvidu/openvidu-server.jar -u OPENVIDU_PRO_USERNAME:OPENVIDU_PRO_
 
 # Check if KMS is up to date
 KMS_VERSION=$(curl --silent https://oudzlg0y3m.execute-api.eu-west-1.amazonaws.com/v1/ov_kms_matrix?ov=${OPENVIDU_PRO_VERSION} | jq --raw-output '.[0] | .kms' )
-if ! grep -q ${} /etc/apt/sources.list.d/kurento.list; then
+if ! grep -q ${KMS_VERSION} /etc/apt/sources.list.d/kurento.list; then
 	
 	# Purge KMS
 	for pkg in \
