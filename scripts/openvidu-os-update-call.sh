@@ -1,7 +1,7 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
-KMS_VERSION=$1
+OPENVIDU_PRO_VERSION=$1
 
 # Stopping services
 systemctl stop kurento-media-server
