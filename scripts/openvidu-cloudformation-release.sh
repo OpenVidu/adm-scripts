@@ -84,7 +84,7 @@ case $OPENVIDU_PROJECT in
     pushd aws_marketplace
 
     sed "s/OV_AMI/${OV_AMI}/" cfn-mkt-openvidu-server-pro.yaml.template > cfn-mkt-openvidu-server-pro-${OPENVIDU_PRO_VERSION}.yaml
-    sed -i "s/OV_KMS/${OV_KMS}/" cfn-mkt-openvidu-server-pro-${OPENVIDU_PRO_VERSION}.yaml
+    sed -i "s/OV_KMS/${KMS_AMI}/" cfn-mkt-openvidu-server-pro-${OPENVIDU_PRO_VERSION}.yaml
 
     aws s3 cp cfn-mkt-openvidu-server-pro-${OPENVIDU_PRO_VERSION}.yaml s3://aws.openvidu.io --acl public-read
 
