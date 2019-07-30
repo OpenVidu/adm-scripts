@@ -90,6 +90,8 @@ case $OPENVIDU_PROJECT in
 
     popd
 
+    ;;
+
   *)
     echo "No project specified"
     exit 1
