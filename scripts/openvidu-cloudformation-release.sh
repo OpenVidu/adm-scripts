@@ -6,7 +6,7 @@ case $OPENVIDU_PROJECT in
   cloudformation_ov_cluster_free)
 
     CF_VERSION=${OPENVIDU_PRO_VERSION}
-    git tag ${CF_VERSION} || exit 1
+    
 
     # CF Version
     sed "s/@CF_RELEASE@/${CF_VERSION}/" cfn-OpenViduServerPro-cluster.yaml.template > cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
@@ -15,10 +15,14 @@ case $OPENVIDU_PROJECT in
 
     cp -v cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml cfn-OpenViduServerPro-cluster-latest.yaml
 
+    # Keeping the template
     git add cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
     git commit -m "New Release ${OPENVIDU_PRO_VERSION}" cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
-    git push --tags
     git push
+
+    # Creating tag
+    git tag ${CF_VERSION} || exit 1
+    git push --tags
 
     aws s3 cp cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml s3://aws.openvidu.io --acl public-read 
     aws s3 cp cfn-OpenViduServerPro-cluster-latest.yaml                  s3://aws.openvidu.io --acl public-read 
