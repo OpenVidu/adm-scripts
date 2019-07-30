@@ -18,7 +18,7 @@ case $OPENVIDU_PROJECT in
     # Keeping the template
     git add cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
     git commit -m "New Release ${OPENVIDU_PRO_VERSION}" cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
-    git push
+    git push -u origin master
 
     # Creating tag
     git tag ${CF_VERSION} || exit 1
