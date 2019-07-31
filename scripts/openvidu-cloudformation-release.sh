@@ -80,6 +80,8 @@ case $OPENVIDU_PROJECT in
     ;;
 
   cloudformation_ov_pro_server)
+  
+    ## Release for marketplace
     
     pushd aws_marketplace
 
