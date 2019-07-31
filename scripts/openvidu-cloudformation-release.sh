@@ -5,9 +5,10 @@ case $OPENVIDU_PROJECT in
 
   cloudformation_ov_cluster_free)
 
+    ## Free edition of CloudFormation for OpenVidu Pro
+
     CF_VERSION=${OPENVIDU_PRO_VERSION}
     
-
     # CF Version
     sed "s/@CF_RELEASE@/${CF_VERSION}/" cfn-OpenViduServerPro-cluster.yaml.template > cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
     # OV Version
@@ -29,31 +30,14 @@ case $OPENVIDU_PROJECT in
 
     ;;
 
-  cloudformation_ov_pro_free)
-
-    cd cloudformation-openvidu-pro
-
-    CF_VERSION=$(date +"%Y%m%d%H%M%S")
-    git tag ${CF_VERSION} || exit 1
-    git push --tags
-
-    # CF Version
-    sed "s/@CF_RELEASE@/${CF_VERSION}/" CloudformationOpenViduPro.yaml.template > CloudformationOpenViduPro-${OPENVIDU_VERSION}.yaml
-    # OV Version
-    sed -i "s/@OV_V@/${OPENVIDU_VERSION}/" CloudformationOpenViduPro-${OPENVIDU_VERSION}.yaml
-
-    cp -v CloudformationOpenViduPro-${OPENVIDU_VERSION}.yaml CloudformationOpenViduPro-latest.yaml
-
-    aws s3 cp CloudformationOpenViduPro-${OPENVIDU_VERSION}.yaml s3://aws.openvidu.io --acl public-read 
-    aws s3 cp CloudformationOpenViduPro-latest.yaml              s3://aws.openvidu.io --acl public-read 
-
-    ;;
 
   cloudformation_ov_server)
 
+    ## Community edition
+
     cd cloudformation-openvidu
 
-    CF_VERSION=$(date +"%Y%m%d%H%M%S")
+    CF_VERSION=${OPENVIDU_VERSION}
     git tag ${CF_VERSION} || exit 1
     git push --tags
 
