@@ -38,7 +38,7 @@ case $OPENVIDU_PROJECT in
 
     npm install
     npm link openvidu-browser 
-    ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../../main/resources/static || (echo "Failed to compile frontend"; exit 1)
+    ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../main/resources/static || (echo "Failed to compile frontend"; exit 1)
     popd
 
     pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
