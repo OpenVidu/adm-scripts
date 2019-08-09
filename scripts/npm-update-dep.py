@@ -6,12 +6,12 @@ import os
 
 
 # Changing version in openvidu-server frontend 
-with open('openvidu-server/src/angular/frontend/package.json', 'r') as jsonFile:
+with open('openvidu-server/src/dashboard/package.json', 'r') as jsonFile:
 	data = json.load(jsonFile)
 
 data['dependencies']['openvidu-browser'] = os.environ['OPENVIDU_VERSION']
 
-with open('openvidu-server/src/angular/frontend/package.json', 'w') as jsonFile:
+with open('openvidu-server/src/dashboard/package.json', 'w') as jsonFile:
 	json.dump(data, jsonFile, sort_keys=True, indent=4)
 
 # Changing version in openvidu-testapp

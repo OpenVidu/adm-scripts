@@ -34,7 +34,7 @@ case $OPENVIDU_PROJECT in
 
     # Openvidu Server
     echo "## Building openvidu Server"
-    pushd openvidu-server/src/angular/frontend || exit 1
+    pushd openvidu-server/src/dashboard || exit 1
 
     npm install
     npm link openvidu-browser 
