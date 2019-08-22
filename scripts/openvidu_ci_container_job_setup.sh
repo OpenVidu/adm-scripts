@@ -39,6 +39,10 @@ docker run \
   -e "AWS_SECRET_ACCESS_KEY=$OPENVIDU_AWS_SECRET_KEY" \
   $([ "${NAEVA_AWS_ACCESS_KEY_ID}x" != "x" ] && echo "-e NAEVA_AWS_ACCESS_KEY_ID=$NAEVA_AWS_ACCESS_KEY_ID" ) \
   $([ "${NAEVA_AWS_SECRET_ACCESS_KEY}x" != "x" ] && echo "-e NAEVA_AWS_SECRET_ACCESS_KEY=$NAEVA_AWS_SECRET_ACCESS_KEY" ) \
+  $([ "${KMS_AMI_NAME}x" != "x" ] && echo "-e KMS_AMI_NAME=$KMS_AMI_NAME") \
+  $([ "${KMS_AMI_ID}x" != "x" ] && echo "-e KMS_AMI_ID=$KMS_AMI_ID") \
+  $([ "${OV_AMI_NAME}x" != "x" ] && echo "-e OV_AMI_NAME=$OV_AMI_NAME") \
+  $([ "${OV_AMI_ID}x" != "x" ] && echo "-e OV_AMI_ID=$OV_AMI_ID") \
   -e "GITHUB_PRIVATE_RSA_KEY=$CONTAINER_PRIVATE_RSA_KEY" \
   -e "OPENVIDU_PROJECT=$OV_PROJECT" \
   -e "GITHUB_TOKEN=$OPENVIDU_GITHUB_TOKEN" \
