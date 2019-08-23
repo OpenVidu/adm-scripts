@@ -8,6 +8,7 @@ export OV_TASKCAT_VERSION=0.8.42
 
 pushd taskcat
 
+mkdir -p taskcat.ym/templates
 curl -o taskcat.ym/templates/cfn-mkt-openvidu-server-pro-${OV_VERSION}.yaml http://aws.openvidu.io/cfn-mkt-openvidu-server-pro-${OV_VERSION}.yaml
 sed -i "s/TEMPLATE_TO_TEST/cfn-mkt-openvidu-server-pro-${OV_VERSION}.yaml/" taskcat.yml
 
