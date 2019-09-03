@@ -13,5 +13,3 @@ done
 
 # Launch test
 python3 /usr/local/bin/testVideo.py
-
-cat
