@@ -47,6 +47,8 @@ elem.send_keys(Keys.RETURN)
 
 time.sleep(5)
 
+driver.save_screenshot('/workdir/demos.png')
+
 if 'Stream playing' in driver.page_source:
 	print ('Video detected.')
 	elem = driver.find_element_by_id('test-btn')
@@ -86,6 +88,8 @@ elem = driver.find_element_by_id('test-btn')
 elem.send_keys(Keys.RETURN)
 
 time.sleep(5)
+
+driver.save_screenshot('/workdir/call.png')
 
 if 'Stream playing' in driver.page_source:
 	print ('Video detected.')
