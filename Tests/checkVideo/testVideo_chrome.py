@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import NoSuchElementException
 import time
 import sys
 import os
@@ -35,29 +36,34 @@ driver.get(sutURL)
 
 time.sleep(5)
 
-elem = driver.find_element_by_id('test-btn')
-elem.send_keys(Keys.RETURN)
+try:
 
-time.sleep(2)
-
-elem = driver.find_element_by_id('mat-input-0')
-elem.send_keys('MY_SECRET')
-
-elem = driver.find_element_by_id('join-btn')
-elem.send_keys(Keys.RETURN)
-
-time.sleep(5)
-
-driver.save_screenshot('/workdir/demos.png')
-
-if 'Stream playing' in driver.page_source:
-	print ('Video detected.')
 	elem = driver.find_element_by_id('test-btn')
 	elem.send_keys(Keys.RETURN)
-	demos = 0
-else:
-	print ('Alert: No video detected.')
-	demos = 1
+
+	time.sleep(2)
+
+	elem = driver.find_element_by_id('mat-input-0')
+	elem.send_keys('MY_SECRET')
+
+	elem = driver.find_element_by_id('join-btn')
+	elem.send_keys(Keys.RETURN)
+
+	time.sleep(5)
+
+	driver.save_screenshot('/workdir/demos.png')
+
+	if 'Stream playing' in driver.page_source:
+		print ('Video detected.')
+		elem = driver.find_element_by_id('test-btn')
+		elem.send_keys(Keys.RETURN)
+		demos = 0
+	else:
+		print ('Alert: No video detected.')
+		demos = 1
+
+except NoSuchElementException:  
+    demos = 1
 
 #########
 ## CALL
@@ -65,41 +71,44 @@ else:
 
 print ('Testing Call...')
 
-#driver = webdriver.Firefox()
-
 sutURL = 'https://call.openvidu.io/inspector'
 driver.get(sutURL)
 
 time.sleep(5)
 
-elem = driver.find_element_by_id('secret-input')
-elem.send_keys(call_pass)
+try:
 
-elem = driver.find_element_by_id('login-btn')
-elem.send_keys(Keys.RETURN)
+	elem = driver.find_element_by_id('secret-input')
+	elem.send_keys(call_pass)
 
-time.sleep(2)
+	elem = driver.find_element_by_id('login-btn')
+	elem.send_keys(Keys.RETURN)
 
-elem = driver.find_element_by_id('menu-test-btn')
-elem.send_keys(Keys.RETURN)
+	time.sleep(2)
 
-time.sleep(2)
+	elem = driver.find_element_by_id('menu-test-btn')
+	elem.send_keys(Keys.RETURN)
 
-elem = driver.find_element_by_id('test-btn')
-elem.send_keys(Keys.RETURN)
+	time.sleep(2)
 
-time.sleep(5)
-
-driver.save_screenshot('/workdir/call.png')
-
-if 'Stream playing' in driver.page_source:
-	print ('Video detected.')
 	elem = driver.find_element_by_id('test-btn')
 	elem.send_keys(Keys.RETURN)
-	call = 0
-else:
-	print ('Alert: No video detected.')
-	call = 1
+
+	time.sleep(5)
+
+	driver.save_screenshot('/workdir/call.png')
+
+	if 'Stream playing' in driver.page_source:
+		print ('Video detected.')
+		elem = driver.find_element_by_id('test-btn')
+		elem.send_keys(Keys.RETURN)
+		call = 0
+	else:
+		print ('Alert: No video detected.')
+		call = 1
+
+except NoSuchElementException:  
+    call = 1
 
 driver.quit()
 
