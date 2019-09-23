@@ -48,7 +48,7 @@ docker run \
   -d \
   --name kms-${DATESTAMP} \
   -p 8888:8888 \
-  kurento/kurento-media-server:latest
+  kurento/kurento-media-server:6.11.0
 
 # Get KMS Docker IP
 KMS_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' kms-${DATESTAMP})
