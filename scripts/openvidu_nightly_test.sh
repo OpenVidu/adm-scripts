@@ -96,7 +96,7 @@ docker run \
   --name maven-${DATESTAMP} \
   -v "$(pwd)":/workdir \
   -w /workdir \
-  maven:3.3-jdk-8 ./run.sh
+  maven:3.3.9-jdk-8 ./run.sh
 
 # Cleaning the house
 CONTAINERS=(firefox chrome testapp kms openvidu)
