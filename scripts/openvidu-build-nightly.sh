@@ -31,7 +31,8 @@ OV_VERSION=$(get_version_from_pom-xml.py)
 cp target/openvidu-server-${OV_VERSION}.jar target/openvidu-server-latest.jar
 popd
 
-FILES="target/openvidu-server-${OV_VERSION}.jar:upload/openvidu/nightly/${DATESTAMP}/openvidu-server-${OV_VERSION}.jar"
-FILES="$FILES target/openvidu-server-latest.jar:upload/openvidu/nightly/latest/openvidu-server-latest.jar"
+pushd openvidu-server/target
+FILES="openvidu-server-${OV_VERSION}.jar:upload/openvidu/nightly/${DATESTAMP}/openvidu-server-${OV_VERSION}.jar"
+FILES="$FILES openvidu-server-latest.jar:upload/openvidu/nightly/latest/openvidu-server-latest.jar"
 FILES=$FILES openvidu_http_publish.sh
-
+popd
