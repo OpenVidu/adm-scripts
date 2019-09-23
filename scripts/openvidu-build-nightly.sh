@@ -8,9 +8,10 @@ echo "##################### EXECUTE: openvidu_build_nightly ####################
 DATESTAMP=$(date +%Y%m%d)
 MAVEN_OPTIONS='--batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true'
 
-mvn $MAVEN_OPTIONS compile || exit 1
+mvn $MAVEN_OPTIONS clean || exit 1
 mvn $MAVEN_OPTIONS install || exit 1
 cd openvidu-server
+mvn $MAVEN_OPTIONS compile
 mvn $MAVEN_OPTIONS package || exit 1
 
 OV_VERSION=$(get_version_from_pom-xml.py)
