@@ -86,7 +86,7 @@ done
 # Testing
 cd openvidu-test-e2e
 cat >run.sh<<EOF
-mvn -DAPP_URL=https://${TESTAPP_IP}:443/ -DOPENVIDU_URL=https://${OPENVIDU_IP}:4443/ -DREMOTE_URL_CHROME=http://${CHROME_IP}:4444/wd/hub/ -DREMOTE_URL_FIREFOX=http://${FIREFOX_IP}:4444/wd/hub/ test
+mvn --batch-mode -DAPP_URL=https://${TESTAPP_IP}:443/ -DOPENVIDU_URL=https://${OPENVIDU_IP}:4443/ -DREMOTE_URL_CHROME=http://${CHROME_IP}:4444/wd/hub/ -DREMOTE_URL_FIREFOX=http://${FIREFOX_IP}:4444/wd/hub/ test
 echo \$? > res.out
 EOF
 chmod +x run.sh
