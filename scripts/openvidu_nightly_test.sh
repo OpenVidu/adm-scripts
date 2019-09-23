@@ -73,10 +73,14 @@ docker run \
 OPENVIDU_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' openvidu-${DATESTAMP})
 
 # Wait for OpenViduServer
+TIMEOUT=60
+i=0
 until $(curl --insecure --output /dev/null --silent --head --fail --user OPENVIDUAPP:MY_SECRET https://${OPENVIDU_IP}:4443/)
 do 
 	echo "Waiting for openvidu-server...";
 	sleep 5;
+  let i=i+5
+  [ $i == $TIMEOUT ] && { echo "Timeout!"; exit 1; }
 done
 
 # Testing
