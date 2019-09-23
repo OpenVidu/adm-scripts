@@ -25,11 +25,11 @@ popd
 
 # OpenVidu TestApp
 pushd openvidu-testapp
-npm install || exit 1
+npm install --unsafe-perm || exit 1
 npm link openvidu-browser || exit 1
 npm link openvidu-node-client || exit 1
 ./node_modules/\@angular/cli/bin/ng -v || exit 1
-./node_modules/\@angular/cli/bin/ng build || exit 1
+./node_modules/\@angular/cli/bin/ng build --prod || exit 1
 
 # Generate the zip file
 cd dist 
