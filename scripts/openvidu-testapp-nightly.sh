@@ -4,7 +4,7 @@ set -eu -o pipefail
 # Build nightly version of OpenVidu TestApp
 # and upload the zip to builds.openvidu.io
 
-echo "##################### EXECUTE: openvidu_build_nightly #####################"
+echo "##################### EXECUTE: openvidu_build_testapp_nightly #####################"
 
 DATESTAMP=$(date +%Y%m%d)
 TESTAPP_VERSION=$(cd openvidu-testapp; npm-get-version.py )
