@@ -18,6 +18,20 @@ mvn $MAVEN_OPTIONS versions:set-property -Dproperty=version.openvidu.java.client
 mvn $MAVEN_OPTIONS clean || exit 1
 mvn $MAVEN_OPTIONS install || exit 1
 
+# OpenVidu Browser
+pushd openvidu-browser 
+npm install --unsafe-perm || exit 1
+npm run build || exit 1
+npm link || exit 1
+popd 
+
+# OpenVidu Node Client
+pushd openvidu-node-client
+npm install --unsafe-perm || exit 1
+npm run build || exit 1
+npm link || exit 1
+popd
+
 # OpenVidu Server Dashboard
 pushd openvidu-server/src/dashboard 
 npm install --unsafe-perm || exit 1
@@ -38,3 +52,7 @@ FILES="openvidu-server-${OV_VERSION}.jar:upload/openvidu/nightly/${DATESTAMP}/op
 FILES="$FILES openvidu-server-latest.jar:upload/openvidu/nightly/latest/openvidu-server-latest.jar"
 FILES=$FILES openvidu_http_publish.sh
 popd
+
+# Tell me the versions we've used
+mvn --version
+./node_modules/\@angular/cli/bin/ng version
