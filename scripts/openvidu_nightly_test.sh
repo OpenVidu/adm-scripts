@@ -80,7 +80,7 @@ do
 	echo "Waiting for openvidu-server...";
 	sleep 5;
   let i=i+5
-  [ $i == $TIMEOUT ] && { echo "Timeout!"; exit 1; }
+  [ $i == $TIMEOUT ] && { echo "Timeout!"; break; }
 done
 
 # Testing
