@@ -121,8 +121,6 @@ popd
 # OpenVidu Server
 pushd openvidu-server
 mvn \$MAVEN_OPTIONS clean compile package || exit 1
-OV_VERSION=$(get_version_from_pom-xml.py)
-cp target/openvidu-server-${OV_VERSION}.jar target/openvidu-server-latest.jar
 popd
 
 pushd openvidu-test-e2e
