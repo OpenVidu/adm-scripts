@@ -84,7 +84,7 @@ do
 done
 
 # Testing
-rgrep version.openvidu.java.client
+rgrep 2.10.0
 cd openvidu-test-e2e
 cat >run.sh<<EOF
 #!/bin/bash -x
