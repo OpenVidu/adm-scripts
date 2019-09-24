@@ -55,4 +55,5 @@ popd
 
 # Tell me the versions we've used
 mvn --version
+pushd openvidu-server/src/dashboard 
 ./node_modules/\@angular/cli/bin/ng version
