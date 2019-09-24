@@ -86,7 +86,7 @@ done
 # Testing
 cat >run.sh<<EOF
 #!/bin/bash -x
-MAVEN_OPTIONS='--batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true'
+MAVEN_OPTIONS='--batch-mode -DskipTests=true'
 
 pushd openvidu-java-client
 mvn \$MAVEN_OPTIONS versions:set -DnewVersion=1.0.0-TEST || exit 1
