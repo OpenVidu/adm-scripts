@@ -84,12 +84,49 @@ do
 done
 
 # Testing
-rgrep 2.10.0
-cd openvidu-test-e2e
 cat >run.sh<<EOF
 #!/bin/bash -x
+pushd openvidu-java-client
+mvn $MAVEN_OPTIONS versions:set -DnewVersion=1.0.0-TEST || exit 1
+popd
+
+# OpenVidu Parent
+mvn $MAVEN_OPTIONS versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=1.0.0-TEST || exit 1
+mvn $MAVEN_OPTIONS clean || exit 1
+mvn $MAVEN_OPTIONS install || exit 1
+
+# OpenVidu Browser
+pushd openvidu-browser 
+npm install --unsafe-perm || exit 1
+npm run build || exit 1
+npm link || exit 1
+popd 
+
+# OpenVidu Node Client
+pushd openvidu-node-client
+npm install --unsafe-perm || exit 1
+npm run build || exit 1
+npm link || exit 1
+popd
+
+# OpenVidu Server Dashboard
+pushd openvidu-server/src/dashboard 
+npm install --unsafe-perm || exit 1
+npm link openvidu-browser || exit 1
+./node_modules/\@angular/cli/bin/ng build --prod --output-path ../main/resources/static || exit 1
+popd
+
+# OpenVidu Server
+pushd openvidu-server
+mvn $MAVEN_OPTIONS clean compile package || exit 1
+OV_VERSION=$(get_version_from_pom-xml.py)
+cp target/openvidu-server-${OV_VERSION}.jar target/openvidu-server-latest.jar
+popd
+
+pushd openvidu-test-e2e
 mvn --batch-mode -DAPP_URL=https://${TESTAPP_IP}:443/ -DOPENVIDU_URL=https://${OPENVIDU_IP}:4443/ -DREMOTE_URL_CHROME=http://${CHROME_IP}:4444/wd/hub/ -DREMOTE_URL_FIREFOX=http://${FIREFOX_IP}:4444/wd/hub/ test
 echo \$? > res.out
+popd
 EOF
 chmod +x run.sh
 docker run \
