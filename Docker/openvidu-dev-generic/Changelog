@@ -6,3 +6,6 @@
 
 16/04/2018 version 0.7
 - update node from 8.x to 10.x
+
+25/09/2019 version 0.8
+- adding ffmpeg

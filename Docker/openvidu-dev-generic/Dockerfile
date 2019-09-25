@@ -15,7 +15,8 @@ RUN apt-get update \
     awscli \
     openjdk-8-jdk \
     python-lxml \
-    openssh-client
+    openssh-client \
+    ffmpeg
 
 # Installing nodejs
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
