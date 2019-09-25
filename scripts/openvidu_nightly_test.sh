@@ -85,9 +85,28 @@ done
 
 # Testing
 cat >run.sh<<EOF
+#!/bin/bash -x
+
+trap exit_on_error ERR
+
+exit_on_error () {
+  echo 1 > /workdir/res.out
+  exit 0
+}
+
+pushd openvidu-java-client
+mvn --batch-mode versions:set -DnewVersion=1.0.0-TEST
+popd
+
+mvn --batch-mode versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=1.0.0-TEST
+mvn --batch-mode -DskipTests=true clean install
+
+mkdir -p /opt/openvidu/recordings
+
 pushd openvidu-test-e2e
 mvn --batch-mode -DAPP_URL=https://${TESTAPP_IP}:443/ -DOPENVIDU_URL=https://${OPENVIDU_IP}:4443/ -DREMOTE_URL_CHROME=http://${CHROME_IP}:4444/wd/hub/ -DREMOTE_URL_FIREFOX=http://${FIREFOX_IP}:4444/wd/hub/ test
-echo \$? > res.out
+popd
+echo \$? > /workdir/res.out
 popd
 EOF
 chmod +x run.sh
@@ -97,7 +116,7 @@ docker run \
   --name maven-${DATESTAMP} \
   -v "$(pwd)":/workdir \
   -w /workdir \
-  maven:3.3.9-jdk-8 ./run.sh
+  openvidu/openvidu-dev-generic:0.8 ./run.sh
 
 # Cleaning the house
 CONTAINERS=(firefox chrome testapp kms openvidu)
