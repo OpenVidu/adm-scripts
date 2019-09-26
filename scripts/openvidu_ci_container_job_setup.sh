@@ -43,6 +43,7 @@ docker run \
   $([ "${KMS_AMI_ID}x" != "x" ] && echo "-e KMS_AMI_ID=$KMS_AMI_ID") \
   $([ "${OV_AMI_NAME}x" != "x" ] && echo "-e OV_AMI_NAME=$OV_AMI_NAME") \
   $([ "${OV_AMI_ID}x" != "x" ] && echo "-e OV_AMI_ID=$OV_AMI_ID") \
+  $([ "${CF_OVP_TARGET}x" != "x" ] && echo "-e CF_OVP_TARGET=$CF_OVP_TARGET") \
   -e "GITHUB_PRIVATE_RSA_KEY=$CONTAINER_PRIVATE_RSA_KEY" \
   -e "OPENVIDU_PROJECT=$OV_PROJECT" \
   -e "GITHUB_TOKEN=$OPENVIDU_GITHUB_TOKEN" \
