@@ -39,10 +39,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},
-    {"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},
-    {"ParameterKey":"MyDomainName","ParameterValue":"Nil"},
+    {"ParameterKey":"PublicElasticIP","ParameterValue":"1.0.2.0"},
+    {"ParameterKey":"MyDomainName","ParameterValue":"myapp.example.com"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"},
-    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"false"},
     {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
@@ -55,10 +55,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},
-    {"ParameterKey":"PublicElasticIP","ParameterValue":"Nil"},
-    {"ParameterKey":"MyDomainName","ParameterValue":"Nil"},
+    {"ParameterKey":"LetsEncryptEmail","ParameterValue":"Nil"},
+    {"ParameterKey":"PublicElasticIP","ParameterValue":"1.0.2.0"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"},
-    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"false"},
     {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
@@ -152,7 +152,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OwnCertCRT","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.crt"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.key"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"},
-    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"false"},
     {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
@@ -169,7 +169,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OwnCertCRT","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.crt"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.key"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"},
-    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"false"},
     {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
@@ -275,7 +275,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"},
-    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"false"},
     {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
@@ -292,7 +292,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OwnCertCRT","ParameterValue":"AAA"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"BBB"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"},
-    {"ParameterKey":"OpenViduWebhook","ParameterValue":"true"},
+    {"ParameterKey":"OpenViduWebhook","ParameterValue":"false"},
     {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
