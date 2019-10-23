@@ -46,7 +46,7 @@ case $OPENVIDU_PROJECT in
     [ ! -z "$OVC_VERSION" ] || OVC_VERSION=${OV_CALL_RELEASE}
 
     # CF Version
-    sed "s/@CF_V@/${CF_VERSION}/" CF-OpenVidu-TEMPLATE.yaml > CF-OpenVidu-$OPENVIDU_VERSION.yaml
+    sed "s/@CF_V@/${CF_VERSION}/g" CF-OpenVidu-TEMPLATE.yaml > CF-OpenVidu-$OPENVIDU_VERSION.yaml
     # OV Version
     sed -i "s/@OV_V@/${OPENVIDU_VERSION}/" CF-OpenVidu-$OPENVIDU_VERSION.yaml
     # OV Demos Version
