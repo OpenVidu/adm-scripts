@@ -22,7 +22,7 @@ case $OPENVIDU_PROJECT in
     git push origin master
 
     # Creating tag
-    git tag ${CF_VERSION} || exit 1
+    git tag v${CF_VERSION} || exit 1
     git push --tags
 
     aws s3 cp cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml s3://aws.openvidu.io --acl public-read 
@@ -38,9 +38,7 @@ case $OPENVIDU_PROJECT in
     cd cloudformation-openvidu
 
     CF_VERSION=${OPENVIDU_VERSION}
-    git tag ${CF_VERSION} || exit 1
-    git push --tags
-
+    
     TUTORIALS_RELEASE=$(curl --silent "https://api.github.com/repos/openvidu/openvidu-tutorials/releases/latest" | jq --raw-output '.tag_name' | cut -d"v" -f2)
     OV_CALL_RELEASE=$(curl --silent "https://api.github.com/repos/openvidu/openvidu-call/releases/latest" | jq --raw-output '.tag_name' | cut -d"v" -f2)
 
@@ -60,6 +58,9 @@ case $OPENVIDU_PROJECT in
 
     aws s3 cp CF-OpenVidu-$OPENVIDU_VERSION.yaml s3://aws.openvidu.io --acl public-read 
     aws s3 cp CF-OpenVidu-latest.yaml s3://aws.openvidu.io --acl public-read 
+
+    git tag v${CF_VERSION} || exit 1
+    git push --tags
 
     ;;
 
