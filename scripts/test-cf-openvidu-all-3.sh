@@ -13,7 +13,7 @@ TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
 
 # Copy template to S3
 if [ "${MODE}" == "dev" ]; then
-  aws s3 cp CF-OpenVidu-dev.yaml s3://aws.openvidu.io --acl public-read
+  aws s3 cp cloudformation-openvidu/CF-OpenVidu-dev.yaml s3://aws.openvidu.io --acl public-read
 fi
 
 # Choosing the template
