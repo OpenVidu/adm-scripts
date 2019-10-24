@@ -66,44 +66,44 @@ EOF
 else
   echo "Unknown combination"
   exit 0
-fi  
-
-
-  aws cloudformation create-stack \
-    --stack-name Openvidu-selfsigned-${DOMAIN_NAME} \
-    --template-url ${CF_FILE} \
-    --parameters file:///${TEMPJSON} \
-    --disable-rollback
-
-  aws cloudformation wait stack-create-complete --stack-name Openvidu-selfsigned-${DOMAIN_NAME}
-
-  echo "Extracting service URL..."
-  URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURL")) | .OutputValue')
-
-  sleep 10
-  RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
-
-  # Cleaning up
-  aws cloudformation delete-stack --stack-name Openvidu-selfsigned-${DOMAIN_NAME}
-
-  if [ "$RES" != "200" ]; then
-    echo "deployment failed"
-    exit 1
-  fi
 fi
+
+aws cloudformation create-stack \
+  --stack-name Openvidu-selfsigned-${DOMAIN_NAME} \
+  --template-url ${CF_FILE} \
+  --parameters file:///${TEMPJSON} \
+  --disable-rollback
+
+aws cloudformation wait stack-create-complete --stack-name Openvidu-selfsigned-${DOMAIN_NAME}
+
+echo "Extracting service URL..."
+URL=$(aws cloudformation describe-stacks --stack-name Openvidu-selfsigned-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURL")) | .OutputValue')
+
+sleep 10
+RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
+
+# Cleaning up
+aws cloudformation delete-stack --stack-name Openvidu-selfsigned-${DOMAIN_NAME}
+
+if [ "$RES" != "200" ]; then
+  echo "deployment failed"
+  exit 1
+fi
+
+fi # End MODE
 
 #############################
 ### Providing a certificate
 #############################
 
 if [ "$MODE" == "dev" ]; then
-  EIP=$(aws ec2 allocate-address)
-  IP=$(echo $EIP |  jq --raw-output '.PublicIp')
-
+  
+EIP=$(aws ec2 allocate-address)
+IP=$(echo $EIP |  jq --raw-output '.PublicIp')
 
 cat >$TEMPFILE<<EOF
 {
-  "Comment": "Testing OpenVidu Server Lets Encrypt Certificate.",
+  "Comment": "Testing OpenVidu Server OwnCert Certificate.",
   "Changes": [
     {
       "Action": "CREATE",
@@ -122,13 +122,10 @@ cat >$TEMPFILE<<EOF
 }
 EOF
 
+aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
+  --change-batch file:///$TEMPFILE
 
-  aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-    --change-batch file:///$TEMPFILE
-  
-  sleep 60
-
-
+sleep 60
 
 # Generate own certificate
 TEMPKEY=$(mktemp -t file-XXX --suffix .key)
@@ -179,28 +176,27 @@ else
   exit 0
 fi
 
+aws cloudformation create-stack \
+  --stack-name Openvidu-owncert-${DOMAIN_NAME} \
+  --template-url ${CF_FILE} \
+  --parameters file:///$TEMPJSON \
+  --disable-rollback
 
-  aws cloudformation create-stack \
-    --stack-name Openvidu-owncert-${DOMAIN_NAME} \
-    --template-url ${CF_FILE} \
-    --parameters file:///$TEMPJSON \
-    --disable-rollback
+aws cloudformation wait stack-create-complete --stack-name Openvidu-owncert-${DOMAIN_NAME}
 
-  aws cloudformation wait stack-create-complete --stack-name Openvidu-owncert-${DOMAIN_NAME}
+echo "Extracting service URL..."
+URL=$(aws cloudformation describe-stacks --stack-name Openvidu-owncert-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURLLE")) | .OutputValue')
 
-  echo "Extracting service URL..."
-  URL=$(aws cloudformation describe-stacks --stack-name Openvidu-owncert-${DOMAIN_NAME} | jq -r '.Stacks[0] | .Outputs[] | select(.OutputKey | contains("WebsiteURLLE")) | .OutputValue')
+sleep 10
+RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
 
-  sleep 10
-  RES=$(curl --insecure --location -u OPENVIDUAPP:MY_SECRET --output /dev/null --silent --write-out "%{http_code}\\n" ${URL} | grep "200")
+# Cleaning up
+aws cloudformation delete-stack --stack-name Openvidu-owncert-${DOMAIN_NAME}
 
-  # Cleaning up
-  aws cloudformation delete-stack --stack-name Openvidu-owncert-${DOMAIN_NAME}
+sleep 60
 
-  sleep 60
-
-  ALLOCATION_ID=$(aws ec2 describe-addresses --public-ips ${IP} | jq -r ' .Addresses[0] | .AllocationId')
-  aws ec2 release-address --allocation-id ${ALLOCATION_ID} 
+ALLOCATION_ID=$(aws ec2 describe-addresses --public-ips ${IP} | jq -r ' .Addresses[0] | .AllocationId')
+aws ec2 release-address --allocation-id ${ALLOCATION_ID} 
 
 cat >$TEMPFILE<<EOF
 {
@@ -223,14 +219,15 @@ cat >$TEMPFILE<<EOF
 }
 EOF
 
-  aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
-    --change-batch file:///$TEMPFILE
+aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
+  --change-batch file:///$TEMPFILE
 
-  if [ "$RES" != "200" ]; then
-    echo "deployment failed"
-    exit 1
-  fi
+if [ "$RES" != "200" ]; then
+  echo "deployment failed"
+  exit 1
 fi
+
+fi # End mode
 
 #############################
 ### Let's encrypt certificate
