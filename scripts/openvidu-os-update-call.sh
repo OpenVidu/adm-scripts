@@ -28,7 +28,7 @@ if ! grep -q ${KMS_VERSION} /etc/apt/sources.list.d/kurento.list; then
 		'^libboost-?(filesystem|log|program-options|regex|system|test|thread)?-dev' \
 		'^lib(glib2.0|glibmm-2.4|opencv|sigc++-2.0|soup2.4|ssl|tesseract|vpx)-dev' \
 		uuid-dev
-	do apt-get -y purge --auto-remove $pkg ; done
+	do apt-get -y purge --auto-remove $pkg || true ; done
 	
 	# Install newer version of KMS
 	echo "deb [arch=amd64] http://ubuntu.openvidu.io/${KMS_VERSION} xenial kms6" > /etc/apt/sources.list.d/kurento.list
