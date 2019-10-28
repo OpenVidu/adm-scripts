@@ -47,9 +47,10 @@ EOF
 rm -rf /var/www/html/*
 
 # Deploying
-tar zxf /home/ubuntu/openvidu-call.tar.gz -C /var/www/html
+curl -o /tmp/openvidu-call.tar.gz
+tar zxf /tmp/openvidu-call.tar.gz -C /var/www/html
 chown -R www-data.www-data /var/www/html
-rm /home/ubuntu/openvidu-call.tar.gz
+rm /tmp/openvidu-call.tar.gz
 mv ~/OpenViduCall-config-file.json /var/www/html/ov-settings.json
 
 # Starting services
