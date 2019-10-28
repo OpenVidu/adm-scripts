@@ -9,7 +9,7 @@ systemctl stop nginx
 supervisorctl stop openvidu-server
 
 # Get the jar
-curl -o /opt/openvidu/openvidu-server.jar -u OPENVIDU_PRO_USERNAME:OPENVIDU_PRO_PASSWORD https://pro.openvidu.io/openvidu-server-pro-${OPENVIDU_PRO_VERSION}.jar
+curl -o /opt/openvidu/openvidu-server.jar -u ${OPENVIDU_PRO_USERNAME}:${OPENVIDU_PRO_PASSWORD} https://pro.openvidu.io/openvidu-server-pro-${OPENVIDU_PRO_VERSION}.jar
 
 # Check if KMS is up to date
 KMS_VERSION=$(curl --silent https://oudzlg0y3m.execute-api.eu-west-1.amazonaws.com/v1/ov_kms_matrix?ov=${OPENVIDU_PRO_VERSION} | jq --raw-output '.[0] | .kms' )
@@ -50,7 +50,7 @@ rm -rf /var/www/html/*
 tar zxf /home/ubuntu/openvidu-call.tar.gz -C /var/www/html
 chown -R www-data.www-data /var/www/html
 rm /home/ubuntu/openvidu-call.tar.gz
-cp ~/OpenViduCall-config-file.json /var/www/html/ov-settings.json
+mv ~/OpenViduCall-config-file.json /var/www/html/ov-settings.json
 
 # Starting services
 systemctl start kurento-media-server
