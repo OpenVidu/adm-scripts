@@ -47,7 +47,7 @@ EOF
 rm -rf /var/www/html/*
 
 # Deploying
-curl -o /tmp/openvidu-call.tar.gz
+curl -o /tmp/openvidu-call.tar.gz https://github.com/OpenVidu/openvidu-call/releases/download/v${OPENVIDU_PRO_VERSION}/openvidu-call-${OPENVIDU_PRO_VERSION}.tar.gz
 tar zxf /tmp/openvidu-call.tar.gz -C /var/www/html
 chown -R www-data.www-data /var/www/html
 rm /tmp/openvidu-call.tar.gz
