@@ -299,7 +299,14 @@ case $OPENVIDU_PROJECT in
     npm install || { echo "dashboard -> install "; exit 1; }
     npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
     npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
-    npm run build-server-prod-aws  || { echo "dashboard -> build for prod"; exit 1; }
+    if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
+        npm run build-server-prod-aws  || { echo "dashboard -> build for prod"; exit 1; }
+    elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
+        npm run build-server-prod  || { echo "dashboard -> build for prod"; exit 1; }
+    else
+        echo "Option not supported"
+        exit 1
+    fi
     popd
 
     pushd openvidu-server-pro
@@ -308,6 +315,16 @@ case $OPENVIDU_PROJECT in
     else
         OVP_VERSION=${OPENVIDU_PRO_VERSION}
     fi
+
+    if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
+        OVP_VERSION=${OPENVIDU_PRO_VERSION}-slash-inspector
+    elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
+        OVP_VERSION=${OPENVIDU_PRO_VERSION}-slash
+    else
+        echo "Option not supported"
+        exit 1
+    fi
+
     mvn versions:set -DnewVersion=${OVP_VERSION} || { echo "Failed to bump openvidu-pro version"; exit 1; }
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
