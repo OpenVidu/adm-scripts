@@ -317,9 +317,9 @@ case $OPENVIDU_PROJECT in
     fi
 
     if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
-        OVP_VERSION=${OPENVIDU_PRO_VERSION}-slash-inspector
+        OVP_VERSION=${OVP_VERSION}-slash-inspector
     elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
-        OVP_VERSION=${OPENVIDU_PRO_VERSION}-slash
+        OVP_VERSION=${OVP_VERSION}-slash
     else
         echo "Option not supported"
         exit 1
