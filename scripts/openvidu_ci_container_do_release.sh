@@ -299,6 +299,11 @@ case $OPENVIDU_PROJECT in
     npm install || { echo "dashboard -> install "; exit 1; }
     npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
     npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
+
+    # We compile the front in 
+    # 1. /inspector
+    # 2. / 
+    # depends on OPENVIDU_WHERE_PUBLISH_INSPECTOR
     if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
         npm run build-server-prod-aws  || { echo "dashboard -> build for prod"; exit 1; }
     elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
@@ -316,6 +321,10 @@ case $OPENVIDU_PROJECT in
         OVP_VERSION=${OPENVIDU_PRO_VERSION}
     fi
 
+    # We assign a surname to the jar file depending on where inspector lives
+    # Could be:
+    # 1. https://URL/inspector
+    # 2. https://URL/
     if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
         OVP_VERSION=${OVP_VERSION}-slash-inspector
     elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
