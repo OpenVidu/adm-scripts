@@ -260,6 +260,7 @@ case $OPENVIDU_PROJECT in
     export AWS_DEFAULT_REGION=us-east-1
 
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
+    [ -z "$OVP_TARGET" ] && exit 1
 
     git clone https://github.com/OpenVidu/openvidu.git
 
