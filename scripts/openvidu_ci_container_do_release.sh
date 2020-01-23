@@ -37,7 +37,7 @@ case $OPENVIDU_PROJECT in
     pushd openvidu-server/src/dashboard || exit 1
 
     npm install
-    npm link openvidu-browser 
+    npm link openvidu-browser
     ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../main/resources/static || (echo "Failed to compile frontend"; exit 1)
     popd
 
@@ -53,48 +53,48 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the artifact to Github"; exit 1)
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || (echo "Failed to upload the artifact to Github"; exit 1)
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || (echo "Failed to upload the artifact to Github"; exit 1)
-    
+
     ;;
 
   openvidu-java-client)
 
     echo "## Building openvidu-java-client"
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
-    
+
     mvn $MAVEN_OPTIONS versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to update version"; exit 1)
-    
+
     pushd "$OPENVIDU_PROJECT"
-    
+
     mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
     mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
     mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
-    
+
     # Github release: commit and push
     git add pom.xml
     git commit -a -m "Update openvidu-java-client to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
-    
+
     popd
-    
+
     ;;
-    
+
   openvidu-test-browsers)
 
     echo "## Building openvidu-test-browsers"
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     pushd "$OPENVIDU_PROJECT"
-    
+
     mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
     mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
     mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
-    
+
     # Github release: commit and push
     git add pom.xml
     git commit -a -m "Update openvidu-test-browsers to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
-    
+
     popd
-    
+
     ;;
 
   openvidu-node-client)
@@ -106,14 +106,14 @@ case $OPENVIDU_PROJECT in
     npm install
     npm run build|| (echo "Failed to build"; exit 1)
     npm publish || (echo "Failed to publish to npm"; exit 1)
-    
+
     # Github release: commit and push
     git add package.json
     git commit -a -m "Update openvidu-node-client to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
-    
+
     popd
-    
+
     ;;
 
   # OpenVidu Tutorials
@@ -136,7 +136,7 @@ case $OPENVIDU_PROJECT in
     DESC=$(git log -1 --pretty=%B)
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
     popd
-    
+
     ;;
 
   classroom-front)
@@ -148,7 +148,7 @@ case $OPENVIDU_PROJECT in
     npm install || (echo "Failed to install dependencies"; exit 1)
     rm /opt/src/main/resources/static/* || (echo "Cleaning"; exit 1)
     ./node_modules/\@angular/cli/bin/ng build --prod --output-path /opt/src/main/resources/static || (echo "Failed compiling"; exit 1)
-    
+
     ;;
 
   classroom-back)
@@ -157,7 +157,7 @@ case $OPENVIDU_PROJECT in
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
     mvn clean compile package -DskipTest=true || (echo "Failed compiling"; exit 1)
-    
+
     # Github release: commit and push
     git add /opt/src/main/resources/static/*
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
@@ -166,7 +166,7 @@ case $OPENVIDU_PROJECT in
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file /opt/target/classroom-demo-${OPENVIDU_VERSION}.war || (echo "Failed to upload the artifact to Github"; exit 1)
-    
+
     ;;
 
   openvidu-call)
@@ -197,13 +197,13 @@ case $OPENVIDU_PROJECT in
     # openvidu-call package
     cd dist/openvidu-call
     tar czf /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz *
-    
-    # openvidu-call-demos build and package	
-    cd ../..	
-    rm -rf dist/openvidu-call	
-    ./node_modules/\@angular/cli/bin/ng build --prod --base-href=/openvidu-call/ || exit 1	
-    cd dist/openvidu-call	
-    tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *	
+
+    # openvidu-call-demos build and package
+    cd ../..
+    rm -rf dist/openvidu-call
+    ./node_modules/\@angular/cli/bin/ng build --prod --base-href=/openvidu-call/ || exit 1
+    cd dist/openvidu-call
+    tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *
 
     # npm release openvidu-angular
     cd ../openvidu-angular
@@ -219,7 +219,7 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call artifact to Github"; exit 1)
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call-demos artifact to Github"; exit 1)
-    
+
     # OpenVidu/openvidu repo (OpenVidu Web Component)
     openvidu_github_release.go upload  --user openvidu --repo "openvidu" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip --file /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip || (echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1)
 
@@ -258,7 +258,7 @@ case $OPENVIDU_PROJECT in
   openvidu-pro)
 
     export AWS_DEFAULT_REGION=us-east-1
-    
+
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
 
     git clone https://github.com/OpenVidu/openvidu.git
@@ -300,9 +300,9 @@ case $OPENVIDU_PROJECT in
     npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
     npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
 
-    # We compile the front in 
+    # We compile the front in
     # 1. /inspector
-    # 2. / 
+    # 2. /
     # depends on OPENVIDU_WHERE_PUBLISH_INSPECTOR
     if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
         npm run build-server-prod-aws  || { echo "dashboard -> build for prod"; exit 1; }
@@ -347,10 +347,12 @@ case $OPENVIDU_PROJECT in
       ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
 
     # Do the same in Naeva
-    export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
-    export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
-    aws s3 cp openvidu-server-pro-${OVP_VERSION}.jar s3://naeva-openvidu-pro/
-    popd
+    if [[ "$OVP_TARGET" == "market" || "$OVP_TARGET" == "all" ]]; then
+      export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
+      export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
+      aws s3 cp openvidu-server-pro-${OVP_VERSION}.jar s3://naeva-openvidu-pro/
+      popd
+    fi
 
     ;;
 
