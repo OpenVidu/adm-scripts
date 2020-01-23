@@ -339,12 +339,14 @@ case $OPENVIDU_PROJECT in
     popd
 
     # Upload the JAR to https://pro.openvidu.io (CodeURJC)
-    pushd openvidu-server-pro/target
-    chmod 0400 /opt/id_rsa.key
-    scp -o StrictHostKeyChecking=no \
+    if [[ "$OVP_TARGET" == "no_market" || "$OVP_TARGET" == "all" ]]; then
+      pushd openvidu-server-pro/target
+      chmod 0400 /opt/id_rsa.key
+      scp -o StrictHostKeyChecking=no \
       -i /opt/id_rsa.key \
       openvidu-server-pro-${OVP_VERSION}.jar \
       ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
+    fi
 
     # Do the same in Naeva
     if [[ "$OVP_TARGET" == "market" || "$OVP_TARGET" == "all" ]]; then
