@@ -327,9 +327,9 @@ case $OPENVIDU_PROJECT in
     # 1. https://URL/inspector
     # 2. https://URL/
     if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
-        OVP_VERSION=${OVP_VERSION}-slash-inspector
+        OVP_VERSION=${OVP_VERSION}
     elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
-        OVP_VERSION=${OVP_VERSION}-slash
+        OVP_VERSION=${OVP_VERSION}-dev
     else
         echo "Option not supported"
         exit 1
