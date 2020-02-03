@@ -308,7 +308,7 @@ case $OPENVIDU_PROJECT in
     # depends on OPENVIDU_WHERE_PUBLISH_INSPECTOR
     if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
         npm run build-server-prod-aws  || { echo "dashboard -> build for prod"; exit 1; }
-    if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR_K8S" ]; then
+    elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR_K8S" ]; then
         npm run build-server-prod-k8s  || { echo "dashboard -> build for prod k8s"; exit 1; }
     elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
         npm run build-server-prod  || { echo "dashboard -> build for prod"; exit 1; }
