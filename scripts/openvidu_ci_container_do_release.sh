@@ -322,12 +322,19 @@ case $OPENVIDU_PROJECT in
         OVP_VERSION=${OPENVIDU_PRO_VERSION}
     fi
 
-    # We assign a surname to the jar file depending on where inspector lives
+    # Depending on the environment, we will have different environments
+    # 1. BASE_HREF_TO_SLASH_INSPECTOR has the inspector in /inspector. It's for deployments with CF, Ansible and aws.
+    #   Has defined a unique port for OpenVidu: 4443
+    # 2. BASE_HREF_TO_SLASH_INSPECTOR_K8s has the inspector in /inspector. It's for deployments in k8s.
+    # 3. BASE_HREF_TO_ROOT_PATH has the inspector in /. It's for dev purposes
+    #   OpenVidu Port is 443
     # Could be:
     # 1. https://URL/inspector
     # 2. https://URL/
     if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
         OVP_VERSION=${OVP_VERSION}
+    elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR_K8S" ]; then
+        OVP_VERSION=${OVP_VERSION}-k8s
     elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
         OVP_VERSION=${OVP_VERSION}-dev
     else
