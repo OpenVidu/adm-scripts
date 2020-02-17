@@ -54,6 +54,9 @@ case $OPENVIDU_PROJECT in
     # OV Call Version
     sed -i "s/@OVC_V@/${OVC_VERSION}/" CF-OpenVidu-$OPENVIDU_VERSION.yaml
 
+    # Git branch
+    sed -i "s/@GAB@/${GIT_BRANCH}/" CF-OpenVidu-$OPENVIDU_VERSION.yaml
+
     cp CF-OpenVidu-$OPENVIDU_VERSION.yaml CF-OpenVidu-latest.yaml
 
     # Update CF of specific version
