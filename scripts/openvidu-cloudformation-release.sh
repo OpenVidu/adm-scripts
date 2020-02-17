@@ -8,7 +8,7 @@ case $OPENVIDU_PROJECT in
     ## Free edition of CloudFormation for OpenVidu Pro
 
     CF_VERSION=${OPENVIDU_PRO_VERSION}
-    
+
     # CF Version
     sed "s/@CF_RELEASE@/${CF_VERSION}/" cfn-OpenViduServerPro-cluster.yaml.template > cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml
     # OV Version
@@ -25,8 +25,8 @@ case $OPENVIDU_PROJECT in
     git tag v${CF_VERSION} || exit 1
     git push --tags
 
-    aws s3 cp cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml s3://aws.openvidu.io --acl public-read 
-    aws s3 cp cfn-OpenViduServerPro-cluster-latest.yaml                  s3://aws.openvidu.io --acl public-read 
+    aws s3 cp cfn-OpenViduServerPro-cluster-${OPENVIDU_PRO_VERSION}.yaml s3://aws.openvidu.io --acl public-read
+    aws s3 cp cfn-OpenViduServerPro-cluster-latest.yaml                  s3://aws.openvidu.io --acl public-read
 
     ;;
 
@@ -34,11 +34,11 @@ case $OPENVIDU_PROJECT in
   cloudformation_ov_server)
 
     ## Community edition
-
+    git checkout $GIT_BRANCH
     cd cloudformation-openvidu
 
     CF_VERSION=${OPENVIDU_VERSION}
-    
+
     TUTORIALS_RELEASE=$(curl --silent "https://api.github.com/repos/openvidu/openvidu-tutorials/releases/latest" | jq --raw-output '.tag_name' | cut -d"v" -f2)
     OV_CALL_RELEASE=$(curl --silent "https://api.github.com/repos/openvidu/openvidu-call/releases/latest" | jq --raw-output '.tag_name' | cut -d"v" -f2)
 
@@ -56,8 +56,13 @@ case $OPENVIDU_PROJECT in
 
     cp CF-OpenVidu-$OPENVIDU_VERSION.yaml CF-OpenVidu-latest.yaml
 
-    aws s3 cp CF-OpenVidu-$OPENVIDU_VERSION.yaml s3://aws.openvidu.io --acl public-read 
-    aws s3 cp CF-OpenVidu-latest.yaml s3://aws.openvidu.io --acl public-read 
+    # Update CF of specific version
+    aws s3 cp CF-OpenVidu-$OPENVIDU_VERSION.yaml s3://aws.openvidu.io --acl public-read
+
+    # Update latest only if branch is master
+    if [[ $GIT_BRANCH == "master" ]]; then
+      aws s3 cp CF-OpenVidu-latest.yaml s3://aws.openvidu.io --acl public-read
+    fi
 
     git tag v${CF_VERSION} || exit 1
     git push --tags
@@ -65,9 +70,9 @@ case $OPENVIDU_PROJECT in
     ;;
 
   cloudformation_ov_pro_server)
-  
+
     ## Release for marketplace
-    
+
     pushd aws_marketplace
 
     sed "s/OV_AMI/${OV_AMI}/" cfn-mkt-openvidu-server-pro.yaml.template > cfn-mkt-openvidu-server-pro-${OPENVIDU_PRO_VERSION}.yaml
