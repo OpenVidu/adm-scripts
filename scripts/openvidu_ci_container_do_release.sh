@@ -353,10 +353,18 @@ case $OPENVIDU_PROJECT in
     if [[ "$OVP_TARGET" == "no_market" || "$OVP_TARGET" == "all" ]]; then
       pushd openvidu-server-pro/target
       chmod 0400 /opt/id_rsa.key
+
+      # Upload to pro.openvidu.io
       scp -o StrictHostKeyChecking=no \
       -i /opt/id_rsa.key \
       openvidu-server-pro-${OVP_VERSION}.jar \
       ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
+
+      # Upload to pro-stripe.openvidu.io
+      scp -o StrictHostKeyChecking=no \
+      -i /opt/id_rsa.key \
+      openvidu-server-pro-${OVP_VERSION}.jar \
+      ubuntu@pro-stripe.openvidu.io:/var/www/pro-stripe.openvidu.io/
     fi
 
     # Do the same in Naeva
