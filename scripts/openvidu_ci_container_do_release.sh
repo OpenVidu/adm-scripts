@@ -21,8 +21,6 @@ case $OPENVIDU_PROJECT in
     pushd openvidu-browser || exit 1
     npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Faile to bump package.json version"; exit 1)
 
-    rm static/js/*
-
     npm install
     npm run build || exit 1
     VERSION=$OPENVIDU_VERSION npm run browserify || exit 1
