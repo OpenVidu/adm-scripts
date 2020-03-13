@@ -120,7 +120,7 @@ cat >$TEMPFILE<<EOF
 }
 EOF
 
-aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
+aws route53 change-resource-record-sets --hosted-zone-id Z33V7VZIKS4MZD \
   --change-batch file:///$TEMPFILE
 
 sleep 60
@@ -217,7 +217,7 @@ cat >$TEMPFILE<<EOF
 }
 EOF
 
-aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
+aws route53 change-resource-record-sets --hosted-zone-id Z33V7VZIKS4MZD \
   --change-batch file:///$TEMPFILE
 
 if [ "$RES" != "200" ]; then
@@ -253,7 +253,7 @@ cat >$TEMPFILE<<EOF
 }
 EOF
 
-aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
+aws route53 change-resource-record-sets --hosted-zone-id Z33V7VZIKS4MZD \
   --change-batch file:///$TEMPFILE
 
 sleep 60
@@ -340,7 +340,7 @@ cat >$TEMPFILE<<EOF
 }
 EOF
 
-aws route53 change-resource-record-sets --hosted-zone-id ZVWKFNM0CR0BK \
+aws route53 change-resource-record-sets --hosted-zone-id Z33V7VZIKS4MZD \
   --change-batch file:///$TEMPFILE
 
 if [ "$RES" != "200" ]; then
