@@ -128,7 +128,7 @@ sleep 60
 # Generate own certificate
 TEMPKEY=$(mktemp -t file-XXX --suffix .key)
 TEMPCRT=$(mktemp -t file-XXX --suffix .crt)
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $TEMPKEY -out $TEMPCRT -subj "/CN=$DOMAIN_NAME.k8s.codeurjc.es"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $TEMPKEY -out $TEMPCRT -subj "/CN=$DOMAIN_NAME.cloudapps.codeurjc.es."
 
 if [ "$MODE" == "dev" ]; then
   aws s3 cp $TEMPKEY s3://public.openvidu.io/openvidu-cloudformation-fake.key --acl public-read
@@ -139,7 +139,7 @@ if [ "$TYPE" == "server" ]; then
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey": "KeyName","ParameterValue":"kms-aws-share-key" },
-    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.k8s.codeurjc.es"},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es."},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"owncert"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
@@ -156,7 +156,7 @@ elif [ "$TYPE" == "demos" ]; then
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey": "KeyName","ParameterValue":"kms-aws-share-key" },
-    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.k8s.codeurjc.es"},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es."},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"owncert"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
@@ -262,7 +262,7 @@ if [ "$TYPE" == "server" ]; then
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
-    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.k8s.codeurjc.es"},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es."},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"letsencrypt"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
@@ -279,7 +279,7 @@ elif [ "$TYPE" == "demos" ]; then
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
-    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.k8s.codeurjc.es"},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es."},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"letsencrypt"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
