@@ -70,6 +70,7 @@ else
   exit 0
 fi
 
+echo "Starting SelfSigned SSL OpenVidu CE CloudFormation Test"
 aws cloudformation create-stack \
   --stack-name Openvidu-selfsigned-${DOMAIN_NAME} \
   --template-url ${CF_FILE} \
@@ -182,6 +183,7 @@ else
   exit 0
 fi
 
+echo "Starting SelfSigned SSL OpenVidu CE CloudFormation Test"
 aws cloudformation create-stack \
   --stack-name Openvidu-owncert-${DOMAIN_NAME} \
   --template-url ${CF_FILE} \
@@ -309,6 +311,7 @@ else
   exit 0
 fi
 
+echo "Starting SelfSigned SSL OpenVidu CE CloudFormation Test"
 aws cloudformation create-stack \
   --stack-name Openvidu-letsencrypt-${DOMAIN_NAME} \
   --template-url ${CF_FILE} \
