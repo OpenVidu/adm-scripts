@@ -43,7 +43,6 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"MyDomainName","ParameterValue":"myapp.example.com"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"},
     {"ParameterKey":"OpenViduWebhook","ParameterValue":"false"},
-    {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
@@ -59,7 +58,6 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"PublicElasticIP","ParameterValue":"1.0.2.0"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"},
     {"ParameterKey":"OpenViduWebhook","ParameterValue":"false"},
-    {"ParameterKey":"OpenViduWebhookEndpoint","ParameterValue":"http://54.154.208.234"},
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
@@ -97,7 +95,7 @@ fi # End MODE
 #############################
 
 if [ "$MODE" == "dev" ]; then
-  
+
 EIP=$(aws ec2 allocate-address)
 IP=$(echo $EIP |  jq --raw-output '.PublicIp')
 
@@ -108,7 +106,7 @@ cat >$TEMPFILE<<EOF
     {
       "Action": "CREATE",
       "ResourceRecordSet": {
-        "Name": "${DOMAIN_NAME}.k8s.codeurjc.es.",
+        "Name": "${DOMAIN_NAME}.cloudapps.codeurjc.es.",
         "Type": "A",
         "TTL": 60,
         "ResourceRecords": [
@@ -145,7 +143,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"owncert"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
-    {"ParameterKey":"WantToSendInfo","ParameterValue":"false"}, 
+    {"ParameterKey":"WantToSendInfo","ParameterValue":"false"},
     {"ParameterKey":"OwnCertCRT","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.crt"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.key"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"false"},
@@ -162,7 +160,7 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"owncert"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
-    {"ParameterKey":"WantToSendInfo","ParameterValue":"false"}, 
+    {"ParameterKey":"WantToSendInfo","ParameterValue":"false"},
     {"ParameterKey":"OwnCertCRT","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.crt"},
     {"ParameterKey":"OwnCertKEY","ParameterValue":"http://public.openvidu.io/openvidu-cloudformation-fake.key"},
     {"ParameterKey":"WantToDeployDemos","ParameterValue":"true"},
@@ -196,7 +194,7 @@ aws cloudformation delete-stack --stack-name Openvidu-owncert-${DOMAIN_NAME}
 sleep 60
 
 ALLOCATION_ID=$(aws ec2 describe-addresses --public-ips ${IP} | jq -r ' .Addresses[0] | .AllocationId')
-aws ec2 release-address --allocation-id ${ALLOCATION_ID} 
+aws ec2 release-address --allocation-id ${ALLOCATION_ID}
 
 cat >$TEMPFILE<<EOF
 {
@@ -205,7 +203,7 @@ cat >$TEMPFILE<<EOF
     {
       "Action": "DELETE",
       "ResourceRecordSet": {
-        "Name": "${DOMAIN_NAME}.k8s.codeurjc.es.",
+        "Name": "${DOMAIN_NAME}.cloudapps.codeurjc.es.",
         "Type": "A",
         "TTL": 60,
         "ResourceRecords": [
@@ -241,7 +239,7 @@ cat >$TEMPFILE<<EOF
     {
       "Action": "CREATE",
       "ResourceRecordSet": {
-        "Name": "${DOMAIN_NAME}.k8s.codeurjc.es.",
+        "Name": "${DOMAIN_NAME}.cloudapps.codeurjc.es.",
         "Type": "A",
         "TTL": 60,
         "ResourceRecords": [
@@ -319,7 +317,7 @@ aws cloudformation delete-stack --stack-name Openvidu-letsencrypt-${DOMAIN_NAME}
 sleep 60
 
 ALLOCATION_ID=$(aws ec2 describe-addresses --public-ips ${IP} | jq -r '.Addresses[0] | .AllocationId')
-aws ec2 release-address --allocation-id ${ALLOCATION_ID} 
+aws ec2 release-address --allocation-id ${ALLOCATION_ID}
 
 cat >$TEMPFILE<<EOF
 {
@@ -328,7 +326,7 @@ cat >$TEMPFILE<<EOF
   {
     "Action": "DELETE",
     "ResourceRecordSet": {
-      "Name": "${DOMAIN_NAME}.k8s.codeurjc.es.",
+      "Name": "${DOMAIN_NAME}.cloudapps.codeurjc.es.",
       "Type": "A",
       "TTL": 60,
       "ResourceRecords": [

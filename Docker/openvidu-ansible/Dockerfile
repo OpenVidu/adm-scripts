@@ -1,5 +1,7 @@
 FROM ubuntu:18.04
 
+MAINTAINER Carlos Ruiz carlos.ruizbal@gmail.com
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y gnupg2 python3-pip sshpass git openssh-client && \
     rm -rf /var/lib/apt/lists/* && \
