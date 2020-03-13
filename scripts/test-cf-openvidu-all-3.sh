@@ -61,6 +61,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
+
+# Print parameters
+cat $TEMPJSON
+
 else
   echo "Unknown combination"
   exit 0
@@ -169,6 +173,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
+
+# Print parameters
+cat $TEMPJSON
+
 else
   echo "Unknown combination"
   exit 0
@@ -292,6 +300,10 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
+
+# Print parameters
+cat $TEMPJSON
+
 else
   echo "Unknown combination"
   exit 0
