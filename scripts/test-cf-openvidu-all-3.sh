@@ -139,7 +139,7 @@ if [ "$TYPE" == "server" ]; then
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey": "KeyName","ParameterValue":"kms-aws-share-key" },
-    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es."},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es"},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"owncert"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
@@ -156,7 +156,7 @@ elif [ "$TYPE" == "demos" ]; then
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey": "KeyName","ParameterValue":"kms-aws-share-key" },
-    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es."},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es"},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"owncert"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
@@ -262,7 +262,7 @@ if [ "$TYPE" == "server" ]; then
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
-    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es."},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es"},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"letsencrypt"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
@@ -279,7 +279,7 @@ elif [ "$TYPE" == "demos" ]; then
 cat > $TEMPJSON<<EOF
   [
     {"ParameterKey":"KeyName","ParameterValue":"kms-aws-share-key"},
-    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es."},
+    {"ParameterKey":"MyDomainName","ParameterValue":"${DOMAIN_NAME}.cloudapps.codeurjc.es"},
     {"ParameterKey":"PublicElasticIP","ParameterValue":"${IP}"},
     {"ParameterKey":"WhichCert","ParameterValue":"letsencrypt"},
     {"ParameterKey":"LetsEncryptEmail","ParameterValue":"openvidu@gmail.com"},
