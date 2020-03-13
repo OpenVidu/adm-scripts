@@ -61,14 +61,13 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
-
-# Print parameters
-cat $TEMPJSON
-
 else
   echo "Unknown combination"
   exit 0
 fi
+
+# Print parameters
+cat $TEMPJSON
 
 echo "Starting SelfSigned SSL OpenVidu CE CloudFormation Test"
 aws cloudformation create-stack \
@@ -174,16 +173,15 @@ cat > $TEMPJSON<<EOF
     {"ParameterKey":"OpenViduWebhookHeaders","ParameterValue":"Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"}
   ]
 EOF
-
-# Print parameters
-cat $TEMPJSON
-
 else
   echo "Unknown combination"
   exit 0
 fi
 
-echo "Starting SelfSigned SSL OpenVidu CE CloudFormation Test"
+# Print parameters
+cat $TEMPJSON
+
+echo "Starting OwnCert SSL OpenVidu CE CloudFormation Test"
 aws cloudformation create-stack \
   --stack-name Openvidu-owncert-${DOMAIN_NAME} \
   --template-url ${CF_FILE} \
@@ -303,15 +301,15 @@ cat > $TEMPJSON<<EOF
   ]
 EOF
 
-# Print parameters
-cat $TEMPJSON
-
 else
   echo "Unknown combination"
   exit 0
 fi
 
-echo "Starting SelfSigned SSL OpenVidu CE CloudFormation Test"
+# Print parameters
+cat $TEMPJSON
+
+echo "Starting letsencrypt SSL OpenVidu CE CloudFormation Test"
 aws cloudformation create-stack \
   --stack-name Openvidu-letsencrypt-${DOMAIN_NAME} \
   --template-url ${CF_FILE} \
