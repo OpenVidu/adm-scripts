@@ -187,6 +187,7 @@ case $OPENVIDU_PROJECT in
     echo "## Building openvidu WebComponent"
     npm run build:openvidu-webcomponent
     zip -r --junk-paths /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip openvidu-webcomponent
+    rm -rf ./openvidu-webcomponent # Delete webcomponent compilation folder
 
     # openvidu-angular build
     echo "## Building openvidu-angular"
