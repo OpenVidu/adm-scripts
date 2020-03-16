@@ -4,9 +4,9 @@ set -eu -o pipefail
 OPENVIDU_PRO_VERSION=$1
 
 # Stopping services
-systemctl stop kurento-media-server
-systemctl stop nginx
-supervisorctl stop openvidu-server
+systemctl stop kurento-media-server || true
+systemctl stop nginx || true
+supervisorctl stop openvidu-server || true
 
 # Get the jar
 curl -o /opt/openvidu/openvidu-server.jar -u ${OPENVIDU_PRO_USERNAME}:${OPENVIDU_PRO_PASSWORD} https://pro.openvidu.io/openvidu-server-pro-${OPENVIDU_PRO_VERSION}.jar
