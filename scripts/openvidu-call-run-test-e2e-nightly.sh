@@ -21,8 +21,8 @@ docker run \
   --rm \
   --name kms-ov-${DATESTAMP} \
   -p 4443:4443 \
-  -e openvidu.secret=MY_SECRET \
-  -e openvidu.publicurl=docker \
+  -e OPENVIDU_SECRET=MY_SECRET \
+  -e OPENVIDU_PUBLICURL=docker \
   openvidu/openvidu-server-kms
 
 OV_URL=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' kms-ov-${DATESTAMP})
