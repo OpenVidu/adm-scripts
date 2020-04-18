@@ -16,10 +16,10 @@ case $OPENVIDU_PROJECT in
 
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
-    echo "## Building openvidu-browser"
+    echo "## Building OpenVidu Browser"
     npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
     pushd openvidu-browser || exit 1
-    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Faile to bump package.json version"; exit 1)
+    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
 
     npm install
     npm run build || exit 1
@@ -31,12 +31,12 @@ case $OPENVIDU_PROJECT in
     popd
 
     # Openvidu Server
-    echo "## Building openvidu Server"
+    echo "## Building OpenVidu Server"
     pushd openvidu-server/src/dashboard || exit 1
 
     npm install
     npm link openvidu-browser
-    ./node_modules/\@angular/cli/bin/ng build --prod --output-path ../main/resources/static || (echo "Failed to compile frontend"; exit 1)
+    npm run build-prod || (echo "Failed to compile frontend"; exit 1)
     popd
 
     pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
