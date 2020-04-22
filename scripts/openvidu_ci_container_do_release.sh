@@ -299,22 +299,7 @@ case $OPENVIDU_PROJECT in
     npm install || { echo "dashboard -> install "; exit 1; }
     npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
     npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
-
-    # We compile the front in
-    # 1. /inspector. Port 4443
-    # 2. /inspector. Port 443
-    # 3. /. Any Port
-    # depends on OPENVIDU_WHERE_PUBLISH_INSPECTOR
-    if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
-        npm run build-server-prod-aws  || { echo "dashboard -> build for prod"; exit 1; }
-    elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR_K8S" ]; then
-        npm run build-server-prod-k8s  || { echo "dashboard -> build for prod k8s"; exit 1; }
-    elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
-        npm run build-server-prod  || { echo "dashboard -> build for prod"; exit 1; }
-    else
-        echo "Option not supported"
-        exit 1
-    fi
+    npm run build-server-prod  || { echo "dashboard -> build for prod"; exit 1; }
     popd
 
     pushd openvidu-server-pro
@@ -322,26 +307,6 @@ case $OPENVIDU_PROJECT in
         OVP_VERSION=${OPENVIDU_PRO_VERSION}-SNAPSHOT
     else
         OVP_VERSION=${OPENVIDU_PRO_VERSION}
-    fi
-
-    # Depending on the environment, we will have different environments
-    # 1. BASE_HREF_TO_SLASH_INSPECTOR has the inspector in /inspector. It's for deployments with CF, Ansible and aws.
-    #   Has defined a unique port for OpenVidu: 4443
-    # 2. BASE_HREF_TO_SLASH_INSPECTOR_K8s has the inspector in /inspector. It's for deployments in k8s.
-    # 3. BASE_HREF_TO_ROOT_PATH has the inspector in /. It's for dev purposes
-    #   OpenVidu Port is 443
-    # Could be:
-    # 1. https://URL/inspector
-    # 2. https://URL/
-    if [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR" ]; then
-        OVP_VERSION=${OVP_VERSION}
-    elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_SLASH_INSPECTOR_K8S" ]; then
-        OVP_VERSION=${OVP_VERSION}-k8s
-    elif [ "${OPENVIDU_WHERE_PUBLISH_INSPECTOR}" == "BASE_HREF_TO_ROOT_PATH" ]; then
-        OVP_VERSION=${OVP_VERSION}-dev
-    else
-        echo "Option not supported"
-        exit 1
     fi
 
     mvn versions:set -DnewVersion=${OVP_VERSION} || { echo "Failed to bump openvidu-pro version"; exit 1; }
