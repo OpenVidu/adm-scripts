@@ -215,11 +215,11 @@ case $OPENVIDU_PROJECT in
     npm run build:openvidu-angular
 
     # npm release openvidu-angular
-    cd ../openvidu-angular
+    cd projects/openvidu-angular
     npm publish || (echo "Failed to publish openvidu-angular to npm"; exit 1)
 
     # Github release: commit and push
-    cd ../..
+    cd ../../..
     git commit -a -m "Update to version v$OPENVIDU_CALL_VERSION"
     git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
