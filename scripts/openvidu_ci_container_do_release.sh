@@ -172,18 +172,39 @@ case $OPENVIDU_PROJECT in
     echo "## Building openvidu-call"
     [ -z "$OPENVIDU_CALL_VERSION" ] && exit 1
 
+    ## FRONT
     # Update npm dependencies
     npm-update-dep-call.py || (echo "Faile to update dependencies/bump version"; exit 1)
-    pushd front/openvidu-call || (echo "Failed to change folder"; exit 1)
+    cd openvidu-call-front || (echo "Failed to change folder"; exit 1)
 
     # Install npm dependencies
     npm install || exit 1
 
     # openvidu-call production build
     ./node_modules/\@angular/cli/bin/ng version || exit 1
-    ./node_modules/\@angular/cli/bin/ng build --prod || exit 1
+    npm run build-prod || exit 1
+
+    ## BACK
+    cd ../openvidu-call-back || (echo "Failed to change folder"; exit 1)
+    npm install || (echo "Failed to NPM install"; exit 1)
+    npm run build || (echo "Failed to NPM run build"; exit 1)
+
+    # openvidu-call package
+    cd dist
+    tar czf /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz *
+    rm -rf dist/*
+
+    # openvidu-call-demos build and package
+    cd ../../openvidu-call-front
+    rm -rf dist/openvidu-call
+    npm run build-prod /openvidu-call/ || exit 1
+    cd ../openvidu-call-back || (echo "Failed to change folder"; exit 1)
+    npm run build || (echo "Failed to NPM run build"; exit 1)
+    cd dist
+    tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *
 
     # OpenVidu Web Component build and package
+    cd ../../openvidu-call-front || (echo "Failed to change folder"; exit 1)
     echo "## Building openvidu WebComponent"
     npm run build:openvidu-webcomponent
     zip -r --junk-paths /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip openvidu-webcomponent
@@ -192,17 +213,6 @@ case $OPENVIDU_PROJECT in
     # openvidu-angular build
     echo "## Building openvidu-angular"
     npm run build:openvidu-angular
-
-    # openvidu-call package
-    cd dist/openvidu-call
-    tar czf /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz *
-
-    # openvidu-call-demos build and package
-    cd ../..
-    rm -rf dist/openvidu-call
-    ./node_modules/\@angular/cli/bin/ng build --prod --base-href=/openvidu-call/ || exit 1
-    cd dist/openvidu-call
-    tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *
 
     # npm release openvidu-angular
     cd ../openvidu-angular
