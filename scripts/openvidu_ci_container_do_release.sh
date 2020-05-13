@@ -215,7 +215,7 @@ case $OPENVIDU_PROJECT in
     npm run build:openvidu-angular
 
     # npm release openvidu-angular
-    cd projects/openvidu-angular
+    cd dist/openvidu-angular
     npm publish || (echo "Failed to publish openvidu-angular to npm"; exit 1)
 
     # Github release: commit and push
