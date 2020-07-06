@@ -22,7 +22,7 @@ docker run \
   -e AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY} \
   openvidu/openvidu-taskcat:${OV_TASKCAT_VERSION} \
   /usr/local/bin/taskcat test run \
-    -v -A ${NAEVA_AWS_ACCESS_KEY_ID} \
+    -A ${NAEVA_AWS_ACCESS_KEY_ID} \
     -S ${NAEVA_AWS_SECRET_ACCESS_KEY}
 
 popd
