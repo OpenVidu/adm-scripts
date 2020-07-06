@@ -20,8 +20,7 @@ docker run \
   -e AWS_DEFAULT_REGION=us-east-1 \
   -e AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID} \
   -e AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY} \
-  openvidu/openvidu-taskcat:${OV_TASKCAT_VERSION} \ 
-    /usr/local/bin/taskcat \
+  openvidu/openvidu-taskcat:${OV_TASKCAT_VERSION} /usr/local/bin/taskcat \
     -c taskcat.yml -p -v \
     -A ${NAEVA_AWS_ACCESS_KEY_ID} \
     -S ${NAEVA_AWS_SECRET_ACCESS_KEY}
