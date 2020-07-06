@@ -12,8 +12,6 @@ mkdir -p taskcat.ym/templates
 curl -o taskcat.ym/templates/CF-OpenVidu-${OV_VERSION}.yaml https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-${OV_VERSION}.yaml
 sed -i "s/TEMPLATE_TO_TEST/CF-OpenVidu-${OV_VERSION}.yaml/" taskcat.yml
 
-ls -l
-
 docker run \
   --name openvidu-taskcat-${BUILD_ID} \
   --rm -t \
