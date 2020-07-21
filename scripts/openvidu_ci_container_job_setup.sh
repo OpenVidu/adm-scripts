@@ -53,6 +53,7 @@ docker run \
   $([ "${AWS_DOCKER_TAG}x" != "x" ] && echo "-e AWS_DOCKER_TAG=$AWS_DOCKER_TAG") \
   $([ "${AWS_KEY_NAME}x" != "x" ] && echo "-e AWS_KEY_NAME=$AWS_KEY_NAME") \
   $([ "${UPDATE_INSTALLATION_SCRIPT}x" != "x" ] && echo "-e UPDATE_INSTALLATION_SCRIPT=$UPDATE_INSTALLATION_SCRIPT") \
+  $([ "${CF_RELEASE}x" != "x" ] && echo "-e CF_RELEASE=$CF_RELEASE") \
   $([ "${ELASTICSEARCH_DOCKER_TAG}x" != "x" ] && echo "-e ELASTICSEARCH_DOCKER_TAG=$ELASTICSEARCH_DOCKER_TAG") \
   $([ "${KIBANA_DOCKER_TAG}x" != "x" ] && echo "-e KIBANA_DOCKER_TAG=$KIBANA_DOCKER_TAG") \
   -e "GITHUB_PRIVATE_RSA_KEY=$CONTAINER_PRIVATE_RSA_KEY" \
