@@ -269,7 +269,6 @@ case $OPENVIDU_PROJECT in
     export AWS_DEFAULT_REGION=us-east-1
 
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
-    [ -z "$OVP_TARGET" ] && exit 1
 
     git clone https://github.com/OpenVidu/openvidu.git
 
@@ -323,25 +322,14 @@ case $OPENVIDU_PROJECT in
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
-    # Upload the JAR to https://pro.openvidu.io (CodeURJC)
-    if [[ "$OVP_TARGET" == "no_market" || "$OVP_TARGET" == "all" ]]; then
-      pushd openvidu-server-pro/target
-      chmod 0400 /opt/id_rsa.key
+    pushd openvidu-server-pro/target
+    chmod 0400 /opt/id_rsa.key
 
-      # Upload to pro.openvidu.io
-      scp -o StrictHostKeyChecking=no \
-      -i /opt/id_rsa.key \
-      openvidu-server-pro-${OVP_VERSION}.jar \
-      ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
-    fi
-
-    # Do the same in Naeva
-    if [[ "$OVP_TARGET" == "market" || "$OVP_TARGET" == "all" ]]; then
-      export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
-      export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
-      aws s3 cp openvidu-server-pro-${OVP_VERSION}.jar s3://naeva-openvidu-pro/
-      popd
-    fi
+    # Upload to pro.openvidu.io
+    scp -o StrictHostKeyChecking=no \
+    -i /opt/id_rsa.key \
+    openvidu-server-pro-${OVP_VERSION}.jar \
+    ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
 
     ;;
 
