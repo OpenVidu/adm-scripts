@@ -333,12 +333,6 @@ case $OPENVIDU_PROJECT in
       -i /opt/id_rsa.key \
       openvidu-server-pro-${OVP_VERSION}.jar \
       ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
-
-      # Upload to pro-stripe.openvidu.io
-      scp -o StrictHostKeyChecking=no \
-      -i /opt/id_rsa.key \
-      openvidu-server-pro-${OVP_VERSION}.jar \
-      ubuntu@pro-stripe.openvidu.io:/var/www/pro-stripe.openvidu.io/
     fi
 
     # Do the same in Naeva
