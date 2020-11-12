@@ -216,21 +216,21 @@ case $OPENVIDU_PROJECT in
 
     # npm release openvidu-angular
     cd dist/openvidu-angular
-    # npm publish || (echo "Failed to publish openvidu-angular to npm"; exit 1)
+    npm publish || (echo "Failed to publish openvidu-angular to npm"; exit 1)
 
-    # Github release: commit and push
-    cd ../../..
-    git commit -a -m "Update to version v$OPENVIDU_CALL_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    # # Github release: commit and push
+    # cd ../../..
+    # git commit -a -m "Update to version v$OPENVIDU_CALL_VERSION"
+    # git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
-    # OpenVidu/openvidu-call repo
-    DESC="Release v$OPENVIDU_CALL_VERSION"
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call artifact to Github"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call-demos artifact to Github"; exit 1)
+    # # OpenVidu/openvidu-call repo
+    # DESC="Release v$OPENVIDU_CALL_VERSION"
+    # openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+    # openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call artifact to Github"; exit 1)
+    # openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call-demos artifact to Github"; exit 1)
 
-    # OpenVidu/openvidu repo (OpenVidu Web Component)
-    openvidu_github_release.go upload  --user openvidu --repo "openvidu" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip --file /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip || (echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1)
+    # # OpenVidu/openvidu repo (OpenVidu Web Component)
+    # openvidu_github_release.go upload  --user openvidu --repo "openvidu" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip --file /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip || (echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1)
 
     ;;
 
