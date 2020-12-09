@@ -1,11 +1,11 @@
-FROM ubuntu:16.04
-MAINTAINER Fede Diaz nordri@gmail.com
+FROM ubuntu:18.04
+LABEL mantainer=carlos.ruizbalgmail.com
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git curl build-essential zip python python-lxml
 
 # Installing nodejs
-RUN curl -sLk https://deb.nodesource.com/setup_10.x | bash - && \
+RUN curl -sLk https://deb.nodesource.com/setup_14.x | bash - && \
     apt-get install -y nodejs
 
 # Cleaning the house
