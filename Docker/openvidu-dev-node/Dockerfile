@@ -5,7 +5,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends git curl build-essential zip python python-lxml
 
 # Installing nodejs
-RUN curl -sLk https://deb.nodesource.com/setup_14.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
     apt-get install -y nodejs
 
 # Cleaning the house
