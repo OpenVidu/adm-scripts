@@ -1,9 +1,10 @@
-FROM ubuntu:16.04
-MAINTAINER openvidu@gmail.com
+FROM ubuntu:18.04
+
+LABEL maintainer=carlos.ruizbal@gmail.com
 
 # Install Java
 RUN apt-get update && \
-    apt-get install -y openjdk-8-jdk
+    apt-get install -y openjdk-11-jdk
 
 # Cleaning the house
 RUN apt-get clean && \

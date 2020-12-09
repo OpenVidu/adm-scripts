@@ -1,5 +1,6 @@
-FROM ubuntu:16.04
-MAINTAINER nordri@gmail.com
+FROM ubuntu:18.04
+
+LABEL maintainer=carlos.ruizbal@gmail.com
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
@@ -13,13 +14,13 @@ RUN apt-get update \
     lsb-release \
     maven \
     awscli \
-    openjdk-8-jdk \
+    openjdk-11-jdk \
     python-lxml \
     openssh-client \
     ffmpeg
 
 # Installing nodejs
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
     apt-get install -y nodejs
 
 # Cleaning the house
