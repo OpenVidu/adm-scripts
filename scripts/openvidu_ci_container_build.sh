@@ -3,11 +3,16 @@
 echo "##################### EXECUTE: openvidu_ci_container_build #####################"
 
 [ -n $PUSH_IMAGES ] || PUSH_IMAGES='no'
+[ -n $LATEST_TAG ] || LATEST_TAG='yes'
 [ -n $DOCKERHUB_REPO ] || exit 1
 [ -n "$IMAGE_NAME" ] || exit 1
 [ -n "$TAGS" ] || exit 1
 
-TAGS="$TAGS latest"
+if [[ "$LATEST_TAG" == "yes" ]]; then
+  TAGS="$TAGS latest"
+else
+  TAGS="$TAGS"
+fi
 
 docker build --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f Dockerfile . || exit 1
 
