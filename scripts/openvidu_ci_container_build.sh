@@ -3,8 +3,8 @@
 echo "##################### EXECUTE: openvidu_ci_container_build #####################"
 
 [ -n $PUSH_IMAGES ] || PUSH_IMAGES='no'
-[ -n $LATEST_TAG ] || LATEST_TAG='yes'
 [ -n $DOCKERHUB_REPO ] || exit 1
+[ -n "$LATEST_TAG" ] || LATEST_TAG='yes'
 [ -n "$IMAGE_NAME" ] || exit 1
 [ -n "$TAGS" ] || exit 1
 
