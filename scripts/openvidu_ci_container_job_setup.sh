@@ -55,7 +55,7 @@ docker run \
   $([ "${UPDATE_INSTALLATION_SCRIPT}x" != "x" ] && echo "-e UPDATE_INSTALLATION_SCRIPT=$UPDATE_INSTALLATION_SCRIPT") \
   $([ "${UPDATE_CF}x" != "x" ] && echo "-e UPDATE_CF=$UPDATE_CF") \
   $([ "${CF_RELEASE}x" != "x" ] && echo "-e CF_RELEASE=$CF_RELEASE") \
-  $([ "${AMI_LIST}x" != "x" ] && echo "-e AMI_LIST='$AMI_LIST'") \
+  $([ "${AMI_LIST}x" != "x" ] && echo "-e AMI_LIST=$AMI_LIST") \
   $([ "${ELASTICSEARCH_DOCKER_TAG}x" != "x" ] && echo "-e ELASTICSEARCH_DOCKER_TAG=$ELASTICSEARCH_DOCKER_TAG") \
   $([ "${KIBANA_DOCKER_TAG}x" != "x" ] && echo "-e KIBANA_DOCKER_TAG=$KIBANA_DOCKER_TAG") \
   -e "GITHUB_PRIVATE_RSA_KEY=$CONTAINER_PRIVATE_RSA_KEY" \
