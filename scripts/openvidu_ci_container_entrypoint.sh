@@ -32,7 +32,7 @@ fi
 
 # GPG Block
 if [ -f "$GPG_PRIVATE_BLOCK" ]; then
-  gpg --import $GPG_PRIVATE_BLOCK
+  gpg --import --batch $GPG_PRIVATE_BLOCK
 fi
 
 # AWS region
