@@ -32,6 +32,7 @@ fi
 
 # GPG Block
 if [ -f "$GPG_PRIVATE_BLOCK" ]; then
+  export GPG_TTY=$(tty)
   gpg --import --batch $GPG_PRIVATE_BLOCK
 fi
 
