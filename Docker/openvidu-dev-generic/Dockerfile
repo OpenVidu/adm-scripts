@@ -10,13 +10,13 @@ RUN apt-get update \
     curl \
     jq \
     zip \
+    openjdk-11-jdk \
     python \
     python-pip \
     pwgen \
     lsb-release \
     maven \
     awscli \
-    openjdk-11-jdk \
     python-lxml \
     openssh-client \
     ffmpeg

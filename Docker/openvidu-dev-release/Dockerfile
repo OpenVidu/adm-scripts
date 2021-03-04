@@ -4,7 +4,7 @@ FROM ubuntu:18.04
 LABEL maintainer=carlos.ruizbal@gmail.com
 
 RUN apt-get update && \
-    apt-get install -y git curl build-essential maven openjdk-11-jdk python-lxml
+    apt-get install -y git curl build-essential openjdk-11-jdk maven python-lxml
 
 # Installing nodejs
 RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh && \
