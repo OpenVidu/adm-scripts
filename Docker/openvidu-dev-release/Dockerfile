@@ -12,6 +12,8 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh && \
     apt-get install -y nodejs && \
     rm nodesource_setup.sh
 
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> /root/.bashrc
+
 # Installing angular-cli
 RUN npm install -g @angular/cli
 

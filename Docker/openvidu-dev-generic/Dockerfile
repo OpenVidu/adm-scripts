@@ -25,6 +25,8 @@ RUN apt-get update \
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
     apt-get install -y nodejs
 
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> /root/.bashrc
+
 # Cleaning the house
 RUN apt-get clean && \
     apt-get autoclean && \
