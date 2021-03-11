@@ -28,7 +28,7 @@ curl -O http://builds.openvidu.io/openvidu/nightly/latest/openvidu-testapp-lates
 unzip openvidu-testapp-latest.zip -d web
 
 # Build docker image
-docker build --no-cache --rm=true -t openvidu/testapp:nightly-${DATESTAMP} .
+docker build --pull --no-cache --rm=true -t openvidu/testapp:nightly-${DATESTAMP} .
 docker tag openvidu/testapp:nightly-${DATESTAMP} openvidu/testapp:nightly-latest
 
 # Upload the image

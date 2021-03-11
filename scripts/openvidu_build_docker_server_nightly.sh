@@ -10,7 +10,7 @@ pushd Docker/openvidu-server-nightly
 curl -o openvidu-server.jar http://builds.openvidu.io/openvidu/nightly/latest/openvidu-server-latest.jar
 
 # Build docker image
-docker build --no-cache --rm=true -t openvidu/openvidu-server:nightly-${DATESTAMP} .
+docker build --pull --no-cache --rm=true -t openvidu/openvidu-server:nightly-${DATESTAMP} .
 
 # Upload the image
 docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"

@@ -14,7 +14,7 @@ else
   TAGS="$TAGS"
 fi
 
-docker build --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f Dockerfile . || exit 1
+docker build --pull --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f Dockerfile . || exit 1
 
 for TAG in $(echo $TAGS)
 do
