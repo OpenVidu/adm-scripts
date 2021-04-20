@@ -288,27 +288,29 @@ case $OPENVIDU_PROJECT in
     mvn -DskipTests=true install || { echo "openvidu -> install"; exit 1; }
     popd
 
-    pushd openvidu/openvidu-node-client
-    npm install || { echo "openvidu-node-client -> install"; exit 1; }
-    npm run build || { echo "openvidu-node-client -> build"; exit 1; }
-    npm link || { echo "openvidu-node-client -> link"; exit 1; }
-    popd
+    if [ "${BUILD_OPENVIDU_INSPECTOR}" == true ]; then
+      pushd openvidu/openvidu-node-client
+      npm install || { echo "openvidu-node-client -> install"; exit 1; }
+      npm run build || { echo "openvidu-node-client -> build"; exit 1; }
+      npm link || { echo "openvidu-node-client -> link"; exit 1; }
+      popd
 
-    pushd openvidu/openvidu-browser
-    npm install || { echo "openvidu-browser -> install"; exit 1; }
-    npm run build || { echo "openvidu-browser -> build"; exit 1; }
-    npm link || { echo "openvidu-browser -> link"; exit 1; }
-    popd
+      pushd openvidu/openvidu-browser
+      npm install || { echo "openvidu-browser -> install"; exit 1; }
+      npm run build || { echo "openvidu-browser -> build"; exit 1; }
+      npm link || { echo "openvidu-browser -> link"; exit 1; }
+      popd
+
+      pushd dashboard
+      npm install || { echo "dashboard -> install "; exit 1; }
+      npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
+      npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
+      npm run build-server-prod  || { echo "dashboard -> build for prod"; exit 1; }
+      popd
+    fi
 
     pushd openvidu/openvidu-server
     mvn -Pdependency install || { echo "openvidu-server -> install dependency"; exit 1; }
-    popd
-
-    pushd dashboard
-    npm install || { echo "dashboard -> install "; exit 1; }
-    npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
-    npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
-    npm run build-server-prod  || { echo "dashboard -> build for prod"; exit 1; }
     popd
 
     pushd openvidu-server-pro
