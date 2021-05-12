@@ -15,42 +15,46 @@ case $OPENVIDU_PROJECT in
   openvidu)
 
     # Openvidu Browser
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
-    echo "## Building OpenVidu Browser"
-    npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
-    pushd openvidu-browser || exit 1
-    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
+    # [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    # echo "## Building OpenVidu Browser"
+    # npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
+    # pushd openvidu-browser || exit 1
+    # npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
 
-    npm install
-    npm run build || exit 1
-    VERSION=$OPENVIDU_VERSION npm run browserify || exit 1
-    VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
+    # npm install
+    # npm run build || exit 1
+    # VERSION=$OPENVIDU_VERSION npm run browserify || exit 1
+    # VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
-    npm link || (echo "Failed to link npm"; exit 1)
-    npm publish || (echo "Failed to publish to npm"; exit 1)
-    popd
+    # npm link || (echo "Failed to link npm"; exit 1)
+    # npm publish || (echo "Failed to publish to npm"; exit 1)
+    # popd
 
     # Openvidu Server
-    echo "## Building OpenVidu Server"
-    pushd openvidu-server/src/dashboard || exit 1
+    # echo "## Building OpenVidu Server"
+    # pushd openvidu-server/src/dashboard || exit 1
 
-    npm install
-    npm link openvidu-browser
-    npm run build-prod || (echo "Failed to compile frontend"; exit 1)
-    popd
+    # npm install
+    # npm link openvidu-browser
+    # npm run build-prod || (echo "Failed to compile frontend"; exit 1)
+    # popd
 
-    pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
-    mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
+    # pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
+    # mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
-    git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    # git commit -a -m "Update to version v$OPENVIDU_VERSION"
+    # git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
 
-    DESC="Release v$OPENVIDU_VERSION"
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the artifact to Github"; exit 1)
-    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || (echo "Failed to upload the artifact to Github"; exit 1)
-    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || (echo "Failed to upload the artifact to Github"; exit 1)
+    # DESC="Release v$OPENVIDU_VERSION"
+    # openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+    # openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the artifact to Github"; exit 1)
+    # openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || (echo "Failed to upload the artifact to Github"; exit 1)
+    # openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || (echo "Failed to upload the artifact to Github"; exit 1)
+
+    # Test http publish
+    mkdir -p openvidu-server/target
+    echo "Test" > openvidu-server/target/openvidu-server-"${OPENVIDU_VERSION}".jar
 
     # Pushing file to builds server
     pushd openvidu-server/target
