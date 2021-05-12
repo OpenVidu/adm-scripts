@@ -11,9 +11,9 @@ curl -o openvidu-server.jar http://builds.openvidu.io/openvidu/nightly/latest/op
 
 # Build docker image
 if [[ -z "${OV_VERSION}" ]]; then
-    ./create_image.sh openvidu/openvidu-server:nightly-"${DATESTAMP}" .
+    ./create_image.sh nightly-"${DATESTAMP}"
 else 
-    ./create_image.sh openvidu/openvidu-server:"${OV_VERSION}" .
+    ./create_image.sh "${OV_VERSION}"
 fi
 
 # Upload the image
