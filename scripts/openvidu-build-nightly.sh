@@ -1,6 +1,8 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
+[ -n "$OVERWRITE_VERSION" ] || OVERWRITE_VERSION='false'
+
 # Build nightly version of OpenVidu Server
 # and upload the jar to builds.openvidu.io
 
@@ -58,6 +60,14 @@ if [[ "${IS_OV_VERSION_DEFINED}" == 'false' ]]; then
     FILES="openvidu-server.jar:upload/openvidu/nightly/${DATESTAMP}/openvidu-server-${OPENVIDU_VERSION}.jar"
     FILES="$FILES openvidu-server.jar:upload/openvidu/nightly/latest/openvidu-server-latest.jar"
 else
+    if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
+      curl --head --silent http://builds.openvidu.io/openvidu/builds/openvidu-server-"${OPENVIDU_VERSION}".jar | head -n 1 | grep -q 200
+      FILE_EXIST=$?
+      if [[ "${FILE_EXIST}" -eq 0 ]]; then
+        echo "Build openvidu-server-${OPENVIDU_VERSION} actually exists and OVERWRITE_VERSION=false"
+        exit 1 
+      fi
+    fi
     FILES="openvidu-server.jar:upload/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar"
 fi
 FILES=$FILES openvidu_http_publish.sh

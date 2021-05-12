@@ -273,7 +273,7 @@ case $OPENVIDU_PROJECT in
   openvidu-pro)
 
     export AWS_DEFAULT_REGION=us-east-1
-
+    [ -n "$OVERWRITE_VERSION" ] || OVERWRITE_VERSION='false'
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
 
     git clone https://github.com/OpenVidu/openvidu.git
@@ -333,6 +333,16 @@ case $OPENVIDU_PROJECT in
     pushd openvidu-server-pro/target
     chmod 0400 /opt/id_rsa.key
 
+    if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
+      ssh -o StrictHostKeyChecking=no -i /opt/id_rsa.key ubuntu@pro.openvidu.io \
+        [[ -f /var/www/pro.openvidu.io/openvidu-server-pro-"${OVP_VERSION}".jar ]]
+      FILE_EXIST=$?
+      if [[ "${FILE_EXIST}" -eq 0 ]]; then
+        echo "Build openvidu-server-pro-${OVP_VERSION} actually exists and OVERWRITE_VERSION=false"
+        exit 1 
+      fi
+    fi
+    
     # Upload to pro.openvidu.io
     scp -o StrictHostKeyChecking=no \
     -i /opt/id_rsa.key \
