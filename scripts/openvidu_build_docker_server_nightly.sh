@@ -7,21 +7,13 @@ DATESTAMP=$(date +%Y%m%d)
 pushd openvidu-server/docker/openvidu-server
 
 # Download nightly version of OpenVidu Server
-curl -o openvidu-server.jar http://builds.openvidu.io/openvidu/nightly/latest/openvidu-server-latest.jar
+curl -o ../../target/openvidu-server-latest.jar http://builds.openvidu.io/openvidu/nightly/latest/openvidu-server-latest.jar
 
 # Build docker image
-if [[ -z "${OV_VERSION}" ]]; then
-    ./create_image.sh nightly-"${DATESTAMP}"
-else 
-    ./create_image.sh "${OV_VERSION}"
-fi
+./create_image.sh nightly-"${DATESTAMP}"
 
 # Upload the image
 docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
-if [[ -z "${OV_VERSION}" ]]; then
-    docker push openvidu/openvidu-server:nightly-"${DATESTAMP}"
-else 
-    docker push openvidu/openvidu-server:"${OV_VERSION}"
-fi
+docker push openvidu/openvidu-server:nightly-"${DATESTAMP}"
 
 docker logout
