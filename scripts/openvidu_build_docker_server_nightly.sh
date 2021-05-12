@@ -4,16 +4,16 @@ set -eu -o pipefail
 DATESTAMP=$(date +%Y%m%d)
 
 # Create a nightly docker container for OpenVidu Server
-pushd Docker/openvidu-server-nightly
+pushd openvidu-server/docker/openvidu-server
 
 # Download nightly version of OpenVidu Server
 curl -o openvidu-server.jar http://builds.openvidu.io/openvidu/nightly/latest/openvidu-server-latest.jar
 
 # Build docker image
 if [[ -z "${OV_VERSION}" ]]; then
-    docker build --pull --no-cache --rm=true -t openvidu/openvidu-server:nightly-"${DATESTAMP}" .
+    ./create_image.sh openvidu/openvidu-server:nightly-"${DATESTAMP}" .
 else 
-    docker build --pull --no-cache --rm=true -t openvidu/openvidu-server:"${OV_VERSION}" .
+    ./create_image.sh openvidu/openvidu-server:"${OV_VERSION}" .
 fi
 
 # Upload the image
