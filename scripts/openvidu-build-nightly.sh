@@ -7,6 +7,10 @@ set -eu -o pipefail
 echo "##################### EXECUTE: openvidu_build_nightly #####################"
 DATESTAMP=$(date +%Y%m%d)
 MAVEN_OPTIONS='--batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true'
+IS_OV_VERSION_DEFINED='false'
+if [[ -n "${OPENVIDU_VERSION}" ]]; then
+    IS_OV_VERSION_DEFINED='true'
+fi
 
 # OpenVidu Java Client
 pushd openvidu-java-client
@@ -42,7 +46,7 @@ popd
 # OpenVidu Server
 pushd openvidu-server
 mvn $MAVEN_OPTIONS clean compile package || exit 1
-if [[ -z "${OPENVIDU_VERSION}" ]]; then
+if [[ "${IS_OV_VERSION_DEFINED}" == 'false' ]]; then
     OPENVIDU_VERSION=$(get_version_from_pom-xml.py)
 fi
 cp target/openvidu-server-${OPENVIDU_VERSION}.jar target/openvidu-server-latest.jar
@@ -50,11 +54,11 @@ popd
 
 # Pushing file to server
 pushd openvidu-server/target
-if [[ -z "${OPENVIDU_VERSION}" ]]; then
+if [[ "${IS_OV_VERSION_DEFINED}" == 'false' ]]; then
     FILES="openvidu-server-${OPENVIDU_VERSION}.jar:upload/openvidu/nightly/${DATESTAMP}/openvidu-server-${OPENVIDU_VERSION}.jar"
     FILES="$FILES openvidu-server-latest.jar:upload/openvidu/nightly/latest/openvidu-server-latest.jar"
 else
-    FILES="$FILES openvidu-server-${OPENVIDU_VERSION}.jar:upload/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar"
+    FILES="openvidu-server-${OPENVIDU_VERSION}.jar:upload/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar"
 fi
 FILES=$FILES openvidu_http_publish.sh
 popd
