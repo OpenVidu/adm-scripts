@@ -7,6 +7,7 @@ DATESTAMP=$(date +%Y%m%d)
 pushd openvidu-server/docker/openvidu-server
 
 # Download nightly version of OpenVidu Server
+mkdir -p ../../target/
 curl -o ../../target/openvidu-server-latest.jar http://builds.openvidu.io/openvidu/nightly/latest/openvidu-server-latest.jar
 
 # Build docker image
