@@ -52,6 +52,12 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || (echo "Failed to upload the artifact to Github"; exit 1)
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || (echo "Failed to upload the artifact to Github"; exit 1)
 
+    # Pushing file to builds server
+    pushd openvidu-server/target
+    FILES="openvidu-server-${OPENVIDU_VERSION}.jar:upload/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar"
+    FILES=$FILES openvidu_http_publish.sh
+    popd
+
     ;;
 
   openvidu-java-client)
