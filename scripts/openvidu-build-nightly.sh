@@ -49,16 +49,16 @@ mvn $MAVEN_OPTIONS clean compile package || exit 1
 if [[ "${IS_OV_VERSION_DEFINED}" == 'false' ]]; then
     OPENVIDU_VERSION=$(get_version_from_pom-xml.py)
 fi
-cp target/openvidu-server-${OPENVIDU_VERSION}.jar target/openvidu-server-latest.jar
+cp target/openvidu-server-*.jar target/openvidu-server.jar
 popd
 
 # Pushing file to server
 pushd openvidu-server/target
 if [[ "${IS_OV_VERSION_DEFINED}" == 'false' ]]; then
-    FILES="openvidu-server-${OPENVIDU_VERSION}.jar:upload/openvidu/nightly/${DATESTAMP}/openvidu-server-${OPENVIDU_VERSION}.jar"
-    FILES="$FILES openvidu-server-latest.jar:upload/openvidu/nightly/latest/openvidu-server-latest.jar"
+    FILES="openvidu-server.jar:upload/openvidu/nightly/${DATESTAMP}/openvidu-server-${OPENVIDU_VERSION}.jar"
+    FILES="$FILES openvidu-server.jar:upload/openvidu/nightly/latest/openvidu-server-latest.jar"
 else
-    FILES="openvidu-server-${OPENVIDU_VERSION}.jar:upload/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar"
+    FILES="openvidu-server.jar:upload/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar"
 fi
 FILES=$FILES openvidu_http_publish.sh
 popd
