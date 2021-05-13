@@ -334,9 +334,9 @@ case $OPENVIDU_PROJECT in
     chmod 0400 /opt/id_rsa.key
 
     if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
+      FILE_EXIST=0
       ssh -o StrictHostKeyChecking=no -i /opt/id_rsa.key ubuntu@pro.openvidu.io \
-        [[ -f /var/www/pro.openvidu.io/openvidu-server-pro-"${OVP_VERSION}".jar ]]
-      FILE_EXIST=$?
+        [[ -f /var/www/pro.openvidu.io/openvidu-server-pro-"${OVP_VERSION}".jar ]] || FILE_EXIST=$?
       if [[ "${FILE_EXIST}" -eq 0 ]]; then
         echo "Build openvidu-server-pro-${OVP_VERSION} actually exists and OVERWRITE_VERSION=false"
         exit 1 
