@@ -42,7 +42,7 @@ popd
 pushd openvidu-server/src/dashboard 
 npm install --unsafe-perm || exit 1
 npm link openvidu-browser || exit 1
-./node_modules/\@angular/cli/bin/ng build --prod --output-path ../main/resources/static || exit 1
+npm run build-prod
 popd
 
 # OpenVidu Server
