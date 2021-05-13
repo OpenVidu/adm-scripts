@@ -3,7 +3,7 @@ set -eu -o pipefail
 
 echo "##################### EXECUTE: openvidu_ci_container_build #####################"
 
-[ -n "${OV_VERSION}" ] || exit 1
+[ -n "${OVC_VERSION}" ] || exit 1
 [ -n "${RELEASE}" ] || RELEASE='false'
 [ -n "${OPENVIDU_CALL_BRANCH}" ] || OPENVIDU_CALL_BRANCH='master'
 [ -n "${OPENVIDU_BROWSER_BRANCH}" ] || OPENVIDU_BROWSER_BRANCH='master' 
@@ -18,11 +18,11 @@ docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
 if [[ "${RELEASE}" == 'true' ]]; then
     pushd docker
     chmod u+x run.sh
-    ./run.sh "${OV_VERSION}" "${OPENVIDU_CALL_BRANCH}"
+    ./run.sh "${OVC_VERSION}" "${OPENVIDU_CALL_BRANCH}"
     popd
 else
-    docker build -f docker/custom.dockerfile -t openvidu/openvidu-call:"${OV_VERSION}" --build-arg OPENVIDU_BROWSER="${OPENVIDU_BROWSER_BRANCH}" . || exit 1
-    docker push openvidu/openvidu-call:"${OV_VERSION}"
+    docker build -f docker/custom.dockerfile -t openvidu/openvidu-call:"${OVC_VERSION}" --build-arg OPENVIDU_BROWSER="${OPENVIDU_BROWSER_BRANCH}" . || exit 1
+    docker push openvidu/openvidu-call:"${OVC_VERSION}"
 fi
 
 docker logout
