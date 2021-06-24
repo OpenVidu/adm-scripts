@@ -17,12 +17,11 @@ fi
 if ${KURENTO_JAVA_SNAPSHOT} ; then
   git clone https://github.com/Kurento/kurento-java.git
   cd kurento-java && MVN_VERSION=$(mvn --batch-mode -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-  cd ../openvidu && mvn --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion=$MVN_VERSION
+  cd .. && mvn --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion=$MVN_VERSION
   mvn dependency:get -DrepoUrl=https://maven.openvidu.io/repository/snapshots/ -Dartifact=org.kurento:kurento-client:$MVN_VERSION
   mvn dependency:get -DrepoUrl=https://maven.openvidu.io/repository/snapshots/ -Dartifact=org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION
   mvn dependency:get -DrepoUrl=https://maven.openvidu.io/repository/snapshots/ -Dartifact=org.kurento:kurento-jsonrpc-server:$MVN_VERSION
   mvn dependency:get -DrepoUrl=https://maven.openvidu.io/repository/snapshots/ -Dartifact=org.kurento:kurento-test:$MVN_VERSION
-  cd ..
 fi
 
 # OpenVidu Java Client
