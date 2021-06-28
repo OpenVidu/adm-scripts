@@ -278,6 +278,14 @@ case $OPENVIDU_PROJECT in
     [ -n "$OVERWRITE_VERSION" ] || OVERWRITE_VERSION='false'
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
 
+    # Commit or branch to build
+    [ -n "$OPENVIDU_CE_COMMIT" ] || OPENVIDU_CE_COMMIT='master'
+    [ -n "$OPENVIDU_PRO_COMMIT" ] || OPENVIDU_PRO_COMMIT='master'
+
+    if [[ "${OPENVIDU_PRO_COMMIT}" != 'master' ]]; then
+      git checkout "${OPENVIDU_PRO_COMMIT}"
+    fi
+
     git clone https://github.com/OpenVidu/openvidu.git
 
     if ${KURENTO_JAVA_SNAPSHOT} ; then
@@ -292,6 +300,9 @@ case $OPENVIDU_PROJECT in
     fi
 
     pushd openvidu
+    if [[ "${OPENVIDU_CE_COMMIT}" != 'master' ]]; then
+      git checkout "${OPENVIDU_CE_COMMIT}"
+    fi
     mvn -DskipTests=true compile || { echo "openvidu -> compile"; exit 1; }
     mvn -DskipTests=true install || { echo "openvidu -> install"; exit 1; }
     popd
@@ -341,10 +352,10 @@ case $OPENVIDU_PROJECT in
         [[ -f /var/www/pro.openvidu.io/openvidu-server-pro-"${OVP_VERSION}".jar ]] || FILE_EXIST=$?
       if [[ "${FILE_EXIST}" -eq 0 ]]; then
         echo "Build openvidu-server-pro-${OVP_VERSION} actually exists and OVERWRITE_VERSION=false"
-        exit 1 
+        exit 1
       fi
     fi
-    
+
     # Upload to pro.openvidu.io
     scp -o StrictHostKeyChecking=no \
     -i /opt/id_rsa.key \
