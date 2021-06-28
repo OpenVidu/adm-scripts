@@ -283,6 +283,7 @@ case $OPENVIDU_PROJECT in
     [ -n "$OPENVIDU_PRO_COMMIT" ] || OPENVIDU_PRO_COMMIT='master'
 
     if [[ "${OPENVIDU_PRO_COMMIT}" != 'master' ]]; then
+      git fetch --all
       git checkout "${OPENVIDU_PRO_COMMIT}"
     fi
 
