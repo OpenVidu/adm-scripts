@@ -282,11 +282,6 @@ case $OPENVIDU_PROJECT in
     [ -n "$OPENVIDU_CE_COMMIT" ] || OPENVIDU_CE_COMMIT='master'
     [ -n "$OPENVIDU_PRO_COMMIT" ] || OPENVIDU_PRO_COMMIT='master'
 
-    if [[ "${OPENVIDU_PRO_COMMIT}" != 'master' ]]; then
-      git fetch --all
-      git checkout "${OPENVIDU_PRO_COMMIT}"
-    fi
-
     git clone https://github.com/OpenVidu/openvidu.git
 
     if ${KURENTO_JAVA_SNAPSHOT} ; then
