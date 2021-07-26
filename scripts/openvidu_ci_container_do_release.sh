@@ -28,6 +28,18 @@ case $OPENVIDU_PROJECT in
 
     npm link || (echo "Failed to link npm"; exit 1)
     npm publish || (echo "Failed to publish to npm"; exit 1)
+
+    # Active waiting for openvidu-browser NPM library
+    CHECK_VERSION_AVAILABILTY="npm show openvidu-browser@$OPENVIDU_VERSION version"
+    VERSION=$(eval "$CHECK_VERSION_AVAILABILTY")
+    until [[ "$VERSION" == "$OPENVIDU_VERSION" ]]
+    do
+      echo "Waiting for openvidu-browser@$OPENVIDU_VERSION to be available in NPM...";
+      sleep 2;
+      VERSION=$(eval "$CHECK_VERSION_AVAILABILTY")
+    done
+    echo "openvidu-browser@$OPENVIDU_VERSION already available in NPM"
+
     popd
 
     # Openvidu Server
