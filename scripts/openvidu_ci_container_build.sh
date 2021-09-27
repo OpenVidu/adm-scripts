@@ -3,8 +3,8 @@
 echo "##################### EXECUTE: openvidu_ci_container_build #####################"
 
 # Check if nightly
-[ -n $NIGHTLY ] || NIGHTLY='no'
-if [[ "${NIGHTLY}" == "yes"  ]]; then
+[ -n "$NIGHTLY" ] || NIGHTLY="false"
+if [[ "${NIGHTLY}" == "true"  ]]; then
   TAGS="nightly-$(date +%m%d%Y)"
 fi
 
