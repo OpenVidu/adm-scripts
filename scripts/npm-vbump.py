@@ -4,15 +4,16 @@
 import json
 import os
 import argparse
+from collections import OrderedDict
 
 def bump_version(ENV_VAR):
 	with open('package.json', 'r') as jsonFile:
-		data = json.load(jsonFile)
+		data = json.load(jsonFile, object_pairs_hook=OrderedDict)
 
 	data['version'] = os.environ[ENV_VAR]
 
 	with open('package.json', 'w') as jsonFile:
-		json.dump(data, jsonFile, sort_keys=True, indent=4)
+		json.dump(data, jsonFile, indent=4)
 
 def main():
 
