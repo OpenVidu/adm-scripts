@@ -81,7 +81,7 @@ case $OPENVIDU_PROJECT in
     pushd openvidu-browser || exit 1
     npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
 
-    npm install
+    npm install --unsafe-perm
     npm run build || exit 1
     VERSION=$OPENVIDU_VERSION npm run browserify || exit 1
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
@@ -93,7 +93,7 @@ case $OPENVIDU_PROJECT in
     echo "## Building OpenVidu Server"
     pushd openvidu-server/src/dashboard || exit 1
 
-    npm install
+    npm install --unsafe-perm
     npm link openvidu-browser
     npm run build-prod || (echo "Failed to compile frontend"; exit 1)
     popd
