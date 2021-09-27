@@ -2,6 +2,13 @@
 
 echo "##################### EXECUTE: openvidu_ci_container_build #####################"
 
+# Check if nightly
+[ -n $NIGHTLY ] || NIGHTLY='no'
+if [[ "${NIGHTLY}" == "yes"  ]]; then
+  TAGS="nightly-$(date +%m%d%Y)"
+fi
+
+# Check other env variables
 [ -n $PUSH_IMAGES ] || PUSH_IMAGES='no'
 [ -n $DOCKERHUB_REPO ] || exit 1
 [ -n "$LATEST_TAG" ] || LATEST_TAG='yes'

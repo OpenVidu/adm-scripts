@@ -3,7 +3,7 @@ set -eu -o pipefail
 
 # Create a nightly docker container for OpenVidu TestApp
 
-DATESTAMP=$(date +%Y%m%d)
+DATESTAMP=$(date +%m%d%Y)
 
 mkdir -p nginx
 openssl req -subj '/CN=localhost' -x509 -newkey rsa:4096 -nodes -keyout nginx/key.pem -out nginx/cert.pem -days 365
@@ -33,6 +33,6 @@ docker tag openvidu/testapp:nightly-${DATESTAMP} openvidu/testapp:nightly-latest
 
 # Upload the image
 docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
-docker push openvidu/testapp:nightly-${DATESTAMP} 
+docker push openvidu/testapp:nightly-${DATESTAMP}
 docker push openvidu/testapp:nightly-latest
 docker logout

@@ -1,7 +1,7 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
-DATESTAMP=$(date +%Y%m%d)
+DATESTAMP=$(date +%m%d%Y)
 
 # Run the browser
 docker run \

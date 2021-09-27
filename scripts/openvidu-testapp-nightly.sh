@@ -6,7 +6,7 @@ set -eu -o pipefail
 
 echo "##################### EXECUTE: openvidu_build_testapp_nightly #####################"
 
-DATESTAMP=$(date +%Y%m%d)
+DATESTAMP=$(date +%m%d%Y)
 TESTAPP_VERSION=$(cd openvidu-testapp; npm-get-version.py )
 
 # OpenVidu Browser build

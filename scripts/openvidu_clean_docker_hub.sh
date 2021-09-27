@@ -18,7 +18,7 @@ DOCKER_HUB_PASSWORD=${DH_UPASS}
 DOCKER_HUB_ORGANIZATION=${DH_ORG}
 DOCKER_HUB_REPOSITORY=${DH_REPO}
 
-SEVENDAYSAGO=$(date +%Y%m%d -d "7 days ago")
+SEVENDAYSAGO=$(date +%m%d%Y -d "7 days ago")
 
 # Get Docker Hub Token
 TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_HUB_USERNAME}'", "password": "'${DOCKER_HUB_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
