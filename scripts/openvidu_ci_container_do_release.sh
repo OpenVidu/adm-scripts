@@ -329,6 +329,12 @@ case $OPENVIDU_PROJECT in
   openvidu-pro)
 
     export AWS_DEFAULT_REGION=us-east-1
+    # Check if nightly
+    [ -n "$NIGHTLY" ] || NIGHTLY="false"
+    if [[ "${NIGHTLY}" == "true"  ]]; then
+      OPENVIDU_PRO_VERSION="nightly-$(date +%m%d%Y)"
+    fi
+
     [ -n "$OVERWRITE_VERSION" ] || OVERWRITE_VERSION='false'
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
 
