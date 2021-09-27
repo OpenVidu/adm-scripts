@@ -384,6 +384,21 @@ case $OPENVIDU_PROJECT in
 
     ;;
 
+  mediasoup-controller)
+    echo "## Release mediasoup-controller v${OPENVIDU_VERSION}"
+    DESC="Release mediasoup-controller v${OPENVIDU_VERSION}"
+
+    # Update version in package.json file
+    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
+    git add package.json
+    git commit -a -m "Update mediasoup-controller to version v$OPENVIDU_VERSION"
+
+    # Push to github
+    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+
+    ;;
+
   *)
     echo "No project specified"
     exit 1
