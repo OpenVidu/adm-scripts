@@ -376,8 +376,8 @@ case $OPENVIDU_PROJECT in
 
     echo "## Release replication-manager v${OPENVIDU_VERSION}"
     DESC="Release replication-manager v${OPENVIDU_VERSION}"
-    mvn --batch-mode -o package -DskipTests \
-      && mv target/replication-manager-*.jar target/replication-manager-"${OPENVIDU_VERSION}".jar
+    mvn --batch-mode -DskipTests=true clean compile package || (echo "Failed to build replication-manager version"; exit 1)
+    mv target/replication-manager-*.jar target/replication-manager-"${OPENVIDU_VERSION}".jar || exit 1
 
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name replication-manager-"${OPENVIDU_VERSION}".jar --file target/replication-manager-"${OPENVIDU_VERSION}".jar || (echo "Failed to upload the artifact to Github"; exit 1)
