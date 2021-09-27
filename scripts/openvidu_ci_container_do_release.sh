@@ -74,8 +74,14 @@ case $OPENVIDU_PROJECT in
 
   openvidu-nightly)
 
-    # Openvidu Browser
+    # Check if nightly
+    [ -n "$NIGHTLY" ] || NIGHTLY="false"
+    if [[ "${NIGHTLY}" == "true"  ]]; then
+      OPENVIDU_VERSION="nightly-$(date +%m%d%Y)"
+    fi
     [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+
+    # Openvidu Browser
     echo "## Building OpenVidu Browser"
     npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
     pushd openvidu-browser || exit 1
