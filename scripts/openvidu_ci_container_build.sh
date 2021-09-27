@@ -7,6 +7,7 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 [ -n "$LATEST_TAG" ] || LATEST_TAG='yes'
 [ -n "$IMAGE_NAME" ] || exit 1
 [ -n "$TAGS" ] || exit 1
+DOCKER_FILE_DIR="${DOCKER_FILE_DIR:-Dockerfile}"
 
 if [[ "$LATEST_TAG" == "yes" ]]; then
   TAGS="$TAGS latest"
@@ -14,7 +15,7 @@ else
   TAGS="$TAGS"
 fi
 
-docker build --pull --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f Dockerfile . || exit 1
+docker build --pull --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
 
 for TAG in $(echo $TAGS)
 do
