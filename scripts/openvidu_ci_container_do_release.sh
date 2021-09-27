@@ -83,23 +83,18 @@ case $OPENVIDU_PROJECT in
 
     # Openvidu Browser
     echo "## Building OpenVidu Browser"
-    npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
-    pushd openvidu-browser || exit 1
-    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
-
-    npm install
-    npm run build || exit 1
-    npm pack || (echo "Failed to pack openvidu-browser"; exit 1)
-    mv openvidu-browser-"${OPENVIDU_VERSION}".tgz ../openvidu-server/src/dashboard
+    pushd openvidu-browser
+    npm install || { echo "openvidu-browser -> install"; exit 1; }
+    npm run build || { echo "openvidu-browser -> build"; exit 1; }
+    npm link || { echo "openvidu-browser -> link"; exit 1; }
     popd
 
     # Openvidu Server
     echo "## Building OpenVidu Server"
-    pushd openvidu-server/src/dashboard || exit 1
-
-    npm install openvidu-browser-"${OPENVIDU_VERSION}".tgz
-    npm install
-    npm run build-prod || (echo "Failed to compile frontend"; exit 1)
+    pushd openvidu-server/src/dashboard
+    npm install || { echo "dashboard -> install "; exit 1; }
+    npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
+    npm run build-prod || { echo "dashboard -> build for prod"; exit 1; }
     popd
 
     pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
