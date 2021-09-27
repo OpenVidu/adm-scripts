@@ -101,7 +101,7 @@ case $OPENVIDU_PROJECT in
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
-      HTTP_REQUEST=$(curl -s -o /dev/null -I -w "%{http_code}" "http://builds.openvidu.io/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar")
+      HTTP_REQUEST=$(curl --write-out "%{http_code}" --silent --output /dev/null "http://builds.openvidu.io/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar")
       if [[ "${HTTP_REQUEST}" == "200" ]]; then
         echo "Build openvidu-server-pro-${OPENVIDU_VERSION} actually exists and OVERWRITE_VERSION=false"
         exit 1
