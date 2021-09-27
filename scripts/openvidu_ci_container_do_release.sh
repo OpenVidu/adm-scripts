@@ -372,6 +372,18 @@ case $OPENVIDU_PROJECT in
 
     ;;
 
+  replication-manager)
+
+    echo "## Release replication-manager v${OPENVIDU_VERSION}"
+    DESC="Release replication-manager v${OPENVIDU_VERSION}"
+    mvn --batch-mode -o package -DskipTests \
+      && mv target/replication-manager-*.jar target/replication-manager-"${OPENVIDU_VERSION}".jar
+
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name replication-manager-"${OPENVIDU_VERSION}".jar --file target/replication-manager-"${OPENVIDU_VERSION}".jar || (echo "Failed to upload the artifact to Github"; exit 1)
+
+    ;;
+
   *)
     echo "No project specified"
     exit 1
