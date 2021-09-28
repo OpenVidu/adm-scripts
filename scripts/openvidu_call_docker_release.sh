@@ -13,9 +13,7 @@ fi
 [ -n "${OPENVIDU_CALL_BRANCH}" ] || OPENVIDU_CALL_BRANCH='master'
 [ -n "${OPENVIDU_BROWSER_BRANCH}" ] || OPENVIDU_BROWSER_BRANCH='master'
 
-pushd openvidu-call-front
-sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
-popd
+
 
 if [ "${OPENVIDU_CALL_BRANCH}" != 'master' ]; then
     git checkout "${OPENVIDU_CALL_BRANCH}"
@@ -30,6 +28,14 @@ if [[ "${RELEASE}" == 'true' ]]; then
     ./run.sh "${OVC_VERSION}" "${OPENVIDU_CALL_BRANCH}"
     popd
 else
+    pushd openvidu-call-front
+    if [[ "${NIGHTLY}" == "true" ]]; then
+      PREVIOUS_VERSION=$(awk -F \" '/"version": ".+"/ { print $4; exit; }' package.json)
+      sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${PREVIOUS_VERSION}-${OVC_VERSION}\"/" package.json
+    else
+      sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
+    fi
+    popd
     docker build -f docker/custom.dockerfile -t openvidu/openvidu-call:"${OVC_VERSION}" --build-arg OPENVIDU_BROWSER="${OPENVIDU_BROWSER_BRANCH}" . || exit 1
     docker push openvidu/openvidu-call:"${OVC_VERSION}"
 fi
