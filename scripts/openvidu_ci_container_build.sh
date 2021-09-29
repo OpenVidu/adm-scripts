@@ -19,6 +19,16 @@ fi
 
 # If nighly
 if [[ "${NIGHTLY}" == "true" ]]; then
+
+  # If nightly, check that version is no released
+  export OV_VERSION="${TAGS}"
+  EXIST_RELEASE=$(check_openvidu_release_docker.sh)
+  if [[ ${EXIST_RELEASE} == "true" ]]; then
+    echo "Release specified exist. To create nightly builds you need to specify the current version in development"
+    exit 1
+  fi
+
+  # Check that num of tags is only one on nightly
   NUM_TAGS=$(echo "$TAGS" | wc -w)
   if [[ "${NUM_TAGS}" == "1" ]]; then
     TAGS="${TAGS}-nightly-$(date +%m%d%Y)"
