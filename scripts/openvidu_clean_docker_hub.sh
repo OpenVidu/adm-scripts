@@ -13,12 +13,24 @@ set -eu -o pipefail
 #
 # openvidu/openvidu-server:nightly-20180101
 
+date_to_timestamp() {
+  DATE="${1}"
+  if [[ -z "${DATE}" ]]; then
+    return 1
+  fi
+  MONTH="$(echo "$DATE" | cut -c 1-2)"
+  DAY="$(echo "$DATE" | cut -c 3-4)"
+  YEAR="$(echo "$DATE" | cut -c 5-)"
+  # Convert date using ISO 8601 (Thanks ISO 8601...)
+  date -d "${YEAR}-${MONTH}-${DAY}T00:00:00" "+%s"
+}
+
 DOCKER_HUB_USERNAME=${DH_UNAME}
 DOCKER_HUB_PASSWORD=${DH_UPASS}
 DOCKER_HUB_ORGANIZATION=${DH_ORG}
 DOCKER_HUB_REPOSITORY=${DH_REPO}
 
-SEVENDAYSAGO=$(date +%m%d%Y -d "7 days ago")
+SEVENDAYSAGO=$(date +%s -d "7 days ago")
 
 # Get Docker Hub Token
 TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_HUB_USERNAME}'", "password": "'${DOCKER_HUB_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
@@ -28,8 +40,13 @@ TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/reposi
 
 for TAG in $TAGS
 do
-  DATE=$(echo $TAG | cut -d"-" -f3)
-  if [[ -n "${DATE}" ]] && [[ ! "$DATE" -gt "$SEVENDAYSAGO" ]]; then
-  	curl -X DELETE -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}/tags/${TAG}/
+  DATE_FORMATTED=$(echo $TAG | cut -d"-" -f3)
+  if [[ -n "${DATE_FORMATTED}" ]]; then
+
+    DATE=$(date_to_timestamp "${DATE_FORMATTED}")
+    if [[ -n "${DATE}" ]] && [[ "$SEVENDAYSAGO" -gt "$DATE" ]]; then
+      curl -X DELETE -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}/tags/${TAG}/
+    fi
+
   fi
 done
