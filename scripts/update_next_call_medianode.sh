@@ -41,7 +41,7 @@ fi
 
 # Replace variables with nightly tags if specified
 cd "${MEDIA_NODE_DIRECTORY}"
-if [[ "${NIGHTLY}" == "true" ]]; then
+if [[ "${NIGHTLY}" == "true" ]] || [[ "${OV_VERSION}" == "master" ]]; then
     # Replace variables in docker-compose.yml file
     sed -i "s|image: openvidu/media-node-controller:.*|image: openvidu/media-node-controller:${MEDIA_NODE_CONTROLLER_TAG}|" docker-compose.yml
     sed -i "s|MEDIASOUP_IMAGE=openvidu/mediasoup-controller:.*|MEDIASOUP_IMAGE=openvidu/mediasoup-controller:${MEDIASOUP_CONTROLLER_TAG}|" docker-compose.yml

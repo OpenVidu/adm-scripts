@@ -41,8 +41,8 @@ fi
 
 cd "${INSTALLATION_DIRECTORY}"
 # Download and install media node
-if [[ "${OV_VERSION}" == "master" ]]; then
-    curl https://raw.githubusercontent.com/OpenVidu/openvidu/"${OV_VERSION}"/openvidu-server/deployments/pro/docker-compose/openvidu-server-pro/install_openvidu_pro.sh | bash
+if [[ "${NIGHTLY}" == "true" ]] || [[ "${OV_VERSION}" == "master" ]]; then
+    curl https://raw.githubusercontent.com/OpenVidu/openvidu/master/openvidu-server/deployments/pro/docker-compose/openvidu-server-pro/install_openvidu_pro.sh | bash
 else
     curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_openvidu_pro_"${OV_VERSION}".sh | bash
 fi
