@@ -2,13 +2,8 @@
 
 echo "##################### EXECUTE: openvidu_ci_container_build #####################"
 
-# Check if nightly
-[ -n "$NIGHTLY" ] || NIGHTLY="false"
-if [[ "${NIGHTLY}" == "true"  ]]; then
-  TAGS="nightly-$(date +%m%d%Y)"
-fi
-
 # Check other env variables
+[ -n "$NIGHTLY" ] || NIGHTLY="false"
 [ -n $PUSH_IMAGES ] || PUSH_IMAGES='no'
 [ -n $DOCKERHUB_REPO ] || exit 1
 [ -n "$LATEST_TAG" ] || LATEST_TAG='yes'
@@ -22,6 +17,17 @@ else
   TAGS="$TAGS"
 fi
 
+# If nighly
+if [[ "${NIGHTLY}" == "true" ]]; then
+  NUM_TAGS=$(echo "$TAGS" | wc -w)
+  if [[ "${NUM_TAGS}" == "1" ]]; then
+    TAGS="${TAGS}-nightly-$(date +%m%d%Y)"
+  else
+    echo "Nightly build can only have one TAG specified"
+    exit 1
+  fi
+fi
+
 docker build --pull --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
 
 for TAG in $(echo $TAGS)
@@ -31,7 +37,7 @@ done
 
 if [ "$PUSH_IMAGES" == "yes" ]; then
   docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
-  
+
   for TAG in $(echo $TAGS)
   do
     docker push $DOCKERHUB_REPO/$IMAGE_NAME:$TAG

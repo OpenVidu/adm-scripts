@@ -4,16 +4,16 @@ set -eu -o pipefail
 INSTALLATION_DIRECTORY="/opt"
 OPENVIDU_DIRECTORY="${INSTALLATION_DIRECTORY}/openvidu"
 NIGHTLY="${1}"
-OV_VERSION="${2:-master}"
+OV_VERSION="${2}"
+
 if [[ "${NIGHTLY}" == "true" ]]; then
     DATESTAMP=$(date +%m%d%Y)
-    OV_VERSION="master"
-    OPENVIDU_SERVER_PRO_TAG="nightly-${DATESTAMP}"
-    OPENVIDU_REDIS_TAG="nightly-${DATESTAMP}"
-    OPENVIDU_COTURN_TAG="nightly-${DATESTAMP}"
-    OPENVIDU_PROXY_TAG="nightly-${DATESTAMP}"
-    OPENVIDU_CALL_VERSION="nightly-${DATESTAMP}"
-    MEDIASOUP_CONTROLLER_TAG="nightly-${DATESTAMP}"
+    OPENVIDU_SERVER_PRO_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
+    OPENVIDU_REDIS_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
+    OPENVIDU_COTURN_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
+    OPENVIDU_PROXY_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
+    OPENVIDU_CALL_VERSION="${OV_VERSION}-nightly-${DATESTAMP}"
+    MEDIASOUP_CONTROLLER_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
 fi
 
 # Stop and clean all docker images

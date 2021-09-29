@@ -74,27 +74,30 @@ case $OPENVIDU_PROJECT in
 
   openvidu-nightly)
 
+    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
     # Check if nightly
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
     if [[ "${NIGHTLY}" == "true"  ]]; then
-      OPENVIDU_VERSION="nightly-$(date +%m%d%Y)"
+      OPENVIDU_VERSION="${OPENVIDU_VERSION}-nightly-$(date +%m%d%Y)"
     fi
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
 
     # Openvidu Browser
     echo "## Building OpenVidu Browser"
     pushd openvidu-browser
+    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
     npm install || { echo "openvidu-browser -> install"; exit 1; }
     npm run build || { echo "openvidu-browser -> build"; exit 1; }
-    npm link || { echo "openvidu-browser -> link"; exit 1; }
+    npm pack || { echo "openvidu-browser -> pack"; exit 1; }
+    mv openvidu-browser-"${OPENVIDU_VERSION}".tgz ../openvidu-server/src/dashboard
     popd
 
     # Openvidu Server
     echo "## Building OpenVidu Server"
     pushd openvidu-server/src/dashboard
+    npm install openvidu-browser-"${OPENVIDU_VERSION}".tgz
     npm install || { echo "dashboard -> install "; exit 1; }
-    npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
     npm run build-prod || { echo "dashboard -> build for prod"; exit 1; }
+    rm openvidu-browser-"${OPENVIDU_VERSION}".tgz
     popd
 
     pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
@@ -330,14 +333,14 @@ case $OPENVIDU_PROJECT in
   openvidu-pro)
 
     export AWS_DEFAULT_REGION=us-east-1
-    # Check if nightly
-    [ -n "$NIGHTLY" ] || NIGHTLY="false"
-    if [[ "${NIGHTLY}" == "true"  ]]; then
-      OPENVIDU_PRO_VERSION="nightly-$(date +%m%d%Y)"
-    fi
 
     [ -n "$OVERWRITE_VERSION" ] || OVERWRITE_VERSION='false'
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
+    # Check if nightly
+    [ -n "$NIGHTLY" ] || NIGHTLY="false"
+    if [[ "${NIGHTLY}" == "true"  ]]; then
+      OPENVIDU_PRO_VERSION="${OPENVIDU_PRO_VERSION}-nightly-$(date +%m%d%Y)"
+    fi
 
     # Commit or branch to build
     [ -n "$OPENVIDU_CE_COMMIT" ] || OPENVIDU_CE_COMMIT='master'
@@ -366,22 +369,28 @@ case $OPENVIDU_PROJECT in
 
     if [ "${BUILD_OPENVIDU_INSPECTOR}" == true ]; then
       pushd openvidu/openvidu-node-client
-      npm install || { echo "openvidu-node-client -> install"; exit 1; }
-      npm run build || { echo "openvidu-node-client -> build"; exit 1; }
-      npm link || { echo "openvidu-node-client -> link"; exit 1; }
+      npm-vbump.py --envvar OPENVIDU_PRO_VERSION || (echo "Failed to bump package.json version"; exit 1)
+      npm install || { echo "openvidu-browser -> install"; exit 1; }
+      npm run build || { echo "openvidu-browser -> build"; exit 1; }
+      npm pack || { echo "openvidu-browser -> pack"; exit 1; }
+      mv openvidu-node-client-"${OPENVIDU_PRO_VERSION}".tgz ../../dashboard
       popd
 
       pushd openvidu/openvidu-browser
+      npm-vbump.py --envvar OPENVIDU_PRO_VERSION || (echo "Failed to bump package.json version"; exit 1)
       npm install || { echo "openvidu-browser -> install"; exit 1; }
       npm run build || { echo "openvidu-browser -> build"; exit 1; }
-      npm link || { echo "openvidu-browser -> link"; exit 1; }
+      npm pack || { echo "openvidu-browser -> build"; exit 1; }
+      mv openvidu-browser-"${OPENVIDU_PRO_VERSION}".tgz ../../dashboard
       popd
 
       pushd dashboard
-      npm install || { echo "dashboard -> install "; exit 1; }
-      npm link openvidu-node-client || { echo "dashboard -> link"; exit 1; }
-      npm link openvidu-browser || { echo "dashboard -> link"; exit 1; }
+      npm install openvidu-node-client-"${OPENVIDU_PRO_VERSION}".tgz || { echo "dashboard -> install "; exit 1; }
+      npm install openvidu-browser-"${OPENVIDU_PRO_VERSION}".tgz || { echo "dashboard -> install "; exit 1; }
+      npm install
       npm run build-server-prod  || { echo "dashboard -> build for prod"; exit 1; }
+      rm openvidu-node-client-"${OPENVIDU_PRO_VERSION}".tgz
+      rm openvidu-browser-"${OPENVIDU_PRO_VERSION}".tgz
       popd
     fi
 
