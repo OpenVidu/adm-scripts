@@ -1,4 +1,4 @@
-#!/bin/bash  
+#!/bin/bash -x
 set -eu -o pipefail
 
 # This script is intended to remove old tags
