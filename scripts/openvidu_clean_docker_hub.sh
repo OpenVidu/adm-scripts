@@ -28,7 +28,7 @@ TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/reposi
 
 for TAG in $TAGS
 do
-  DATE=$(echo $TAG | cut -d"-" -f2)
+  DATE=$(echo $TAG | cut -d"-" -f3)
   if [ ! "$DATE" -gt "$SEVENDAYSAGO" ]; then
   	curl -X DELETE -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}/tags/${TAG}/
   fi
