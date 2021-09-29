@@ -36,17 +36,23 @@ SEVENDAYSAGO=$(date +%s -d "7 days ago")
 TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_HUB_USERNAME}'", "password": "'${DOCKER_HUB_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
 
 # Get Tags
+set +e
 TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}/tags/?page_size=300 | jq -r '.results|.[]|.name' | grep nightly)
 
-for TAG in $TAGS
-do
-  DATE_FORMATTED=$(echo $TAG | cut -d"-" -f3)
-  if [[ -n "${DATE_FORMATTED}" ]]; then
+if [[ -n "${TAGS}" ]]; then
+set -e
+  for TAG in $TAGS
+  do
+    DATE_FORMATTED=$(echo $TAG | cut -d"-" -f3)
+    if [[ -n "${DATE_FORMATTED}" ]]; then
 
-    DATE=$(date_to_timestamp "${DATE_FORMATTED}")
-    if [[ -n "${DATE}" ]] && [[ "$SEVENDAYSAGO" -gt "$DATE" ]]; then
-      curl -X DELETE -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}/tags/${TAG}/
+      DATE=$(date_to_timestamp "${DATE_FORMATTED}")
+      if [[ -n "${DATE}" ]] && [[ "$SEVENDAYSAGO" -gt "$DATE" ]]; then
+        curl -X DELETE -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}/tags/${TAG}/
+      fi
+
     fi
+  done
+fi
 
-  fi
-done
+
