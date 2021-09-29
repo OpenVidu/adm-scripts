@@ -35,6 +35,9 @@ if [[ -d "${OPENVIDU_DIRECTORY}" ]]; then
     if [[ -d "${OPENVIDU_DIRECTORY}"/elasticsearch ]]; then
         mv "${OPENVIDU_DIRECTORY}"/elasticsearch "${INSTALLATION_DIRECTORY}"/old-elasticsearch
     fi
+    if [[ -d "${OPENVIDU_DIRECTORY}"/certificates ]]; then
+        mv "${OPENVIDU_DIRECTORY}"/certificates "${INSTALLATION_DIRECTORY}"/old-certificates
+    fi
     # Remove previous installation
     rm -rf "${OPENVIDU_DIRECTORY}"
 fi
@@ -61,6 +64,17 @@ if [[ -d "${INSTALLATION_DIRECTORY}"/old-elasticsearch ]]; then
     # Rename and move
     mv "${INSTALLATION_DIRECTORY}"/old-elasticsearch "${INSTALLATION_DIRECTORY}"/elasticsearch
     mv "${INSTALLATION_DIRECTORY}"/elasticsearch "${OPENVIDU_DIRECTORY}"/elasticsearch
+fi
+
+if [[ -d "${INSTALLATION_DIRECTORY}"/old-certificates ]]; then
+    # Remove empty certificates folder
+    if [[ -d "${OPENVIDU_DIRECTORY}"/certificates ]]; then
+        rm -rf "${OPENVIDU_DIRECTORY}"/certificates
+    fi
+
+    # Rename and move
+    mv "${INSTALLATION_DIRECTORY}"/old-certificates "${INSTALLATION_DIRECTORY}"/certificates
+    mv "${INSTALLATION_DIRECTORY}"/certificates "${OPENVIDU_DIRECTORY}"/certificates
 fi
 
 cd "${OPENVIDU_DIRECTORY}"
