@@ -82,7 +82,7 @@ if [[ "${RELEASE}" == 'true' ]]; then
     popd
 else
     # Execute update dependencies script
-    docker run -it --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_depencies.sh" || exit 1
+    docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_depencies.sh" || exit 1
     # Build openvidu call
     docker build -f docker/custom.dockerfile -t openvidu/openvidu-call:"${OVC_VERSION}" --build-arg OPENVIDU_BROWSER="${OPENVIDU_BROWSER_BRANCH}" . || exit 1
     docker push openvidu/openvidu-call:"${OVC_VERSION}"
