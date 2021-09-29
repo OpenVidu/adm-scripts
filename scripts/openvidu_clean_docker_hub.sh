@@ -48,7 +48,10 @@ set -e
 
       DATE=$(date_to_timestamp "${DATE_FORMATTED}")
       if [[ -n "${DATE}" ]] && [[ "$SEVENDAYSAGO" -gt "$DATE" ]]; then
+        echo "The image ${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}:${TAG} is old. Deleting"
         curl -X DELETE -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}/tags/${TAG}/
+      else
+        echo "The image ${DOCKER_HUB_ORGANIZATION}/${DOCKER_HUB_REPOSITORY}:${TAG} is not 7 days old. Keeping"
       fi
 
     fi
