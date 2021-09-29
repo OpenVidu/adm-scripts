@@ -33,15 +33,15 @@ fi
 
 cd "${INSTALLATION_DIRECTORY}"
 # Download and install media node
-if [[ "${OV_VERSION}" == "master" ]]; then
-    curl https://raw.githubusercontent.com/OpenVidu/openvidu/"${OV_VERSION}"/openvidu-server/deployments/pro/docker-compose/media-node/install_media_node.sh | bash
+if [[ "${NIGHTLY}" == "true" ]] || [[ "${OV_VERSION}" == "master" ]]; then
+    curl https://raw.githubusercontent.com/OpenVidu/openvidu/master/openvidu-server/deployments/pro/docker-compose/media-node/install_media_node.sh | bash
 else
     curl curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_media_node_"${OV_VERSION}".sh | bash
 fi
 
 # Replace variables with nightly tags if specified
 cd "${MEDIA_NODE_DIRECTORY}"
-if [[ "${NIGHTLY}" == "true" ]] || [[ "${OV_VERSION}" == "master" ]]; then
+if [[ "${NIGHTLY}" == "true" ]]; then
     # Replace variables in docker-compose.yml file
     sed -i "s|image: openvidu/media-node-controller:.*|image: openvidu/media-node-controller:${MEDIA_NODE_CONTROLLER_TAG}|" docker-compose.yml
     sed -i "s|MEDIASOUP_IMAGE=openvidu/mediasoup-controller:.*|MEDIASOUP_IMAGE=openvidu/mediasoup-controller:${MEDIASOUP_CONTROLLER_TAG}|" docker-compose.yml
