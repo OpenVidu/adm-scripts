@@ -21,10 +21,11 @@ fi
 if [[ "${NIGHTLY}" == "true" ]]; then
 
   # If nightly, check that version is no released
-  export OV_VERSION="${TAGS}"
-  EXIST_RELEASE=$(check_openvidu_release_docker.sh)
+  export DOCKER_TAG="${TAGS}"
+  export DOCKER_IMAGE="${DOCKERHUB_REPO}/${IMAGE_NAME}"
+  EXIST_RELEASE=$(check_docker_image_exist.sh)
   if [[ ${EXIST_RELEASE} == "true" ]]; then
-    echo "Release specified exist. To create nightly builds you need to specify the current version in development"
+    echo "Release specified exist. To create nightly builds you need to specify the current version in development for this image" 
     exit 1
   fi
 

@@ -8,10 +8,13 @@ OV_VERSION="${2}"
 
 if [[ "${NIGHTLY}" == "true" ]]; then
     DATESTAMP=$(date +%m%d%Y)
+    REDIS_VERSION="${3}"
+    NGINX_PROXY_VERSION="${4}"
+    COTURN_VERSION="${5}"
     OPENVIDU_SERVER_PRO_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
-    OPENVIDU_REDIS_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
-    OPENVIDU_COTURN_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
-    OPENVIDU_PROXY_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
+    OPENVIDU_REDIS_TAG="${REDIS_VERSION}-nightly-${DATESTAMP}"
+    OPENVIDU_NGINX_PROXY_TAG="${NGINX_PROXY_VERSION}-nightly-${DATESTAMP}"
+    OPENVIDU_COTURN_TAG="${COTURN_VERSION}-nightly-${DATESTAMP}"
     OPENVIDU_CALL_VERSION="${OV_VERSION}-nightly-${DATESTAMP}"
     MEDIASOUP_CONTROLLER_TAG="${OV_VERSION}-nightly-${DATESTAMP}"
 fi
@@ -85,7 +88,7 @@ if [[ "${NIGHTLY}" == "true" ]]; then
     sed -i "s|image: openvidu/openvidu-server-pro:.*|image: openvidu/openvidu-server-pro:${OPENVIDU_SERVER_PRO_TAG}|" docker-compose.yml
     sed -i "s|image: openvidu/openvidu-redis:.*|image: openvidu/openvidu-redis:${OPENVIDU_REDIS_TAG}|" docker-compose.yml
     sed -i "s|image: openvidu/openvidu-coturn:.*|image: openvidu/openvidu-coturn:${OPENVIDU_COTURN_TAG}|" docker-compose.yml
-    sed -i "s|image: openvidu/openvidu-proxy:.*|image: openvidu/openvidu-proxy:${OPENVIDU_PROXY_TAG}|" docker-compose.yml
+    sed -i "s|image: openvidu/openvidu-proxy:.*|image: openvidu/openvidu-proxy:${OPENVIDU_NGINX_PROXY_TAG}|" docker-compose.yml
     sed -i "s|image: openvidu/openvidu-call:.*|image: openvidu/openvidu-call:${OPENVIDU_CALL_VERSION}|" docker-compose.override.yml
 
     # Replace MEDIASOUP IMAGE
@@ -99,7 +102,7 @@ if [[ "${NIGHTLY}" == "true" ]]; then
     docker pull openvidu/openvidu-server-pro:"${OPENVIDU_SERVER_PRO_TAG}"
     docker pull openvidu/openvidu-redis:"${OPENVIDU_REDIS_TAG}"
     docker pull openvidu/openvidu-coturn:"${OPENVIDU_COTURN_TAG}"
-    docker pull openvidu/openvidu-proxy:"${OPENVIDU_PROXY_TAG}"
+    docker pull openvidu/openvidu-proxy:"${OPENVIDU_NGINX_PROXY_TAG}"
     docker pull openvidu/openvidu-call:"${OPENVIDU_CALL_VERSION}"
 fi
 
