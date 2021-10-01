@@ -78,7 +78,8 @@ case $OPENVIDU_PROJECT in
     # Check if nightly
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
     if [[ "${NIGHTLY}" == "true"  ]]; then
-      OPENVIDU_VERSION="${OPENVIDU_VERSION}-nightly-$(date +%m%d%Y)"
+      BUILD_COMMIT=$(git rev-parse --short HEAD)
+      OPENVIDU_VERSION="${OPENVIDU_VERSION}-nightly-${BUILD_COMMIT}-$(date +%m%d%Y)"
     fi
 
     # Openvidu Browser
@@ -336,10 +337,12 @@ case $OPENVIDU_PROJECT in
 
     [ -n "$OVERWRITE_VERSION" ] || OVERWRITE_VERSION='false'
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
+
     # Check if nightly
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
     if [[ "${NIGHTLY}" == "true"  ]]; then
-      OPENVIDU_PRO_VERSION="${OPENVIDU_PRO_VERSION}-nightly-$(date +%m%d%Y)"
+      BUILD_COMMIT=$(git rev-parse --short HEAD)
+      OPENVIDU_PRO_VERSION="${OPENVIDU_PRO_VERSION}-nightly-${BUILD_COMMIT}-$(date +%m%d%Y)"
     fi
 
     # Commit or branch to build

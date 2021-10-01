@@ -6,12 +6,11 @@ set -eu -o pipefail
 #
 # Basically, get the token from Docker Hub using
 # your credentials, then lock up for nightly tag
-# and remove those ones older than seven days. 
+# and remove those ones older than seven days.
 #
 # It knows the date because we tag our nightly repo
 # in this way:
-#
-# openvidu/openvidu-server:nightly-20180101
+# openvidu/openvidu-server:<version>-nightly-<commit>-<date>
 
 date_to_timestamp() {
   DATE="${1}"
@@ -43,7 +42,7 @@ if [[ -n "${TAGS}" ]]; then
 set -e
   for TAG in $TAGS
   do
-    DATE_FORMATTED=$(echo $TAG | cut -d"-" -f3)
+    DATE_FORMATTED=$(echo $TAG | cut -d"-" -f4)
     if [[ -n "${DATE_FORMATTED}" ]]; then
 
       DATE=$(date_to_timestamp "${DATE_FORMATTED}")

@@ -10,7 +10,8 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 # Check if nightly
 [ -n "$NIGHTLY" ] || NIGHTLY="false"
 if [[ "${NIGHTLY}" == "true"  ]]; then
-  OVC_VERSION="${OVC_VERSION}-nightly-$(date +%m%d%Y)"
+  BUILD_COMMIT=$(git rev-parse --short HEAD)
+  OVC_VERSION="${OVC_VERSION}-nightly-${BUILD_COMMIT}-$(date +%m%d%Y)"
 fi
 
 
