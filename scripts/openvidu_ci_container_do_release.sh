@@ -338,18 +338,36 @@ case $OPENVIDU_PROJECT in
     [ -n "$OVERWRITE_VERSION" ] || OVERWRITE_VERSION='false'
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
 
-    # Check if nightly
+    git clone https://github.com/OpenVidu/openvidu.git
+    pushd openvidu
+    if [[ "${OPENVIDU_CE_COMMIT}" != 'master' ]]; then
+      git checkout "${OPENVIDU_CE_COMMIT}"
+    fi
+    popd
+
+    # Check if nightly and setup variables
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
+    ORIG_VERSION="${OPENVIDU_PRO_VERSION}"
     if [[ "${NIGHTLY}" == "true"  ]]; then
+      # Create OpenVidu Pro version based in commit
       BUILD_COMMIT_PRO=$(git rev-parse HEAD | cut -c 1-8)
       OPENVIDU_PRO_VERSION="${OPENVIDU_PRO_VERSION}-nightly-${BUILD_COMMIT_PRO}-$(date +%m%d%Y)"
+
+      # Create OpenVidu CE version based in commit
+      pushd openvidu
+      BUILD_COMMIT_CE=$(git rev-parse HEAD | cut -c 1-8)
+      OPENVIDU_CE_VERSION="${OPENVIDU_PRO_VERSION}-nightly-${BUILD_COMMIT_CE}-$(date +%m%d%Y)"
+      popd
+    else
+
+      # If not nightly, use version originally configured
+      OPENVIDU_PRO_VERSION="${ORIG_VERSION}"
+      OPENVIDU_CE_VERSION="${ORIG_VERSION}"
     fi
 
     # Commit or branch to build
     [ -n "$OPENVIDU_CE_COMMIT" ] || OPENVIDU_CE_COMMIT='master'
     [ -n "$OPENVIDU_PRO_COMMIT" ] || OPENVIDU_PRO_COMMIT='master'
-
-    git clone https://github.com/OpenVidu/openvidu.git
 
     if ${KURENTO_JAVA_SNAPSHOT} ; then
       git clone https://github.com/Kurento/kurento-java.git
@@ -363,22 +381,6 @@ case $OPENVIDU_PROJECT in
     fi
 
     pushd openvidu
-    if [[ "${OPENVIDU_CE_COMMIT}" != 'master' ]]; then
-      git checkout "${OPENVIDU_CE_COMMIT}"
-    fi
-    # Check if nightly
-    # Get OPENVIDU_CE_VERSION.
-    [ -n "$NIGHTLY" ] || NIGHTLY="false"
-    if [[ "${NIGHTLY}" == "true"  ]]; then
-      # OpenVidu CE and OpenVidu PRO version differs on nightlies because
-      # the version contains the specific commit of the build of both projects
-      BUILD_COMMIT_CE=$(git rev-parse HEAD | cut -c 1-8)
-      OPENVIDU_CE_VERSION="${OPENVIDU_PRO_VERSION}-nightly-${BUILD_COMMIT_CE}-$(date +%m%d%Y)"
-    else
-      # If not nigthly, CE and PRO must have the same version.
-      OPENVIDU_CE_VERSION="${OPENVIDU_PRO_VERSION}"
-    fi
-
     mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} || { echo "Failed to bump openvidu-ce version"; exit 1; }
     mvn -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
     mvn -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
