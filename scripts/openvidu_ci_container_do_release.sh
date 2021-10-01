@@ -419,7 +419,7 @@ case $OPENVIDU_PROJECT in
     popd
 
     pushd openvidu-server-pro
-    pom-vbump.py -i -v $OPENVIDU_PRO_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
+    mvn versions:set -DnewVersion=$OPENVIDU_PRO_VERSION
     mvn versions:set-property -Dproperty=version.openvidu.server -DnewVersion=${OPENVIDU_CE_VERSION}
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
