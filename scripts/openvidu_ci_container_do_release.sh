@@ -338,6 +338,10 @@ case $OPENVIDU_PROJECT in
     [ -n "$OVERWRITE_VERSION" ] || OVERWRITE_VERSION='false'
     [ -z "$OPENVIDU_PRO_VERSION" ] && exit 1
 
+    # Commit or branch to build
+    [ -n "$OPENVIDU_CE_COMMIT" ] || OPENVIDU_CE_COMMIT='master'
+    [ -n "$OPENVIDU_PRO_COMMIT" ] || OPENVIDU_PRO_COMMIT='master'
+
     git clone https://github.com/OpenVidu/openvidu.git
     pushd openvidu
     if [[ "${OPENVIDU_CE_COMMIT}" != 'master' ]]; then
@@ -365,10 +369,6 @@ case $OPENVIDU_PROJECT in
       export OPENVIDU_CE_VERSION="${ORIG_VERSION}"
     fi
 
-    # Commit or branch to build
-    [ -n "$OPENVIDU_CE_COMMIT" ] || OPENVIDU_CE_COMMIT='master'
-    [ -n "$OPENVIDU_PRO_COMMIT" ] || OPENVIDU_PRO_COMMIT='master'
-
     if ${KURENTO_JAVA_SNAPSHOT} ; then
       git clone https://github.com/Kurento/kurento-java.git
       cd kurento-java && MVN_VERSION=$(mvn --batch-mode -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
@@ -381,7 +381,21 @@ case $OPENVIDU_PROJECT in
     fi
 
     pushd openvidu
-    mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} || { echo "Failed to bump openvidu-ce version"; exit 1; }
+    # Update java-client from parent pom.xml
+    mvn versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true || (echo "Failed to update version"; exit 1)
+    popd
+
+    pushd openvidu/openvidu-java-client
+    # Update java-client version
+    mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true  || (echo "Failed to bump version"; exit 1)
+    popd
+
+    # Update openvidu-server
+    pushd openvidu/openvidu-server
+    mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true || (echo "Failed to bump version"; exit 1)
+    popd
+
+    pushd openvidu
     mvn -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
     mvn -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
     popd
@@ -419,8 +433,8 @@ case $OPENVIDU_PROJECT in
     popd
 
     pushd openvidu-server-pro
-    mvn versions:set -DnewVersion=$OPENVIDU_PRO_VERSION
-    mvn versions:set-property -Dproperty=version.openvidu.server -DnewVersion=${OPENVIDU_CE_VERSION}
+    mvn versions:set-property -Dproperty=version.openvidu.server -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true
+    mvn versions:set -DnewVersion=$OPENVIDU_PRO_VERSION -DskipTests=true
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
