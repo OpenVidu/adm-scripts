@@ -341,8 +341,8 @@ case $OPENVIDU_PROJECT in
     # Check if nightly
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
     if [[ "${NIGHTLY}" == "true"  ]]; then
-      BUILD_COMMIT=$(git rev-parse HEAD | cut -c 1-8)
-      OPENVIDU_PRO_VERSION="${OPENVIDU_PRO_VERSION}-nightly-${BUILD_COMMIT}-$(date +%m%d%Y)"
+      BUILD_COMMIT_PRO=$(git rev-parse HEAD | cut -c 1-8)
+      OPENVIDU_PRO_VERSION="${OPENVIDU_PRO_VERSION}-nightly-${BUILD_COMMIT_PRO}-$(date +%m%d%Y)"
     fi
 
     # Commit or branch to build
@@ -366,45 +366,59 @@ case $OPENVIDU_PROJECT in
     if [[ "${OPENVIDU_CE_COMMIT}" != 'master' ]]; then
       git checkout "${OPENVIDU_CE_COMMIT}"
     fi
-    mvn versions:set -DnewVersion=${OPENVIDU_PRO_VERSION} || { echo "Failed to bump openvidu-ce version"; exit 1; }
-    mvn -DskipTests=true compile || { echo "openvidu -> compile"; exit 1; }
-    mvn -DskipTests=true install || { echo "openvidu -> install"; exit 1; }
+    # Check if nightly
+    # Get OPENVIDU_CE_VERSION.
+    [ -n "$NIGHTLY" ] || NIGHTLY="false"
+    if [[ "${NIGHTLY}" == "true"  ]]; then
+      # OpenVidu CE and OpenVidu PRO version differs on nightlies because
+      # the version contains the specific commit of the build of both projects
+      BUILD_COMMIT_CE=$(git rev-parse HEAD | cut -c 1-8)
+      OPENVIDU_CE_VERSION="${OPENVIDU_PRO_VERSION}-nightly-${BUILD_COMMIT_CE}-$(date +%m%d%Y)"
+    else
+      # If not nigthly, CE and PRO must have the same version.
+      OPENVIDU_CE_VERSION="${OPENVIDU_PRO_VERSION}"
+    fi
+
+    mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} || { echo "Failed to bump openvidu-ce version"; exit 1; }
+    mvn -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
+    mvn -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
     popd
 
     if [ "${BUILD_OPENVIDU_INSPECTOR}" == true ]; then
       pushd openvidu/openvidu-node-client
-      npm-vbump.py --envvar OPENVIDU_PRO_VERSION || (echo "Failed to bump package.json version"; exit 1)
+      npm-vbump.py --envvar OPENVIDU_CE_VERSION || (echo "Failed to bump package.json version"; exit 1)
       npm install || { echo "openvidu-browser -> install"; exit 1; }
       npm run build || { echo "openvidu-browser -> build"; exit 1; }
       npm pack || { echo "openvidu-browser -> pack"; exit 1; }
-      mv openvidu-node-client-"${OPENVIDU_PRO_VERSION}".tgz ../../dashboard
+      mv openvidu-node-client-"${OPENVIDU_CE_VERSION}".tgz ../../dashboard
       popd
 
       pushd openvidu/openvidu-browser
-      npm-vbump.py --envvar OPENVIDU_PRO_VERSION || (echo "Failed to bump package.json version"; exit 1)
+      npm-vbump.py --envvar OPENVIDU_CE_VERSION || (echo "Failed to bump package.json version"; exit 1)
       npm install || { echo "openvidu-browser -> install"; exit 1; }
       npm run build || { echo "openvidu-browser -> build"; exit 1; }
       npm pack || { echo "openvidu-browser -> build"; exit 1; }
-      mv openvidu-browser-"${OPENVIDU_PRO_VERSION}".tgz ../../dashboard
+      mv openvidu-browser-"${OPENVIDU_CE_VERSION}".tgz ../../dashboard
       popd
 
       pushd dashboard
-      npm install openvidu-node-client-"${OPENVIDU_PRO_VERSION}".tgz || { echo "dashboard -> install "; exit 1; }
-      npm install openvidu-browser-"${OPENVIDU_PRO_VERSION}".tgz || { echo "dashboard -> install "; exit 1; }
+      npm-vbump.py --envvar OPENVIDU_PRO_VERSION || (echo "Failed to bump package.json version"; exit 1)
+      npm install openvidu-node-client-"${OPENVIDU_CE_VERSION}".tgz || { echo "dashboard -> install "; exit 1; }
+      npm install openvidu-browser-"${OPENVIDU_CE_VERSION}".tgz || { echo "dashboard -> install "; exit 1; }
       npm install
       npm run build-server-prod  || { echo "dashboard -> build for prod"; exit 1; }
-      rm openvidu-node-client-"${OPENVIDU_PRO_VERSION}".tgz
-      rm openvidu-browser-"${OPENVIDU_PRO_VERSION}".tgz
+      rm openvidu-node-client-"${OPENVIDU_CE_VERSION}".tgz
+      rm openvidu-browser-"${OPENVIDU_CE_VERSION}".tgz
       popd
     fi
 
     pushd openvidu/openvidu-server
-    mvn -Pdependency install || { echo "openvidu-server -> install dependency"; exit 1; }
+    mvn -Pdependency install || { echo "openvidu-server-ce -> install dependency"; exit 1; }
     popd
 
     pushd openvidu-server-pro
-    mvn versions:set -DnewVersion=${OPENVIDU_PRO_VERSION} || { echo "Failed to bump openvidu-pro version"; exit 1; }
-    mvn versions:set-property -Dproperty=version.openvidu.server -DnewVersion=${OPENVIDU_PRO_VERSION}
+    pom-vbump.py -i -v $OPENVIDU_PRO_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
+    mvn versions:set-property -Dproperty=version.openvidu.server -DnewVersion=${OPENVIDU_CE_VERSION}
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
