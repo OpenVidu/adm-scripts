@@ -78,7 +78,7 @@ case $OPENVIDU_PROJECT in
     # Check if nightly
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
     if [[ "${NIGHTLY}" == "true"  ]]; then
-      BUILD_COMMIT=$(git rev-parse --short HEAD)
+      BUILD_COMMIT=$(git rev-parse HEAD | cut -c 1-8)
       OPENVIDU_VERSION="${OPENVIDU_VERSION}-nightly-${BUILD_COMMIT}-$(date +%m%d%Y)"
     fi
 
@@ -341,7 +341,7 @@ case $OPENVIDU_PROJECT in
     # Check if nightly
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
     if [[ "${NIGHTLY}" == "true"  ]]; then
-      BUILD_COMMIT=$(git rev-parse --short HEAD)
+      BUILD_COMMIT=$(git rev-parse HEAD | cut -c 1-8)
       OPENVIDU_PRO_VERSION="${OPENVIDU_PRO_VERSION}-nightly-${BUILD_COMMIT}-$(date +%m%d%Y)"
     fi
 
@@ -366,6 +366,7 @@ case $OPENVIDU_PROJECT in
     if [[ "${OPENVIDU_CE_COMMIT}" != 'master' ]]; then
       git checkout "${OPENVIDU_CE_COMMIT}"
     fi
+    pom-vbump.py -i -v "$OPENVIDU_PRO_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
     mvn -DskipTests=true compile || { echo "openvidu -> compile"; exit 1; }
     mvn -DskipTests=true install || { echo "openvidu -> install"; exit 1; }
     popd
