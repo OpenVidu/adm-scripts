@@ -366,7 +366,7 @@ case $OPENVIDU_PROJECT in
     if [[ "${OPENVIDU_CE_COMMIT}" != 'master' ]]; then
       git checkout "${OPENVIDU_CE_COMMIT}"
     fi
-    pom-vbump.py -i -v "$OPENVIDU_PRO_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
+    mvn versions:set -DnewVersion=${OPENVIDU_PRO_VERSION} || { echo "Failed to bump openvidu-ce version"; exit 1; }
     mvn -DskipTests=true compile || { echo "openvidu -> compile"; exit 1; }
     mvn -DskipTests=true install || { echo "openvidu -> install"; exit 1; }
     popd
@@ -403,13 +403,8 @@ case $OPENVIDU_PROJECT in
     popd
 
     pushd openvidu-server-pro
-    if [ "${OPENVIDU_PRO_IS_SNAPSHOT}" == true ]; then
-        OVP_VERSION=${OPENVIDU_PRO_VERSION}-SNAPSHOT
-    else
-        OVP_VERSION=${OPENVIDU_PRO_VERSION}
-    fi
-
-    mvn versions:set -DnewVersion=${OVP_VERSION} || { echo "Failed to bump openvidu-pro version"; exit 1; }
+    mvn versions:set -DnewVersion=${OPENVIDU_PRO_VERSION} || { echo "Failed to bump openvidu-pro version"; exit 1; }
+    mvn versions:set-property -Dproperty=version.openvidu.server -DnewVersion=${OPENVIDU_PRO_VERSION}
     mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
@@ -419,9 +414,9 @@ case $OPENVIDU_PROJECT in
     if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
       FILE_EXIST=0
       ssh -o StrictHostKeyChecking=no -i /opt/id_rsa.key ubuntu@pro.openvidu.io \
-        [[ -f /var/www/pro.openvidu.io/openvidu-server-pro-"${OVP_VERSION}".jar ]] || FILE_EXIST=$?
+        [[ -f /var/www/pro.openvidu.io/openvidu-server-pro-"${OPENVIDU_PRO_VERSION}".jar ]] || FILE_EXIST=$?
       if [[ "${FILE_EXIST}" -eq 0 ]]; then
-        echo "Build openvidu-server-pro-${OVP_VERSION} actually exists and OVERWRITE_VERSION=false"
+        echo "Build openvidu-server-pro-${OPENVIDU_PRO_VERSION} actually exists and OVERWRITE_VERSION=false"
         exit 1
       fi
     fi
@@ -429,7 +424,7 @@ case $OPENVIDU_PROJECT in
     # Upload to pro.openvidu.io
     scp -o StrictHostKeyChecking=no \
     -i /opt/id_rsa.key \
-    openvidu-server-pro-${OVP_VERSION}.jar \
+    openvidu-server-pro-${OPENVIDU_PRO_VERSION}.jar \
     ubuntu@pro.openvidu.io:/var/www/pro.openvidu.io/
 
     ;;
