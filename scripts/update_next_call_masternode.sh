@@ -3,6 +3,8 @@ set -eu -o pipefail
 
 INSTALLATION_DIRECTORY="/opt"
 OPENVIDU_DIRECTORY="${INSTALLATION_DIRECTORY}/openvidu"
+CUSTOM_LOCATIONS_DIRECTORY_FOLDER_NAME="custom-nginx-locations"
+CUSTOM_LOCATIONS_DIRECTORY="${OPENVIDU_DIRECTORY}/${CUSTOM_LOCATIONS_DIRECTORY_FOLDER_NAME}"
 NIGHTLY="${1}"
 OV_VERSION="${2}"
 
@@ -74,6 +76,23 @@ if [[ -d "${INSTALLATION_DIRECTORY}"/old-certificates ]]; then
     # Rename and move
     mv "${INSTALLATION_DIRECTORY}"/old-certificates "${INSTALLATION_DIRECTORY}"/certificates
     mv "${INSTALLATION_DIRECTORY}"/certificates "${OPENVIDU_DIRECTORY}"/certificates
+fi
+
+# Create custom location to show versions file
+cat >"${CUSTOM_LOCATIONS_DIRECTORY}"/versions.conf <<EOF
+location ~ ^/versions$ {
+    add_header Content-Type text/plain;
+    add_header X-Content-Type-Options nosniff;
+    alias /${CUSTOM_LOCATIONS_DIRECTORY_FOLDER_NAME}/versions.txt;
+}
+EOF
+
+# Insert cron to generate versions if it was not installed
+if ! crontab -l | grep 'next_call_generate_versions_file.sh' 1>/dev/null 2>&1; then
+    crontab -l >/tmp/crontab.tmp
+    echo "*/5 * * * * ${OPENVIDU_DIRECTORY}/next_call_generate_versions_file.sh" >>/tmp/crontab.tmp
+    crontab /tmp/crontab.tmp
+    rm /tmp/crontab.tmp
 fi
 
 cd "${OPENVIDU_DIRECTORY}"
