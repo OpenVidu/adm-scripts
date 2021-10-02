@@ -7,59 +7,72 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 [ -n "${RELEASE}" ] || RELEASE='false'
 [ -n "${OPENVIDU_CALL_BRANCH}" ] || OPENVIDU_CALL_BRANCH='master'
 [ -n "${OPENVIDU_BROWSER_BRANCH}" ] || OPENVIDU_BROWSER_BRANCH='master'
-# Check if nightly
 [ -n "$NIGHTLY" ] || NIGHTLY="false"
-if [[ "${NIGHTLY}" == "true"  ]]; then
-  BUILD_COMMIT=$(git rev-parse HEAD | cut -c 1-8)
-  OVC_VERSION="${OVC_VERSION}-nightly-${BUILD_COMMIT}-$(date +%Y%m%d)"
+
+if [ "${OPENVIDU_CALL_BRANCH}" != 'master' ]; then
+    git checkout "${OPENVIDU_CALL_BRANCH}"
 fi
 
+if [[ "${RELEASE}" == "false"  ]]; then
+  # Clone OpenVidu Repository to build openvidu-browser and openvidu-node-client
+  git clone https://github.com/OpenVidu/openvidu.git
+  pushd openvidu
+  if [[ "${OPENVIDU_BROWSER_BRANCH}" != 'master' ]]; then
+    git checkout "${OPENVIDU_BROWSER_BRANCH}"
+  fi
+  BUILD_COMMIT_OV=$(git rev-parse HEAD | cut -c 1-8)
+  popd
+  # Get commits from OpenVidu Call and OpenVidu repository
+  BUILD_COMMIT_CALL=$(git rev-parse HEAD | cut -c 1-8)
 
-CURRENT_USERNAME=$(whoami)
-CURRENT_UID=$(id -u "${CURRENT_USERNAME}")
-CURRENT_GID=$(id -g "${CURRENT_USERNAME}")
-# This script updates all dependencies for openvidu call, but only for non release builds
+  if [[ "${NIGHTLY}" == "true" ]]; then
+    OV_NODE_CLIENT_VERSION="${OVC_VERSION}-nightly-${BUILD_COMMIT_OV}-$(date +%Y%m%d)"
+    OV_BROWSER_VERSION="${OVC_VERSION}-nightly-${BUILD_COMMIT_OV}-$(date +%Y%m%d)"
+    OVC_VERSION="${OVC_VERSION}-nightly-${BUILD_COMMIT_CALL}-$(date +%Y%m%d)"
+  else
+    OV_NODE_CLIENT_VERSION="${OVC_VERSION}"
+    OV_BROWSER_VERSION="${OVC_VERSION}"
+  fi
+
+
+  CURRENT_USERNAME=$(whoami)
+  CURRENT_UID=$(id -u "${CURRENT_USERNAME}")
+  CURRENT_GID=$(id -g "${CURRENT_USERNAME}")
+
+# This script updates all dependencies for openvidu call nightly build
 cat >update_depencies.sh <<EOF
 #!/bin/bash -x
 
-# Clone OpenVidu Repository to build openvidu-browser and openvidu-node-client
-git clone https://github.com/OpenVidu/openvidu.git
-pushd openvidu
-if [[ "${OPENVIDU_BROWSER_BRANCH}" != 'master' ]]; then
-  git checkout "${OPENVIDU_BROWSER_BRANCH}"
-fi
-popd
-
 pushd openvidu/openvidu-node-client
 # Build node client
-sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
+sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OV_NODE_CLIENT_VERSION}\"/" package.json
 cat package.json
 npm install || { echo "openvidu-browser -> install"; exit 1; }
 npm run build || { echo "openvidu-browser -> build"; exit 1; }
 npm pack || { echo "openvidu-browser -> pack"; exit 1; }
-mv openvidu-node-client-"${OVC_VERSION}".tgz ../../openvidu-call-back
+mv openvidu-node-client-"${OV_NODE_CLIENT_VERSION}".tgz ../../openvidu-call-back
 
 # update package.json openvidu-call-back
 pushd ../../openvidu-call-back
-chown "${CURRENT_UID}":"${CURRENT_GID}" openvidu-node-client-"${OVC_VERSION}".tgz
+chown "${CURRENT_UID}":"${CURRENT_GID}" openvidu-node-client-"${OV_NODE_CLIENT_VERSION}".tgz
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
-sed -i "/\"openvidu-node-client\":/ s/\"openvidu-node-client\":[^,]*/\"openvidu-node-client\": \"file:openvidu-node-client-${OVC_VERSION}.tgz\"/" package.json
+sed -i "/\"openvidu-node-client\":/ s/\"openvidu-node-client\":[^,]*/\"openvidu-node-client\": \"file:openvidu-node-client-${OV_NODE_CLIENT_VERSION}.tgz\"/" package.json
 cat package.json
 popd
 popd
 
 pushd openvidu/openvidu-browser
-sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
+sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OV_BROWSER_VERSION}\"/" package.json
 npm install || { echo "openvidu-browser -> install"; exit 1; }
 npm run build || { echo "openvidu-browser -> build"; exit 1; }
 npm pack || { echo "openvidu-browser -> build"; exit 1; }
-mv openvidu-browser-"${OVC_VERSION}".tgz ../../openvidu-call-front
+mv openvidu-browser-"${OV_BROWSER_VERSION}".tgz ../../openvidu-call-front
 
 # update package.json openvidu-call-front
 pushd ../../openvidu-call-front
-chown "${CURRENT_UID}":"${CURRENT_GID}" openvidu-browser-"${OVC_VERSION}".tgz
+chown "${CURRENT_UID}":"${CURRENT_GID}" openvidu-browser-"${OV_BROWSER_VERSION}".tgz
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
-sed -i "/\"openvidu-browser\":/ s/\"openvidu-browser\":[^,]*/\"openvidu-browser\": \"file:openvidu-browser-${OVC_VERSION}.tgz\"/" package.json
+sed -i "/\"openvidu-browser\":/ s/\"openvidu-browser\":[^,]*/\"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\"/" package.json
 cat package.json
 popd
 popd
@@ -68,9 +81,6 @@ rm -rf openvidu
 EOF
 chmod +x update_depencies.sh
 
-
-if [ "${OPENVIDU_CALL_BRANCH}" != 'master' ]; then
-    git checkout "${OPENVIDU_CALL_BRANCH}"
 fi
 
 # Login to dockerhub
