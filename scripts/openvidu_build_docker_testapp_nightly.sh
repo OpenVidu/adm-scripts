@@ -3,7 +3,7 @@ set -eu -o pipefail
 
 # Create a nightly docker container for OpenVidu TestApp
 
-DATESTAMP=$(date +%m%d%Y)
+DATESTAMP=$(date +%Y%m%d)
 
 mkdir -p nginx
 openssl req -subj '/CN=localhost' -x509 -newkey rsa:4096 -nodes -keyout nginx/key.pem -out nginx/cert.pem -days 365

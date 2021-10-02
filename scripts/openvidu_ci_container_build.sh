@@ -37,7 +37,7 @@ if [[ "${NIGHTLY}" == "true" ]]; then
   # Check that num of tags is only one on nightly
   NUM_TAGS=$(echo "$TAGS" | wc -w)
   if [[ "${NUM_TAGS}" == "1" ]]; then
-    TAGS="${TAGS}-nightly-${BUILD_COMMIT}-$(date +%m%d%Y) master"
+    TAGS="${TAGS}-nightly-${BUILD_COMMIT}-$(date +%Y%m%d) master"
   else
     echo "Nightly build can only have one TAG specified"
     exit 1

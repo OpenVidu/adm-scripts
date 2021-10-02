@@ -79,7 +79,7 @@ case $OPENVIDU_PROJECT in
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
     if [[ "${NIGHTLY}" == "true"  ]]; then
       BUILD_COMMIT=$(git rev-parse HEAD | cut -c 1-8)
-      OPENVIDU_VERSION="${OPENVIDU_VERSION}-nightly-${BUILD_COMMIT}-$(date +%m%d%Y)"
+      OPENVIDU_VERSION="${OPENVIDU_VERSION}-nightly-${BUILD_COMMIT}-$(date +%Y%m%d)"
     fi
 
     # Openvidu Browser
@@ -355,12 +355,12 @@ case $OPENVIDU_PROJECT in
     if [[ "${NIGHTLY}" == "true"  ]]; then
       # Create OpenVidu Pro version based in commit
       BUILD_COMMIT_PRO=$(git rev-parse HEAD | cut -c 1-8)
-      export OPENVIDU_PRO_VERSION="${ORIG_VERSION}-nightly-${BUILD_COMMIT_PRO}-$(date +%m%d%Y)"
+      export OPENVIDU_PRO_VERSION="${ORIG_VERSION}-nightly-${BUILD_COMMIT_PRO}-$(date +%Y%m%d)"
 
       # Create OpenVidu CE version based in commit
       pushd openvidu
       BUILD_COMMIT_CE=$(git rev-parse HEAD | cut -c 1-8)
-      export OPENVIDU_CE_VERSION="${ORIG_VERSION}-nightly-${BUILD_COMMIT_CE}-$(date +%m%d%Y)"
+      export OPENVIDU_CE_VERSION="${ORIG_VERSION}-nightly-${BUILD_COMMIT_CE}-$(date +%Y%m%d)"
       popd
     else
 
