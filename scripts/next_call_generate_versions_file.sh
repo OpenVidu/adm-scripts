@@ -62,7 +62,7 @@ MEDIA_NODES_IPS=$(curl -s -u OPENVIDUAPP:"${OV_SECRET}" http://localhost:5443/op
         echo "Media Node: ${MEDIA_NODE_IP}"
         echo "==================="
         MEDIASOUP_IMAGE=$(curl -s http://"${MEDIA_NODE_IP}":"${MEDIA_NODE_PORT}"/"${MEDIA_NODE_CONTAINERS_PATH}" | grep -oP '"openvidu/mediasoup-controller:(.*?)"' | head -n 1 | tr -d '"' || echo '')
-        KMS_IMAGE=$(curl -s http://"${MEDIA_NODE_IP}":"${MEDIA_NODE_PORT}"/"${MEDIA_NODE_CONTAINERS_PATH}" | grep -oP '"kurento/kurento-media-server:(.*?)"' | head -n 1 | tr -d '"' || echo '')
+        KMS_IMAGE=$(curl -s http://"${MEDIA_NODE_IP}":"${MEDIA_NODE_PORT}"/"${MEDIA_NODE_CONTAINERS_PATH}" | grep -oP '"kurento/kurento-media-server(.*?)"' | head -n 1 | tr -d '"' || echo '')
         [[ -n "${MEDIASOUP_IMAGE}" ]] && parse_image_info "${MEDIASOUP_IMAGE}"
         [[ -n "${KMS_IMAGE}" ]] && parse_image_info "${KMS_IMAGE}"
         echo
