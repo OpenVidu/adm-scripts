@@ -15,19 +15,19 @@ case $OPENVIDU_PROJECT in
   openvidu)
 
     # Openvidu Browser
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
     echo "## Building OpenVidu Browser"
-    npm-update-dep.py || (echo "Faile to update dependencies"; exit 1)
+    npm-update-dep.py || { echo "Faile to update dependencies"; exit 1; }
     pushd openvidu-browser || exit 1
-    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
+    npm-vbump.py --envvar OPENVIDU_VERSION || { echo "Failed to bump package.json version"; exit 1; }
 
     npm install
     npm run build || exit 1
     VERSION=$OPENVIDU_VERSION npm run browserify || exit 1
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
-    npm link || (echo "Failed to link npm"; exit 1)
-    npm publish || (echo "Failed to publish to npm"; exit 1)
+    npm link || { echo "Failed to link npm"; exit 1; }
+    npm publish || { echo "Failed to publish to npm"; exit 1; }
 
     # Active waiting for openvidu-browser NPM library
     CHECK_VERSION_AVAILABILTY="npm show openvidu-browser@$OPENVIDU_VERSION version"
@@ -48,21 +48,21 @@ case $OPENVIDU_PROJECT in
 
     npm install
     npm link openvidu-browser
-    npm run build-prod || (echo "Failed to compile frontend"; exit 1)
+    npm run build-prod || { echo "Failed to compile frontend"; exit 1; }
     popd
 
-    pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
+    pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || { echo "Failed to bump openvidu-server version"; exit 1; }
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     # Github release: commit and push
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
 
     DESC="Release v$OPENVIDU_VERSION"
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the artifact to Github"; exit 1)
-    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || (echo "Failed to upload the artifact to Github"; exit 1)
-    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || (echo "Failed to upload the artifact to Github"; exit 1)
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact to Github"; exit 1; }
+    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || { echo "Failed to upload the artifact to Github"; exit 1; }
+    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || { echo "Failed to upload the artifact to Github"; exit 1; }
 
     # Pushing file to builds server
     pushd openvidu-server/target
@@ -74,7 +74,7 @@ case $OPENVIDU_PROJECT in
 
   openvidu-nightly)
 
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
     # Check if nightly
     [ -n "$NIGHTLY" ] || NIGHTLY="false"
     if [[ "${NIGHTLY}" == "true"  ]]; then
@@ -85,7 +85,7 @@ case $OPENVIDU_PROJECT in
     # Openvidu Browser
     echo "## Building OpenVidu Browser"
     pushd openvidu-browser
-    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump package.json version"; exit 1)
+    npm-vbump.py --envvar OPENVIDU_VERSION || { echo "Failed to bump package.json version"; exit 1; }
     npm install || { echo "openvidu-browser -> install"; exit 1; }
     npm run build || { echo "openvidu-browser -> build"; exit 1; }
     npm pack || { echo "openvidu-browser -> pack"; exit 1; }
@@ -101,7 +101,7 @@ case $OPENVIDU_PROJECT in
     rm openvidu-browser-"${OPENVIDU_VERSION}".tgz
     popd
 
-    pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || (echo "Failed to bump openvidu-server version"; exit 1)
+    pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || { echo "Failed to bump openvidu-server version"; exit 1; }
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
@@ -122,20 +122,20 @@ case $OPENVIDU_PROJECT in
   openvidu-java-client)
 
     echo "## Building openvidu-java-client"
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
 
-    mvn $MAVEN_OPTIONS versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to update version"; exit 1)
+    mvn $MAVEN_OPTIONS versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=${OPENVIDU_VERSION} || { echo "Failed to update version"; exit 1; }
 
     pushd "$OPENVIDU_PROJECT"
 
-    mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
-    mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
-    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
+    mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || { echo "Failed to bump version"; exit 1; }
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || { echo "Failed to compile"; exit 1; }
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || { echo "Failed to deploy"; exit 1; }
 
     # Github release: commit and push
     git add pom.xml
     git commit -a -m "Update openvidu-java-client to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
 
     popd
 
@@ -144,17 +144,17 @@ case $OPENVIDU_PROJECT in
   openvidu-test-browsers)
 
     echo "## Building openvidu-test-browsers"
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
     pushd "$OPENVIDU_PROJECT"
 
-    mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || (echo "Failed to bump version"; exit 1)
-    mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || (echo "Failed to compile"; exit 1)
-    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || (echo "Failed to deploy"; exit 1)
+    mvn $MAVEN_OPTIONS versions:set -DnewVersion=${OPENVIDU_VERSION} || { echo "Failed to bump version"; exit 1; }
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean compile package || { echo "Failed to compile"; exit 1; }
+    mvn $MAVEN_OPTIONS -DperformRelease=true clean deploy || { echo "Failed to deploy"; exit 1; }
 
     # Github release: commit and push
     git add pom.xml
     git commit -a -m "Update openvidu-test-browsers to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
 
     popd
 
@@ -163,17 +163,17 @@ case $OPENVIDU_PROJECT in
   openvidu-node-client)
 
     echo "## Building $OPENVIDU_PROJECT"
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
     pushd "$OPENVIDU_PROJECT"
-    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Faile to bump package.json version"; exit 1)
+    npm-vbump.py --envvar OPENVIDU_VERSION || { echo "Faile to bump package.json version"; exit 1; }
     npm install
-    npm run build|| (echo "Failed to build"; exit 1)
-    npm publish || (echo "Failed to publish to npm"; exit 1)
+    npm run build|| { echo "Failed to build"; exit 1; }
+    npm publish || { echo "Failed to publish to npm"; exit 1; }
 
     # Github release: commit and push
     git add package.json
     git commit -a -m "Update openvidu-node-client to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
 
     popd
 
@@ -183,19 +183,19 @@ case $OPENVIDU_PROJECT in
   tutorials)
 
     echo "## Building openvidu-js-java"
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
     pushd openvidu-js-java
-    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
-    mvn $MAVEN_OPTIONS clean compile package || (echo "Failed to compile openvidu-js-java"; exit 1)
+    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || { echo "Failed to bump version"; exit 1; }
+    mvn $MAVEN_OPTIONS clean compile package || { echo "Failed to compile openvidu-js-java"; exit 1; }
     DESC=$(git log -1 --pretty=%B)
-    openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar --file target/openvidu-js-java-${OPENVIDU_VERSION}.jar || (echo "Failed to upload the artifact"; exit 1)
+    openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar --file target/openvidu-js-java-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact"; exit 1; }
     popd
 
     echo "## Building openvidu-mvc-java"
     pushd openvidu-mvc-java
-    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
-    mvn $MAVEN_OPTIONS clean compile package || (echo "Failed to compile openvidu-mvc-java"; exit 1)
+    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || { echo "Failed to bump version"; exit 1; }
+    mvn $MAVEN_OPTIONS clean compile package || { echo "Failed to compile openvidu-mvc-java"; exit 1; }
     DESC=$(git log -1 --pretty=%B)
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
     popd
@@ -205,32 +205,32 @@ case $OPENVIDU_PROJECT in
   classroom-front)
 
     echo "## Building classroom-front"
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
+    [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
     cd src/angular/frontend
-    npm-vbump.py --envvar OPENVIDU_VERSION || (echo "Failed to bump version"; exit 1)
-    npm install || (echo "Failed to install dependencies"; exit 1)
-    rm /opt/src/main/resources/static/* || (echo "Cleaning"; exit 1)
+    npm-vbump.py --envvar OPENVIDU_VERSION || { echo "Failed to bump version"; exit 1; }
+    npm install || { echo "Failed to install dependencies"; exit 1; }
+    rm /opt/src/main/resources/static/* || { echo "Cleaning"; exit 1; }
     # TODO Enable "--prod" after upgrade to greater angular 7 because of this issue: https://github.com/uuidjs/uuid/issues/500
-    # ./node_modules/\@angular/cli/bin/ng build --prod --output-path /opt/src/main/resources/static || (echo "Failed compiling"; exit 1)
-    ./node_modules/\@angular/cli/bin/ng build --output-path /opt/src/main/resources/static || (echo "Failed compiling"; exit 1)
+    # ./node_modules/\@angular/cli/bin/ng build --prod --output-path /opt/src/main/resources/static || { echo "Failed compiling"; exit 1; }
+    ./node_modules/\@angular/cli/bin/ng build --output-path /opt/src/main/resources/static || { echo "Failed compiling"; exit 1; }
 
     ;;
 
   classroom-back)
 
     echo "## Building classroom-back"
-    [ -z "$OPENVIDU_VERSION" ] && (echo "OPENVIDU_VERSION is empty"; exit 1)
-    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || (echo "Failed to bump version"; exit 1)
-    mvn clean compile package -DskipTest=true || (echo "Failed compiling"; exit 1)
+    [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
+    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || { echo "Failed to bump version"; exit 1; }
+    mvn clean compile package -DskipTest=true || { echo "Failed compiling"; exit 1; }
 
     # Github release: commit and push
     git add /opt/src/main/resources/static/*
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
 
     DESC="Release v$OPENVIDU_VERSION"
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file /opt/target/classroom-demo-${OPENVIDU_VERSION}.war || (echo "Failed to upload the artifact to Github"; exit 1)
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file /opt/target/classroom-demo-${OPENVIDU_VERSION}.war || { echo "Failed to upload the artifact to Github"; exit 1; }
 
     ;;
 
@@ -241,8 +241,8 @@ case $OPENVIDU_PROJECT in
 
     ## FRONT
     # Update npm dependencies
-    npm-update-dep-call.py || (echo "Faile to update dependencies/bump version"; exit 1)
-    cd openvidu-call-front || (echo "Failed to change folder"; exit 1)
+    npm-update-dep-call.py || { echo "Faile to update dependencies/bump version"; exit 1; }
+    cd openvidu-call-front || { echo "Failed to change folder"; exit 1; }
 
     # Install npm dependencies
     npm install || exit 1
@@ -252,9 +252,9 @@ case $OPENVIDU_PROJECT in
     npm run build-prod || exit 1
 
     ## BACK
-    cd ../openvidu-call-back || (echo "Failed to change folder"; exit 1)
-    npm install || (echo "Failed to NPM install"; exit 1)
-    npm run build || (echo "Failed to NPM run build"; exit 1)
+    cd ../openvidu-call-back || { echo "Failed to change folder"; exit 1; }
+    npm install || { echo "Failed to NPM install"; exit 1; }
+    npm run build || { echo "Failed to NPM run build"; exit 1; }
 
     # openvidu-call package
     cd dist
@@ -265,13 +265,13 @@ case $OPENVIDU_PROJECT in
     cd ../../openvidu-call-front
     rm -rf dist/openvidu-call
     npm run build-prod /openvidu-call/ || exit 1
-    cd ../openvidu-call-back || (echo "Failed to change folder"; exit 1)
-    npm run build || (echo "Failed to NPM run build"; exit 1)
+    cd ../openvidu-call-back || { echo "Failed to change folder"; exit 1; }
+    npm run build || { echo "Failed to NPM run build"; exit 1; }
     cd dist
     tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *
 
     # OpenVidu Web Component build and package
-    cd ../../openvidu-call-front || (echo "Failed to change folder"; exit 1)
+    cd ../../openvidu-call-front || { echo "Failed to change folder"; exit 1; }
     echo "## Building openvidu WebComponent"
     npm run build:openvidu-webcomponent
     zip -r --junk-paths /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip openvidu-webcomponent
@@ -283,21 +283,21 @@ case $OPENVIDU_PROJECT in
 
     # npm release openvidu-angular
     cd dist/openvidu-angular
-    npm publish || (echo "Failed to publish openvidu-angular to npm"; exit 1)
+    npm publish || { echo "Failed to publish openvidu-angular to npm"; exit 1; }
 
     # Github release: commit and push
     cd ../../..
     git commit -a -m "Update to version v$OPENVIDU_CALL_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
 
     # OpenVidu/openvidu-call repo
     DESC="Release v$OPENVIDU_CALL_VERSION"
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call artifact to Github"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || (echo "Failed to upload openvidu-call-demos artifact to Github"; exit 1)
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || { echo "Failed to upload openvidu-call artifact to Github"; exit 1; }
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || { echo "Failed to upload openvidu-call-demos artifact to Github"; exit 1; }
 
     # OpenVidu/openvidu repo (OpenVidu Web Component)
-    openvidu_github_release.go upload  --user openvidu --repo "openvidu" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip --file /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip || (echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1)
+    openvidu_github_release.go upload  --user openvidu --repo "openvidu" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip --file /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip || { echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1; }
 
     ;;
 
@@ -308,26 +308,26 @@ case $OPENVIDU_PROJECT in
     [ -z "$OPENVIDU_REACT_VERSION" ] && exit 1
 
     # Update npm dependencies
-    npm-update-dep-call-react.py || (echo "Failed to update dependencies/bump version"; exit 1)
+    npm-update-dep-call-react.py || { echo "Failed to update dependencies/bump version"; exit 1; }
 
     # Install npm dependencies
-    cd openvidu-call-react || (echo "Failed to change folder"; exit 1)
-    npm install || (echo "Failed to install dependencies in openvidu-call-react"; exit 1)
+    cd openvidu-call-react || { echo "Failed to change folder"; exit 1; }
+    npm install || { echo "Failed to install dependencies in openvidu-call-react"; exit 1; }
     cd ../library
-    npm install || (echo "Failed to install dependencies in openvidu-react library"; exit 1)
+    npm install || { echo "Failed to install dependencies in openvidu-react library"; exit 1; }
 
     # Build openvidu-react library
     cd ../openvidu-call-react
-    npm run build:openvidu-react || (echo "Failed to build openvidu-react library"; exit 1)
+    npm run build:openvidu-react || { echo "Failed to build openvidu-react library"; exit 1; }
 
     # Publish openvidu-react library
     cd ../library
-    npm publish || (echo "Failed to publish openvidu-react library"; exit 1)
+    npm publish || { echo "Failed to publish openvidu-react library"; exit 1; }
 
     # Github commit and push
     cd ..
     git commit -a -m "Update to version v$OPENVIDU_REACT_VERSION"
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
 
     ;;
 
@@ -382,17 +382,17 @@ case $OPENVIDU_PROJECT in
 
     pushd openvidu
     # Update java-client from parent pom.xml
-    mvn versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true || (echo "Failed to update version"; exit 1)
+    mvn versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true || { echo "Failed to update version"; exit 1; }
     popd
 
     pushd openvidu/openvidu-java-client
     # Update java-client version
-    mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true  || (echo "Failed to bump version"; exit 1)
+    mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true  || { echo "Failed to bump version"; exit 1; }
     popd
 
     # Update openvidu-server
     pushd openvidu/openvidu-server
-    mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true || (echo "Failed to bump version"; exit 1)
+    mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true || { echo "Failed to bump version"; exit 1; }
     popd
 
     pushd openvidu
@@ -402,7 +402,7 @@ case $OPENVIDU_PROJECT in
 
     if [ "${BUILD_OPENVIDU_INSPECTOR}" == true ]; then
       pushd openvidu/openvidu-node-client
-      npm-vbump.py --envvar OPENVIDU_CE_VERSION || (echo "Failed to bump package.json version"; exit 1)
+      npm-vbump.py --envvar OPENVIDU_CE_VERSION || { echo "Failed to bump package.json version"; exit 1; }
       npm install || { echo "openvidu-browser -> install"; exit 1; }
       npm run build || { echo "openvidu-browser -> build"; exit 1; }
       npm pack || { echo "openvidu-browser -> pack"; exit 1; }
@@ -410,7 +410,7 @@ case $OPENVIDU_PROJECT in
       popd
 
       pushd openvidu/openvidu-browser
-      npm-vbump.py --envvar OPENVIDU_CE_VERSION || (echo "Failed to bump package.json version"; exit 1)
+      npm-vbump.py --envvar OPENVIDU_CE_VERSION || { echo "Failed to bump package.json version"; exit 1; }
       npm install || { echo "openvidu-browser -> install"; exit 1; }
       npm run build || { echo "openvidu-browser -> build"; exit 1; }
       npm pack || { echo "openvidu-browser -> build"; exit 1; }
@@ -418,7 +418,7 @@ case $OPENVIDU_PROJECT in
       popd
 
       pushd dashboard
-      npm-vbump.py --envvar OPENVIDU_PRO_VERSION || (echo "Failed to bump package.json version"; exit 1)
+      npm-vbump.py --envvar OPENVIDU_PRO_VERSION || { echo "Failed to bump package.json version"; exit 1; }
       npm install openvidu-node-client-"${OPENVIDU_CE_VERSION}".tgz || { echo "dashboard -> install "; exit 1; }
       npm install openvidu-browser-"${OPENVIDU_CE_VERSION}".tgz || { echo "dashboard -> install "; exit 1; }
       npm install
@@ -468,12 +468,12 @@ case $OPENVIDU_PROJECT in
     mvn versions:set -DnewVersion=${OPENVIDU_VERSION} || { echo "Failed to bump openvidu-pro version"; exit 1; }
 
     # Build
-    mvn --batch-mode -DskipTests=true clean compile package || (echo "Failed to build replication-manager version"; exit 1)
+    mvn --batch-mode -DskipTests=true clean compile package || { echo "Failed to build replication-manager version"; exit 1; }
     mv target/replication-manager-*.jar target/replication-manager-"${OPENVIDU_VERSION}".jar || exit 1
 
     # Release
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name replication-manager-"${OPENVIDU_VERSION}".jar --file target/replication-manager-"${OPENVIDU_VERSION}".jar || (echo "Failed to upload the artifact to Github"; exit 1)
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name replication-manager-"${OPENVIDU_VERSION}".jar --file target/replication-manager-"${OPENVIDU_VERSION}".jar || { echo "Failed to upload the artifact to Github"; exit 1; }
 
     ;;
 
@@ -482,13 +482,13 @@ case $OPENVIDU_PROJECT in
     DESC="Release mediasoup-controller v${OPENVIDU_VERSION}"
 
     # Update version in package.json file
-    perl -i -pe "s/\"version\":\s*\"\K\S*(?=\")/$OPENVIDU_VERSION/" package.json || (echo "Failed to bump package.json version"; exit 1)
+    perl -i -pe "s/\"version\":\s*\"\K\S*{ ?=\")/$OPENVIDU_VERSION/" package.json || { echo "Failed to bump package.json version"; exit 1; }
     git add package.json
     git commit -a -m "Update mediasoup-controller to version v$OPENVIDU_VERSION"
 
     # Push to github
-    git push origin HEAD:master || (echo "Failed to push to Github"; exit 1)
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || (echo "Failed to make the release"; exit 1)
+    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
+    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
 
     ;;
 
