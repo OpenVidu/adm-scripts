@@ -482,7 +482,7 @@ case $OPENVIDU_PROJECT in
     DESC="Release mediasoup-controller v${OPENVIDU_VERSION}"
 
     # Update version in package.json file
-    perl -i -pe "s/\"version\":\s*\"\K\S*{ ?=\")/$OPENVIDU_VERSION/" package.json || { echo "Failed to bump package.json version"; exit 1; }
+    perl -i -pe "s/\"version\":\s*\"\K\S*(?=\")/$OPENVIDU_VERSION/" package.json || (echo "Failed to bump package.json version"; exit 1)
     git add package.json
     git commit -a -m "Update mediasoup-controller to version v$OPENVIDU_VERSION"
 
