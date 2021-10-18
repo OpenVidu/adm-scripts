@@ -97,6 +97,10 @@ else
     # Build openvidu call
     docker build -f docker/custom.dockerfile -t openvidu/openvidu-call:"${OVC_VERSION}" --build-arg OPENVIDU_BROWSER="${OPENVIDU_BROWSER_BRANCH}" . || exit 1
     docker push openvidu/openvidu-call:"${OVC_VERSION}"
+    if [[ "${NIGHTLY}" == "true" ]]; then
+      docker tag openvidu/openvidu-call:"${OVC_VERSION}" openvidu/openvidu-call:master
+      docker push openvidu/openvidu-call:master
+    fi
 fi
 
 docker logout
