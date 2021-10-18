@@ -66,7 +66,7 @@ clean_old_amis_by_prefix() {
             # 2. Read each line of the answer
             while read -r OLD_AMI ; do
                 # Parse the result
-                local AMI_DATE AMI_NAME AMI_ID IS_PUBLIC
+                local AMI_DATE AMI_NAME AMI_ID IS_PUBLIC SNAPSHOT_ID
                 AMI_DATE=$(awk '{print $1}' < <(echo "$OLD_AMI"))
                 AMI_NAME=$(awk '{print $2}' < <(echo "$OLD_AMI"))
                 AMI_ID=$(awk '{print $3}' < <(echo "$OLD_AMI"))
@@ -82,8 +82,18 @@ clean_old_amis_by_prefix() {
                     exit 1
                 fi
                 # 4. Get Snapshot ID to delete it
-                SNAPSHOT_ID="$(aws ec2 describe-images --region "${REGION}" --image-ids "${AMI_ID}" --output text --query 'Images[*].BlockDeviceMappings[*].Ebs.SnapshotId')"
+                SNAPSHOT_ID="$(aws ec2 describe-images --region "${REGION}" \
+                    --image-ids "${AMI_ID}" --output text \
+                    --query 'Images[*].BlockDeviceMappings[*].Ebs.SnapshotId')"
+
+                # 5. Showing information about AMI to delete
                 echo "Deleting AMI: '${AMI_NAME}': Date: '${AMI_DATE}', AMI ID: '${AMI_ID}', SNAPSHOT ID: '${SNAPSHOT_ID}' Is public: '${IS_PUBLIC}', Region: ${REGION}"
+
+                # 6. Delete AMI
+                # 6.1 Deregister AMI
+                aws ec2 deregister-image --region "${REGION}" --image-id "${AMI_ID}"
+                # 6.2 Delete Snapshot
+                aws ec2 delete-snapshot --region "${REGION}" --snapshot-id "${SNAPSHOT_ID}"
             done < <(echo "${OLD_AMI_LIST}")
         fi
     done
