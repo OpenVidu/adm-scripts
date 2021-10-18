@@ -45,7 +45,7 @@ clean_old_amis_by_prefix() {
     # Creating Query to delete old AMIs
     # Shellcheck will warn about expansion. We don't want variable expansion in QUERY_TEMPLATE
     # shellcheck disable=SC2016
-    local QUERY_TEMPLATE='Images[?CreationDate<`DAYS_AGO`]|[?contains(Name, `PREFIX`) == `true`][CreationDate, Name, ImageId, Public]'
+    local QUERY_TEMPLATE='Images[?CreationDate<`DAYS_AGO`]|[?starts_with(Name, `PREFIX`) == `true`][CreationDate, Name, ImageId, Public]'
     local QUERY_TEMPLATE="${QUERY_TEMPLATE//DAYS_AGO/${DAYS_AGO}}"
     local QUERY="${QUERY_TEMPLATE//PREFIX/${PREFIX}}"
     for REGION in ${TARGET_REGIONS}
