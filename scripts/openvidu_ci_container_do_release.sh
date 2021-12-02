@@ -102,6 +102,17 @@ case $OPENVIDU_PROJECT in
     popd
 
     pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || { echo "Failed to bump openvidu-server version"; exit 1; }
+
+    if ${KURENTO_JAVA_SNAPSHOT} ; then
+      git clone https://github.com/Kurento/kurento-java.git
+      cd kurento-java && MVN_VERSION=$(mvn --batch-mode -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      cd .. && mvn --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion=$MVN_VERSION
+      mvn dependency:get -DrepoUrl=https://maven.openvidu.io/repository/snapshots/ -Dartifact=org.kurento:kurento-client:$MVN_VERSION
+      mvn dependency:get -DrepoUrl=https://maven.openvidu.io/repository/snapshots/ -Dartifact=org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION
+      mvn dependency:get -DrepoUrl=https://maven.openvidu.io/repository/snapshots/ -Dartifact=org.kurento:kurento-jsonrpc-server:$MVN_VERSION
+      mvn dependency:get -DrepoUrl=https://maven.openvidu.io/repository/snapshots/ -Dartifact=org.kurento:kurento-test:$MVN_VERSION
+    fi
+
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
