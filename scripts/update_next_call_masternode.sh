@@ -1,6 +1,9 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
+export COMPOSE_HTTP_TIMEOUT=500
+export DOCKER_CLIENT_TIMEOUT=500
+
 INSTALLATION_DIRECTORY="/opt"
 OPENVIDU_DIRECTORY="${INSTALLATION_DIRECTORY}/openvidu"
 CUSTOM_LOCATIONS_DIRECTORY_FOLDER_NAME="custom-nginx-locations"
@@ -121,5 +124,9 @@ if [[ "${NIGHTLY}" == "true" ]]; then
     docker pull openvidu/openvidu-call:"${OPENVIDU_CALL_VERSION}"
 fi
 
+
+# Start openvidu
+systemctl restart docker
 export FOLLOW_OPENVIDU_LOGS=false
+/bin/bash openvidu stop
 /bin/bash openvidu start
