@@ -1,6 +1,9 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
+export COMPOSE_HTTP_TIMEOUT=500
+export DOCKER_CLIENT_TIMEOUT=500
+
 INSTALLATION_DIRECTORY="/opt"
 OPENVIDU_DIRECTORY="${INSTALLATION_DIRECTORY}/openvidu"
 MEDIA_NODE_DIRECTORY="${INSTALLATION_DIRECTORY}/kms"
@@ -49,4 +52,6 @@ if [[ "${NIGHTLY}" == "true" ]]; then
 fi
 
 # TODO: Add option FOLLOW_MEDIA_NODE_LOGS to not follow logs
+systemctl restart docker
+docker-compose down
 docker-compose up -d
