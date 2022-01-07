@@ -352,6 +352,10 @@ case $OPENVIDU_PROJECT in
     # Commit or branch to build
     [ -n "$OPENVIDU_CE_COMMIT" ] || OPENVIDU_CE_COMMIT='master'
     [ -n "$OPENVIDU_PRO_COMMIT" ] || OPENVIDU_PRO_COMMIT='master'
+    
+    if [[ "${OPENVIDU_PRO_COMMIT}" != 'master' ]]; then
+      git checkout "${OPENVIDU_PRO_COMMIT}"
+    fi
 
     git clone https://github.com/OpenVidu/openvidu.git
     pushd openvidu
