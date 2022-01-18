@@ -107,11 +107,10 @@ case $OPENVIDU_PROJECT in
       git clone https://github.com/Kurento/kurento-java.git
       cd kurento-java && MVN_VERSION="$(mvn --batch-mode -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)-SNAPSHOT"
       cd .. && mvn --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion="$MVN_VERSION"
-      KURENTO_SNAPSHOTS_GITHUB_PKG="https://public:${KURENTO_SNAPSHOTS_GITHUB_TOKEN}@maven.pkg.github.com/kurento/*"
-      mvn dependency:get -DremoteRepositories="${KURENTO_SNAPSHOTS_GITHUB_PKG}" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
-      mvn dependency:get -DremoteRepositories="${KURENTO_SNAPSHOTS_GITHUB_PKG}" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
-      mvn dependency:get -DremoteRepositories="${KURENTO_SNAPSHOTS_GITHUB_PKG}" -Dartifact="org.kurento:kurento-jsonrpc-server:$MVN_VERSION"
-      mvn dependency:get -DremoteRepositories="${KURENTO_SNAPSHOTS_GITHUB_PKG}" -Dartifact="org.kurento:kurento-test:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-server:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-test:$MVN_VERSION"
     fi
 
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
@@ -385,11 +384,10 @@ case $OPENVIDU_PROJECT in
       git clone https://github.com/Kurento/kurento-java.git
       cd kurento-java && MVN_VERSION="$(mvn --batch-mode -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)-SNAPSHOT"
       cd ../openvidu && mvn --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion="$MVN_VERSION"
-      KURENTO_SNAPSHOTS_GITHUB_PKG="https://public:${KURENTO_SNAPSHOTS_GITHUB_TOKEN}@maven.pkg.github.com/kurento/*"
-      mvn dependency:get -DremoteRepositories="${KURENTO_SNAPSHOTS_GITHUB_PKG}" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
-      mvn dependency:get -DremoteRepositories="${KURENTO_SNAPSHOTS_GITHUB_PKG}" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
-      mvn dependency:get -DremoteRepositories="${KURENTO_SNAPSHOTS_GITHUB_PKG}" -Dartifact="org.kurento:kurento-jsonrpc-server:$MVN_VERSION"
-      mvn dependency:get -DremoteRepositories="${KURENTO_SNAPSHOTS_GITHUB_PKG}" -Dartifact="org.kurento:kurento-test:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-server:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-test:$MVN_VERSION"
       cd ..
     fi
 

@@ -9,6 +9,7 @@ echo "##################### EXECUTE: openvidu_ci_container_job_setup ###########
 WORKSPACE=/opt
 MAVEN_OPTIONS="--batch-mode --settings /opt/openvidu-settings.xml -DskipTests=false"
 CONTAINER_MAVEN_SETTINGS=/opt/openvidu-settings.xml
+CONTAINER_KURENTO_SNAPSHOTS_SETTINGS=/opt/kurento-snapshot-settings.xml
 CONTAINER_ADM_SCRIPTS=/opt/adm-scripts
 CONTAINER_PRIVATE_RSA_KEY=/opt/git_id_rsa
 CONTAINER_NPM_CONFIG=/root/.npmrc
@@ -28,6 +29,7 @@ docker run \
   $([ -f "$GITHUB_PRIVATE_RSA_KEY" ] && echo "-v $GITHUB_PRIVATE_RSA_KEY:$CONTAINER_PRIVATE_RSA_KEY" ) \
   $([ "${OPENVIDU_GITHUB_TOKEN}x" != "x" ] && echo "-e GITHUB_KEY=$OPENVIDU_GITHUB_TOKEN" ) \
   $([ -f "$MAVEN_SETTINGS" ] && echo "-v $MAVEN_SETTINGS:$CONTAINER_MAVEN_SETTINGS") \
+  $([ -f "$MAVEN_KURENTO_SNAPSHOTS_SETTINGS" ] && echo "-v $MAVEN_KURENTO_SNAPSHOTS_SETTINGS:$CONTAINER_KURENTO_SNAPSHOTS_SETTINGS") \
   $([ -f "$NPM_CONFIG" ] && echo "-v $NPM_CONFIG:$CONTAINER_NPM_CONFIG") \
   $([ -f "$GPG_PRIVATE_BLOCK" ] && echo "-v $GPG_PRIVATE_BLOCK:$CONTAINER_GPG_PRIVATE_BLOCK") \
   $([ -f "$GIT_CONFIG" ] && echo "-v $GIT_CONFIG:$CONTAINER_GIT_CONFIG") \
@@ -64,7 +66,6 @@ docker run \
   $([ "${OPENVIDU_CE_COMMIT}x" != "x" ] && echo "-e OPENVIDU_CE_COMMIT=$OPENVIDU_CE_COMMIT") \
   $([ "${OPENVIDU_PRO_COMMIT}x" != "x" ] && echo "-e OPENVIDU_PRO_COMMIT=$OPENVIDU_PRO_COMMIT") \
   $([ "${NIGHTLY}x" != "x" ] && echo "-e NIGHTLY=$NIGHTLY") \
-  $([ "${KURENTO_SNAPSHOTS_GITHUB_TOKEN}x" != "x" ] && echo "-e KURENTO_SNAPSHOTS_GITHUB_TOKEN=$KURENTO_SNAPSHOTS_GITHUB_TOKEN") \
   -e "GITHUB_PRIVATE_RSA_KEY=$CONTAINER_PRIVATE_RSA_KEY" \
   -e "OPENVIDU_PROJECT=$OV_PROJECT" \
   -e "GITHUB_TOKEN=$OPENVIDU_GITHUB_TOKEN" \
