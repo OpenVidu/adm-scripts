@@ -92,14 +92,18 @@ if [[ "${RELEASE}" == 'true' ]]; then
     ./run.sh "${OVC_VERSION}" "${OPENVIDU_CALL_BRANCH}"
     popd
 else
+    DOCKER_IMAGE=openvidu/openvidu-call
+    if [[ "${OPENVIDU_COMPONENTS}" == 'true' ]]; then
+      DOCKER_IMAGE=openvidu/openvidu-call-components
+    fi
     # Execute update dependencies script
     docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_depencies.sh" || exit 1
     # Build openvidu call
-    docker build -f docker/custom.dockerfile -t openvidu/openvidu-call:"${OVC_VERSION}" --build-arg OPENVIDU_BROWSER="${OPENVIDU_BROWSER_BRANCH}" . || exit 1
-    docker push openvidu/openvidu-call:"${OVC_VERSION}"
+    docker build -f docker/custom.dockerfile -t "${DOCKER_IMAGE}":"${OVC_VERSION}" --build-arg OPENVIDU_BROWSER="${OPENVIDU_BROWSER_BRANCH}" . || exit 1
+    docker push "${DOCKER_IMAGE}":"${OVC_VERSION}"
     if [[ "${NIGHTLY}" == "true" ]]; then
-      docker tag openvidu/openvidu-call:"${OVC_VERSION}" openvidu/openvidu-call:master
-      docker push openvidu/openvidu-call:master
+      docker tag "${DOCKER_IMAGE}":"${OVC_VERSION}" "${DOCKER_IMAGE}":master
+      docker push "${DOCKER_IMAGE}":master
     fi
 fi
 
