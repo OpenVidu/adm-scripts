@@ -8,6 +8,8 @@ INSTALLATION_DIRECTORY="/opt"
 OPENVIDU_DIRECTORY="${INSTALLATION_DIRECTORY}/openvidu"
 CUSTOM_LOCATIONS_DIRECTORY_FOLDER_NAME="custom-nginx-locations"
 CUSTOM_LOCATIONS_DIRECTORY="${OPENVIDU_DIRECTORY}/${CUSTOM_LOCATIONS_DIRECTORY_FOLDER_NAME}"
+# If true, openvidu-call will not be updated on update
+KEEP_OV_CALL=false
 NIGHTLY="${1}"
 OV_VERSION="${2}"
 
@@ -41,6 +43,13 @@ if [[ -d "${OPENVIDU_DIRECTORY}" ]]; then
     fi
     if [[ -d "${OPENVIDU_DIRECTORY}"/certificates ]]; then
         mv "${OPENVIDU_DIRECTORY}"/certificates "${INSTALLATION_DIRECTORY}"/old-certificates
+    fi
+
+    # TODO: Comment if you want to keep docker-compose.override.yml
+    if [[ "${KEEP_OV_CALL}" == 'true' ]]; then
+        if [[ -f "${OPENVIDU_DIRECTORY}"/docker-compose.override.yml ]]; then
+            mv "${OPENVIDU_DIRECTORY}"/docker-compose.override.yml "${INSTALLATION_DIRECTORY}"/old-docker-compose.override.yml
+        fi
     fi
     # Remove previous installation
     rm -rf "${OPENVIDU_DIRECTORY}"
@@ -81,6 +90,11 @@ if [[ -d "${INSTALLATION_DIRECTORY}"/old-certificates ]]; then
     mv "${INSTALLATION_DIRECTORY}"/certificates "${OPENVIDU_DIRECTORY}"/certificates
 fi
 
+if [[ -f "${INSTALLATION_DIRECTORY}"/old-docker-compose.override.yml ]]; then
+    rm "${OPENVIDU_DIRECTORY}"/docker-compose.override.yml
+    mv "${INSTALLATION_DIRECTORY}"/old-docker-compose.override.yml "${OPENVIDU_DIRECTORY}"/docker-compose.override.yml
+fi
+
 # Create custom location to show versions file
 cat >"${CUSTOM_LOCATIONS_DIRECTORY}"/versions.conf <<EOF
 location ~ ^/versions$ {
@@ -107,7 +121,9 @@ if [[ "${NIGHTLY}" == "true" ]]; then
     sed -i "s|image: openvidu/openvidu-redis:.*|image: openvidu/openvidu-redis:${OPENVIDU_REDIS_TAG}|" docker-compose.yml
     sed -i "s|image: openvidu/openvidu-coturn:.*|image: openvidu/openvidu-coturn:${OPENVIDU_COTURN_TAG}|" docker-compose.yml
     sed -i "s|image: openvidu/openvidu-proxy:.*|image: openvidu/openvidu-proxy:${OPENVIDU_NGINX_PROXY_TAG}|" docker-compose.yml
-    sed -i "s|image: openvidu/openvidu-call:.*|image: openvidu/openvidu-call:${OPENVIDU_CALL_VERSION}|" docker-compose.override.yml
+    if [[ "${KEEP_OV_CALL}" == 'false' ]]; then
+        sed -i "s|image: openvidu/openvidu-call:.*|image: openvidu/openvidu-call:${OPENVIDU_CALL_VERSION}|" docker-compose.override.yml
+    fi
 
     # Replace MEDIASOUP IMAGE
     if grep -q "^MEDIASOUP_IMAGE=*" < .env; then
