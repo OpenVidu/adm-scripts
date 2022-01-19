@@ -9,10 +9,6 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 [ -n "${OPENVIDU_BROWSER_BRANCH}" ] || OPENVIDU_BROWSER_BRANCH='master'
 [ -n "$NIGHTLY" ] || NIGHTLY="false"
 
-if [ "${OPENVIDU_CALL_BRANCH}" != 'master' ]; then
-    git checkout "${OPENVIDU_CALL_BRANCH}"
-fi
-
 if [[ "${RELEASE}" == "false"  ]]; then
   # Clone OpenVidu Repository to build openvidu-browser and openvidu-node-client
   git clone https://github.com/OpenVidu/openvidu.git
