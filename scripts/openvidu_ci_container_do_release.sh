@@ -480,7 +480,6 @@ case $OPENVIDU_PROJECT in
 
     # Build
     mvn --batch-mode -DskipTests=true clean compile package || { echo "Failed to build replication-manager version"; exit 1; }
-    mv target/replication-manager-*.jar target/replication-manager-"${OPENVIDU_VERSION}".jar || exit 1
 
     # Release
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
