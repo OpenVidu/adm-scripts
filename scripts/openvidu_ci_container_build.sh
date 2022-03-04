@@ -26,13 +26,13 @@ if [[ "${NIGHTLY}" == "true" ]]; then
   fi
 
   # If nightly, check that version is no released
-  export DOCKER_TAG="${TAGS}"
-  export DOCKER_IMAGE="${DOCKERHUB_REPO}/${IMAGE_NAME}"
-  EXIST_RELEASE=$(check_docker_image_exist.sh)
-  if [[ ${EXIST_RELEASE} == "true" ]]; then
-    echo "Release specified exist. To create nightly builds you need to specify the current version in development for this image"
-    exit 1
-  fi
+  # export DOCKER_TAG="${TAGS}"
+  # export DOCKER_IMAGE="${DOCKERHUB_REPO}/${IMAGE_NAME}"
+  # EXIST_RELEASE=$(check_docker_image_exist.sh)
+  # if [[ ${EXIST_RELEASE} == "true" ]]; then
+  #   echo "Release specified exist. To create nightly builds you need to specify the current version in development for this image"
+  #   exit 1
+  # fi
 
   # Check that num of tags is only one on nightly
   NUM_TAGS=$(echo "$TAGS" | wc -w)
