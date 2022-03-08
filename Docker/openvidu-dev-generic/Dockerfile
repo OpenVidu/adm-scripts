@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 LABEL maintainer=carlos.ruizbal@gmail.com
 
@@ -11,8 +11,7 @@ RUN apt-get update \
     jq \
     zip \
     openjdk-11-jdk \
-    python \
-    python-pip \
+    python3-pip \
     pwgen \
     lsb-release \
     maven \
@@ -22,7 +21,7 @@ RUN apt-get update \
     ffmpeg
 
 # Installing nodejs
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs
 
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> /root/.bashrc
