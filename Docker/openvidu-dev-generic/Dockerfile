@@ -18,7 +18,8 @@ RUN apt-get update \
     awscli \
     python-lxml \
     openssh-client \
-    ffmpeg
+    ffmpeg \
+    build-essential
 
 # Installing nodejs
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
