@@ -11,6 +11,7 @@ RUN apt-get update \
     jq \
     zip \
     openjdk-11-jdk \
+    python \
     python3-pip \
     pwgen \
     lsb-release \
