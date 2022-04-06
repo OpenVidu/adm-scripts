@@ -15,11 +15,10 @@ OV_VERSION="${3}"
 
 if [[ "${NIGHTLY}" == "true" ]]; then
     OPENVIDU_SERVER_PRO_TAG="${3}"
-    OPENVIDU_REDIS_TAG="${4}"
-    OPENVIDU_NGINX_PROXY_TAG="${5}"
-    OPENVIDU_COTURN_TAG="${6}"
-    OPENVIDU_CALL_VERSION="${7}"
-    MEDIASOUP_CONTROLLER_TAG="${8}"
+    OPENVIDU_NGINX_PROXY_TAG="${4}"
+    OPENVIDU_COTURN_TAG="${5}"
+    OPENVIDU_CALL_VERSION="${6}"
+    MEDIASOUP_CONTROLLER_TAG="${7}"
 fi
 
 # Stop and clean all docker images
@@ -118,7 +117,6 @@ cd "${OPENVIDU_DIRECTORY}"
 if [[ "${NIGHTLY}" == "true" ]]; then
     # Replace variables in docker-compose.yml file
     sed -i "s|image: openvidu/openvidu-server-pro:.*|image: openvidu/openvidu-server-pro:${OPENVIDU_SERVER_PRO_TAG}|" docker-compose.yml
-    sed -i "s|image: openvidu/openvidu-redis:.*|image: openvidu/openvidu-redis:${OPENVIDU_REDIS_TAG}|" docker-compose.yml
     sed -i "s|image: openvidu/openvidu-coturn:.*|image: openvidu/openvidu-coturn:${OPENVIDU_COTURN_TAG}|" docker-compose.yml
     sed -i "s|image: openvidu/openvidu-proxy:.*|image: openvidu/openvidu-proxy:${OPENVIDU_NGINX_PROXY_TAG}|" docker-compose.yml
     if [[ "${KEEP_OV_CALL}" == 'false' ]]; then
@@ -134,7 +132,6 @@ if [[ "${NIGHTLY}" == "true" ]]; then
         echo "MEDIASOUP_IMAGE=openvidu/mediasoup-controller:${MEDIASOUP_CONTROLLER_TAG}" >> .env
     fi
     docker pull openvidu/openvidu-server-pro:"${OPENVIDU_SERVER_PRO_TAG}"
-    docker pull openvidu/openvidu-redis:"${OPENVIDU_REDIS_TAG}"
     docker pull openvidu/openvidu-coturn:"${OPENVIDU_COTURN_TAG}"
     docker pull openvidu/openvidu-proxy:"${OPENVIDU_NGINX_PROXY_TAG}"
     docker pull openvidu/openvidu-call:"${OPENVIDU_CALL_VERSION}"

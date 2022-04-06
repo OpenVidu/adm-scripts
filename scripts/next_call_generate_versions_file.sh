@@ -12,7 +12,7 @@ parse_image_info() {
     NIGHTLY="false"
     COMMIT="Unknown"
     DATE="Unknown"
-    if [[ "${IMAGE}" =~ "openvidu-redis" ]] || [[ "${IMAGE}" =~ "openvidu-coturn" ]] || [[ "${IMAGE}" =~ "openvidu-proxy" ]]; then
+    if [[ "${IMAGE}" =~ "openvidu-coturn" ]] || [[ "${IMAGE}" =~ "openvidu-proxy" ]]; then
         PROJECT="openvidu/openvidu-server"
     else
         PROJECT=$(echo "${IMAGE}" | cut -d":" -f1 || echo "Unknown")
