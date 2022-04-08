@@ -83,9 +83,9 @@ clean_old_amis_by_prefix() {
             while read -r OLD_AMI ; do
                 # Parse the result
                 local AMI_DATE AMI_NAME AMI_ID IS_PUBLIC SNAPSHOT_ID
-                AMI_DATE=$(awk '{print $1}' < <(echo "$OLD_AMI"))
-                AMI_NAME=$(awk '{print $2}' < <(echo "$OLD_AMI"))
-                AMI_ID=$(awk '{print $3}' < <(echo "$OLD_AMI"))
+                AMI_DATE=$(awk 'BEGIN {FS="\t"}; {print $1}' < <(echo "$OLD_AMI"))
+                AMI_NAME=$(awk 'BEGIN {FS="\t"}; {print $2}' < <(echo "$OLD_AMI"))
+                AMI_ID=$(awk 'BEGIN {FS="\t"}; {print $3}' < <(echo "$OLD_AMI"))
 
                 # 4. Check if the image is bein used
                 USED_AMI="False"
@@ -96,7 +96,7 @@ clean_old_amis_by_prefix() {
                 done
 
                 if [[ "${USED_AMI}" == "False" ]]; then
-                    IS_PUBLIC=$(awk '{print $4}' <(echo "$OLD_AMI"))
+                    IS_PUBLIC=$(awk 'BEGIN {FS="\t"}; {print $4}' <(echo "$OLD_AMI"))
                     # 5. Check if image is public and the AMI name starts with the PREFIX variable
                     # It is filtered by the aws cli, but these checks are just in case
                     if [[ "${IS_PUBLIC}" != "False" ]]; then
