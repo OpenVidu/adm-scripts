@@ -50,6 +50,22 @@ clean_old_amis_by_prefix() {
     local QUERY="${QUERY_TEMPLATE//PREFIX/${PREFIX}}"
     for REGION in ${TARGET_REGIONS}
     do
+        # Array with AMIs which should not be deleted because it is being used
+        CURRENT_AMIS_BEING_USED=()
+        # Get AMIs which are currently used in the account
+        AMI_ID_INSTANCE_ID_LIST="$(aws ec2 describe-instances --region "${REGION}" | jq -r '.Reservations[].Instances[].ImageId')"
+        for AMI_ID_INSTANCE_ID in ${AMI_ID_INSTANCE_ID_LIST}; do
+            AMI_ID=$(echo "${AMI_ID_INSTANCE_ID}" | cut -d'|' -f1)
+            AMI_NAME="$(aws ec2 describe-images --region "${REGION}" --image-ids "${AMI_ID}" | jq -r '.Images[0].Name')"
+            # Check if removable AMI is being used
+            while IFS= read -r PREFIX; do
+                PREFIX_TRIM=$(echo -e "${PREFIX}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+                if [[ "${AMI_NAME}" == "${PREFIX_TRIM}"* ]]; then
+                    CURRENT_AMIS_BEING_USED+=("${AMI_ID}")
+                fi
+            done <<< "$PREFIX_AMIS"
+        done
+
         # Request to AWS
         # The result of the call will have this format
         # CreationDate \t Name \t AMI_ID \t Public
@@ -70,30 +86,43 @@ clean_old_amis_by_prefix() {
                 AMI_DATE=$(awk '{print $1}' < <(echo "$OLD_AMI"))
                 AMI_NAME=$(awk '{print $2}' < <(echo "$OLD_AMI"))
                 AMI_ID=$(awk '{print $3}' < <(echo "$OLD_AMI"))
-                IS_PUBLIC=$(awk '{print $4}' <(echo "$OLD_AMI"))
-                # 3. Check if image is public and the AMI name starts with the PREFIX variable
-                # It is filtered by the aws cli, but these checks are just in case
-                if [[ "${IS_PUBLIC}" != "False" ]]; then
-                    echo "The image '${AMI_NAME}' - '${AMI_ID}' is public"
-                    exit 1
-                fi
-                if [[ "${AMI_NAME}" != "${PREFIX}"* ]]; then
-                    echo "The image '${AMI_NAME}' - '${AMI_ID}' does not start with the specified prefix: ${PREFIX}"
-                    exit 1
-                fi
-                # 4. Get Snapshot ID to delete it
-                SNAPSHOT_ID="$(aws ec2 describe-images --region "${REGION}" \
-                    --image-ids "${AMI_ID}" --output text \
-                    --query 'Images[*].BlockDeviceMappings[*].Ebs.SnapshotId')"
 
-                # 5. Showing information about AMI to delete
-                echo "Deleting AMI: '${AMI_NAME}': Date: '${AMI_DATE}', AMI ID: '${AMI_ID}', SNAPSHOT ID: '${SNAPSHOT_ID}' Is public: '${IS_PUBLIC}', Region: ${REGION}"
+                # 4. Check if the image is bein used
+                USED_AMI="False"
+                for USED_AMI_ID in "${CURRENT_AMIS_BEING_USED[@]}"; do
+                    if [[ "${USED_AMI_ID}" == "${AMI_ID}" ]]; then
+                        USED_AMI="True"
+                    fi
+                done
 
-                # 6. Delete AMI
-                # 6.1 Deregister AMI
-                aws ec2 deregister-image --region "${REGION}" --image-id "${AMI_ID}"
-                # 6.2 Delete Snapshot
-                aws ec2 delete-snapshot --region "${REGION}" --snapshot-id "${SNAPSHOT_ID}"
+                if [[ "${USED_AMI}" == "False" ]]; then
+                    IS_PUBLIC=$(awk '{print $4}' <(echo "$OLD_AMI"))
+                    # 5. Check if image is public and the AMI name starts with the PREFIX variable
+                    # It is filtered by the aws cli, but these checks are just in case
+                    if [[ "${IS_PUBLIC}" != "False" ]]; then
+                        echo "The image '${AMI_NAME}' - '${AMI_ID}' is public"
+                        exit 1
+                    fi
+                    if [[ "${AMI_NAME}" != "${PREFIX}"* ]]; then
+                        echo "The image '${AMI_NAME}' - '${AMI_ID}' does not start with the specified prefix: ${PREFIX}"
+                        exit 1
+                    fi
+                    # 6. Get Snapshot ID to delete it
+                    SNAPSHOT_ID="$(aws ec2 describe-images --region "${REGION}" \
+                        --image-ids "${AMI_ID}" --output text \
+                        --query 'Images[*].BlockDeviceMappings[*].Ebs.SnapshotId')"
+
+                    # 7. Showing information about AMI to delete
+                    echo "Deleting AMI: '${AMI_NAME}': Date: '${AMI_DATE}', AMI ID: '${AMI_ID}', SNAPSHOT ID: '${SNAPSHOT_ID}' Is public: '${IS_PUBLIC}', Region: ${REGION}"
+
+                    # 8. Delete AMI
+                    # 8.1 Deregister AMI
+                    aws ec2 deregister-image --region "${REGION}" --image-id "${AMI_ID}"
+                    # 8.2 Delete Snapshot
+                    aws ec2 delete-snapshot --region "${REGION}" --snapshot-id "${SNAPSHOT_ID}"
+                else
+                    echo "AMI Id '${AMI_ID}' with name '${AMI_NAME}' will not be deleted because it is being used"
+                fi
             done < <(echo "${OLD_AMI_LIST}")
         fi
     done
