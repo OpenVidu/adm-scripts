@@ -128,7 +128,6 @@ clean_old_amis_by_prefix() {
     done
 }
 
-for PREFIX in $PREFIX_AMIS
-do
+while IFS= read -r PREFIX; do
     clean_old_amis_by_prefix "${PREFIX}" "${MAX_DAYS}"
-done
+done <<< "$PREFIX_AMIS"
