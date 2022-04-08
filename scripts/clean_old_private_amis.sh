@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 set -eu -o pipefail
 
 # Delete AMIs with specified prefixed older than MAX_DAYS
