@@ -13,6 +13,7 @@ OV_VERSION="${2}"
 if [[ "${NIGHTLY}" == "true" ]]; then
     MEDIASOUP_CONTROLLER_TAG="${3}"
     MEDIA_NODE_CONTROLLER_TAG="${4}"
+    COTURN_TAG="${5}"
 fi
 
 # Stop and clean all docker images
@@ -47,8 +48,10 @@ if [[ "${NIGHTLY}" == "true" ]]; then
     # Replace variables in docker-compose.yml file
     sed -i "s|image: openvidu/media-node-controller:.*|image: openvidu/media-node-controller:${MEDIA_NODE_CONTROLLER_TAG}|" docker-compose.yml
     sed -i "s|MEDIASOUP_IMAGE=openvidu/mediasoup-controller:.*|MEDIASOUP_IMAGE=openvidu/mediasoup-controller:${MEDIASOUP_CONTROLLER_TAG}|" docker-compose.yml
+    sed -i "s|COTURN_IMAGE=openvidu/openvidu-coturn:.*|COTURN_IMAGE=openvidu/openvidu-coturn:${COTURN_TAG}|" docker-compose.yml
     docker pull openvidu/media-node-controller:"${MEDIA_NODE_CONTROLLER_TAG}"
     docker pull openvidu/mediasoup-controller:"${MEDIASOUP_CONTROLLER_TAG}"
+    docker pull openvidu/openvidu-coturn:"${COTURN_TAG}"
 fi
 
 # TODO: Add option FOLLOW_MEDIA_NODE_LOGS to not follow logs
