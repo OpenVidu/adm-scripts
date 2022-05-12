@@ -60,6 +60,7 @@ case $OPENVIDU_PROJECT in
 
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    sleep 10
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact to Github"; exit 1; }
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || { echo "Failed to upload the artifact to Github"; exit 1; }
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || { echo "Failed to upload the artifact to Github"; exit 1; }
@@ -200,6 +201,7 @@ case $OPENVIDU_PROJECT in
     mvn $MAVEN_OPTIONS clean compile package || { echo "Failed to compile openvidu-js-java"; exit 1; }
     DESC=$(git log -1 --pretty=%B)
     openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    sleep 10
     openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar --file target/openvidu-js-java-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact"; exit 1; }
     popd
 
@@ -239,6 +241,7 @@ case $OPENVIDU_PROJECT in
 
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    sleep 10
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file /opt/target/classroom-demo-${OPENVIDU_VERSION}.war || { echo "Failed to upload the artifact to Github"; exit 1; }
 
     ;;
@@ -302,6 +305,7 @@ case $OPENVIDU_PROJECT in
     # OpenVidu/openvidu-call repo
     DESC="Release v$OPENVIDU_CALL_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    sleep 10
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || { echo "Failed to upload openvidu-call artifact to Github"; exit 1; }
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || { echo "Failed to upload openvidu-call-demos artifact to Github"; exit 1; }
 
@@ -481,6 +485,7 @@ case $OPENVIDU_PROJECT in
 
     # Release
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    sleep 10
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name replication-manager-"${OPENVIDU_VERSION}".jar --file target/replication-manager-"${OPENVIDU_VERSION}".jar || { echo "Failed to upload the artifact to Github"; exit 1; }
 
     ;;
