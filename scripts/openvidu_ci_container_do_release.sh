@@ -264,6 +264,9 @@ case $OPENVIDU_PROJECT in
 
   openvidu-react)
 
+    # Own root directory to avoid EACCES error 
+    chown -R root:root library/ openvidu-call-react/
+
     #### git clone https://github.com/OpenVidu/openvidu-call-react.git
     echo "## Building openvidu-react"
     [ -z "$OPENVIDU_REACT_VERSION" ] && exit 1
@@ -279,7 +282,7 @@ case $OPENVIDU_PROJECT in
 
     # Build openvidu-react library
     cd ../openvidu-call-react
-    npm run build:openvidu-react-ci || { echo "Failed to build openvidu-react library"; exit 1; }
+    npm run build:openvidu-react || { echo "Failed to build openvidu-react library"; exit 1; }
 
     # Publish openvidu-react library
     cd ../library
