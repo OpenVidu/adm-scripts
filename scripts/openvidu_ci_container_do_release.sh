@@ -279,6 +279,8 @@ case $OPENVIDU_PROJECT in
 
     # Build openvidu-react library
     cd ../openvidu-call-react
+    npm cache clean --force
+    sudo chown -R 1001:1001 "/root/.npm"
     npm run build:openvidu-react || { echo "Failed to build openvidu-react library"; exit 1; }
 
     # Publish openvidu-react library
