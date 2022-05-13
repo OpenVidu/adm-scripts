@@ -46,13 +46,28 @@ case $OPENVIDU_PROJECT in
     echo "## Building OpenVidu Server"
     pushd openvidu-server/src/dashboard || exit 1
 
-    npm install
-    npm link openvidu-browser
+    npm install || { echo "Failed 'npm install'"; exit 1; }
+    npm link openvidu-browser || { echo "Failed 'npm link openvidu-browser'"; exit 1; }
     npm run build-prod || { echo "Failed to compile frontend"; exit 1; }
     popd
 
     pom-vbump.py -i -v "$OPENVIDU_VERSION" openvidu-server/pom.xml || { echo "Failed to bump openvidu-server version"; exit 1; }
     mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
+
+    # openvidu-angular
+    pushd openvidu-components-angular
+    npm install || { echo "Failed to 'npm install'"; exit 1; }
+    npm link openvidu-browser
+    npm-update-dep-ov-components-angular.py || { echo "Faile to update dependencies/bump version"; exit 1; }
+    npm run lib:build || { echo "Failed to 'npm run lib:build'"; exit 1; }
+    pushd dist/openvidu-angular
+    npm publish || { echo "Failed to publish openvidu-angular to npm"; exit 1; }
+    popd
+    popd
+
+    # openvidu-webcomponent
+    npm run webcomponent:build || { echo "Failed to 'npm run webcomponent:build'"; exit 1; }
+    zip -r --junk-paths dist/openvidu-webcomponent/openvidu-webcomponent-${OPENVIDU_VERSION}.zip dist/openvidu-webcomponent
 
     # Github release: commit and push
     git commit -a -m "Update to version v$OPENVIDU_VERSION"
@@ -61,9 +76,10 @@ case $OPENVIDU_PROJECT in
     DESC="Release v$OPENVIDU_VERSION"
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
     sleep 10
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact to Github"; exit 1; }
+    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact to Github"; exit 1; }
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || { echo "Failed to upload the artifact to Github"; exit 1; }
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.min.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.min.js || { echo "Failed to upload the artifact to Github"; exit 1; }
+    openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-webcomponent-${OPENVIDU_VERSION}.zip --file openvidu-components-angular/dist/openvidu-webcomponent/openvidu-webcomponent-${OPENVIDU_VERSION}.zip || { echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1; }
 
     # Pushing file to builds server
     pushd openvidu-server/target
@@ -243,74 +259,6 @@ case $OPENVIDU_PROJECT in
     openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
     sleep 10
     openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name classroom-demo-${OPENVIDU_VERSION}.war --file /opt/target/classroom-demo-${OPENVIDU_VERSION}.war || { echo "Failed to upload the artifact to Github"; exit 1; }
-
-    ;;
-
-  openvidu-call)
-
-    echo "## Building openvidu-call"
-    [ -z "$OPENVIDU_CALL_VERSION" ] && exit 1
-
-    ## FRONT
-    # Update npm dependencies
-    npm-update-dep-call.py || { echo "Faile to update dependencies/bump version"; exit 1; }
-    cd openvidu-call-front || { echo "Failed to change folder"; exit 1; }
-
-    # Install npm dependencies
-    npm install || exit 1
-
-    # openvidu-call production build
-    ./node_modules/\@angular/cli/bin/ng version || exit 1
-    npm run build-prod || exit 1
-
-    ## BACK
-    cd ../openvidu-call-back || { echo "Failed to change folder"; exit 1; }
-    npm install || { echo "Failed to NPM install"; exit 1; }
-    npm run build || { echo "Failed to NPM run build"; exit 1; }
-
-    # openvidu-call package
-    cd dist
-    tar czf /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz *
-    rm -rf dist/*
-
-    # openvidu-call-demos build and package
-    cd ../../openvidu-call-front
-    rm -rf dist/openvidu-call
-    npm run build-prod /openvidu-call/ || exit 1
-    cd ../openvidu-call-back || { echo "Failed to change folder"; exit 1; }
-    npm run build || { echo "Failed to NPM run build"; exit 1; }
-    cd dist
-    tar czf /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz *
-
-    # OpenVidu Web Component build and package
-    cd ../../openvidu-call-front || { echo "Failed to change folder"; exit 1; }
-    echo "## Building openvidu WebComponent"
-    npm run build:openvidu-webcomponent
-    zip -r --junk-paths /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip openvidu-webcomponent
-    rm -rf ./openvidu-webcomponent # Delete webcomponent compilation folder
-
-    # openvidu-angular build
-    echo "## Building openvidu-angular"
-    npm run build:openvidu-angular
-
-    # npm release openvidu-angular
-    cd dist/openvidu-angular
-    npm publish || { echo "Failed to publish openvidu-angular to npm"; exit 1; }
-
-    # Github release: commit and push
-    cd ../../..
-    git commit -a -m "Update to version v$OPENVIDU_CALL_VERSION"
-    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
-
-    # OpenVidu/openvidu-call repo
-    DESC="Release v$OPENVIDU_CALL_VERSION"
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
-    sleep 10
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-${OPENVIDU_CALL_VERSION}.tar.gz || { echo "Failed to upload openvidu-call artifact to Github"; exit 1; }
-    openvidu_github_release.go upload  --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz --file /opt/openvidu-call-demos-${OPENVIDU_CALL_VERSION}.tar.gz || { echo "Failed to upload openvidu-call-demos artifact to Github"; exit 1; }
-
-    # OpenVidu/openvidu repo (OpenVidu Web Component)
-    openvidu_github_release.go upload  --user openvidu --repo "openvidu" --tag "v$OPENVIDU_CALL_VERSION" --name openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip --file /opt/openvidu-webcomponent-${OPENVIDU_CALL_VERSION}.zip || { echo "Failed to upload openvidu-webcomponent artifact to Github"; exit 1; }
 
     ;;
 
