@@ -82,7 +82,7 @@ fi
 docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
 
 if [[ "${RELEASE}" == 'true' ]]; then
-    pushd docker
+    pushd openvidu-call/docker
     chmod u+x run.sh
     ./run.sh "${OVC_VERSION}"
     popd
