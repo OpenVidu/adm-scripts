@@ -5,7 +5,7 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 
 [ -n "${OVC_VERSION}" ] || exit 1
 [ -n "${RELEASE}" ] || RELEASE='false'
-[ -n "${OPENVIDU_BROWSER_BRANCH}" ] || OPENVIDU_BROWSER_BRANCH='master'
+[ -n "${OPENVIDU_BRANCH}" ] || OPENVIDU_BRANCH='master'
 [ -n "$NIGHTLY" ] || NIGHTLY="false"
 
 if [[ "${RELEASE}" == "false"  ]]; then
