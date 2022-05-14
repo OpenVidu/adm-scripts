@@ -12,8 +12,8 @@ if [[ "${RELEASE}" == "false"  ]]; then
   # Clone OpenVidu Repository to build openvidu-browser and openvidu-node-client
   git clone https://github.com/OpenVidu/openvidu.git
   pushd openvidu
-  if [[ "${OPENVIDU_BROWSER_BRANCH}" != 'master' ]]; then
-    git checkout "${OPENVIDU_BROWSER_BRANCH}"
+  if [[ "${OPENVIDU_BRANCH}" != 'master' ]]; then
+    git checkout "${OPENVIDU_BRANCH}"
   fi
   BUILD_COMMIT_OV=$(git rev-parse HEAD | cut -c 1-8)
   popd
@@ -23,10 +23,12 @@ if [[ "${RELEASE}" == "false"  ]]; then
   if [[ "${NIGHTLY}" == "true" ]]; then
     OV_NODE_CLIENT_VERSION="${OVC_VERSION}-nightly-${BUILD_COMMIT_OV}-$(date +%Y%m%d)"
     OV_BROWSER_VERSION="${OVC_VERSION}-nightly-${BUILD_COMMIT_OV}-$(date +%Y%m%d)"
+    OV_COMP_ANGULAR="${OVC_VERSION}-nightly-${BUILD_COMMIT_OV}-$(date +%Y%m%d)"
     OVC_VERSION="${OVC_VERSION}-nightly-${BUILD_COMMIT_CALL}-$(date +%Y%m%d)"
   else
     OV_NODE_CLIENT_VERSION="${OVC_VERSION}"
     OV_BROWSER_VERSION="${OVC_VERSION}"
+    OV_COMP_ANGULAR="${OVC_VERSION}"
   fi
 
 
@@ -35,46 +37,66 @@ if [[ "${RELEASE}" == "false"  ]]; then
   CURRENT_GID=$(id -g "${CURRENT_USERNAME}")
 
 # This script updates all dependencies for openvidu call nightly build
-cat >update_depencies.sh <<EOF
+cat >update_dependencies.sh <<EOF
 #!/bin/bash -x
 
-pushd openvidu/openvidu-node-client
+chown -R root:root /workspace
+
 # Build node client
+pushd openvidu/openvidu-node-client
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OV_NODE_CLIENT_VERSION}\"/" package.json
 cat package.json
-npm install || { echo "openvidu-browser -> install"; exit 1; }
-npm run build || { echo "openvidu-browser -> build"; exit 1; }
-npm pack || { echo "openvidu-browser -> pack"; exit 1; }
-mv openvidu-node-client-"${OV_NODE_CLIENT_VERSION}".tgz ../../openvidu-call-back
+npm install || { echo "openvidu-node-client -> install"; exit 1; }
+npm run build || { echo "openvidu-node-client -> build"; exit 1; }
+npm pack || { echo "openvidu-node-client -> pack"; exit 1; }
+mv openvidu-node-client-"${OV_NODE_CLIENT_VERSION}".tgz ../../openvidu-call/openvidu-call-back
+popd
 
 # update package.json openvidu-call-back
-pushd ../../openvidu-call-back
-chown "${CURRENT_UID}":"${CURRENT_GID}" openvidu-node-client-"${OV_NODE_CLIENT_VERSION}".tgz
+pushd openvidu-call/openvidu-call-back
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
 sed -i "/\"openvidu-node-client\":/ s/\"openvidu-node-client\":[^,]*/\"openvidu-node-client\": \"file:openvidu-node-client-${OV_NODE_CLIENT_VERSION}.tgz\"/" package.json
 cat package.json
 popd
-popd
 
+# Build openvidu-browser
 pushd openvidu/openvidu-browser
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OV_BROWSER_VERSION}\"/" package.json
 npm install || { echo "openvidu-browser -> install"; exit 1; }
 npm run build || { echo "openvidu-browser -> build"; exit 1; }
 npm pack || { echo "openvidu-browser -> build"; exit 1; }
-mv openvidu-browser-"${OV_BROWSER_VERSION}".tgz ../../openvidu-call-front
+cp openvidu-browser-"${OV_BROWSER_VERSION}".tgz ../../openvidu/openvidu-components-angular
+cp openvidu-browser-"${OV_BROWSER_VERSION}".tgz ../../openvidu-call/openvidu-call-front
+popd
+
+# Build openvidu angular
+pushd openvidu/openvidu-components-angular
+sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OV_COMP_ANGULAR}\"/" package.json
+sed -i "/\"openvidu-browser\":/ s/\"openvidu-browser\":[^,]*/\"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\"/" package.json
+sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OV_COMP_ANGULAR}\"/" projects/openvidu-angular/package.json
+sed -i "/\"openvidu-browser\":/ s/\"openvidu-browser\":[^,]*/\"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\"/" projects/openvidu-angular/package.json
+cat package.json
+cat projects/openvidu-angular/package.json
+npm install || { echo "Failed to 'npm install'"; exit 1; }
+npm run lib:build || { echo "Failed to 'npm run lib:build'"; exit 1; }
+pushd dist/openvidu-angular
+mv openvidu-angular-"${OV_COMP_ANGULAR}".tgz ../../../../openvidu-call/openvidu-call-front
+popd
+popd
 
 # update package.json openvidu-call-front
-pushd ../../openvidu-call-front
-chown "${CURRENT_UID}":"${CURRENT_GID}" openvidu-browser-"${OV_BROWSER_VERSION}".tgz
+pushd openvidu-call/openvidu-call-front
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
-sed -i "/\"openvidu-browser\":/ s/\"openvidu-browser\":[^,]*/\"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\"/" package.json
+sed -i "s/\"dependencies\": {/\"dependencies\": { \"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\",/" package.json
+sed -i "/\"openvidu-angular\":/ s/\"openvidu-angular\":[^,]*/\"openvidu-angular\": \"file:openvidu-angular-${OV_COMP_ANGULAR}.tgz\"/" package.json
 cat package.json
 popd
-popd
+
+chown -R "${CURRENT_UID}":"${CURRENT_GID}" /workspace
 
 rm -rf openvidu
 EOF
-chmod +x update_depencies.sh
+chmod +x update_dependencies.sh
 
 fi
 
@@ -87,19 +109,17 @@ if [[ "${RELEASE}" == 'true' ]]; then
     ./run.sh "${OVC_VERSION}"
     popd
 else
-    DOCKER_IMAGE=openvidu/openvidu-call
-    if [[ "${OPENVIDU_COMPONENTS}" == 'true' ]]; then
-      DOCKER_IMAGE=openvidu/openvidu-call-components
-    fi
     # Execute update dependencies script
-    docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_depencies.sh" || exit 1
+    docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_dependencies.sh" || exit 1
     # Build openvidu call
-    docker build -f docker/Dockerfile -t "${DOCKER_IMAGE}":"${OVC_VERSION}" --build-arg OPENVIDU_BROWSER="${OPENVIDU_BROWSER_BRANCH}" . || exit 1
+    pushd openvidu-call
+    docker build -f docker/Dockerfile -t "${DOCKER_IMAGE}":"${OVC_VERSION}" . || exit 1
     docker push "${DOCKER_IMAGE}":"${OVC_VERSION}"
     if [[ "${NIGHTLY}" == "true" ]]; then
       docker tag "${DOCKER_IMAGE}":"${OVC_VERSION}" "${DOCKER_IMAGE}":master
       docker push "${DOCKER_IMAGE}":master
     fi
+    popd
 fi
 
 docker logout
