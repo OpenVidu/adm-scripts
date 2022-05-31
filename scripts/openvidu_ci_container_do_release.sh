@@ -127,9 +127,10 @@ case $OPENVIDU_PROJECT in
       mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-commons:$MVN_VERSION"
       mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
       mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
+      mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
+    else
+      mvn --batch-mode -DskipTests=true clean compile package
     fi
-
-    mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
 
     if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
       HTTP_REQUEST=$(curl --write-out "%{http_code}" --silent --output /dev/null "http://builds.openvidu.io/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar")
@@ -358,8 +359,13 @@ case $OPENVIDU_PROJECT in
     popd
 
     pushd openvidu
-    mvn -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
-    mvn -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
+    if ${KURENTO_JAVA_SNAPSHOT} ; then
+      mvn --settings /opt/kurento-snapshot-settings.xml -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
+      mvn --settings /opt/kurento-snapshot-settings.xml -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
+    else
+      mvn -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
+      mvn -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
+    fi
     popd
 
     if [ "${BUILD_OPENVIDU_INSPECTOR}" == true ]; then
