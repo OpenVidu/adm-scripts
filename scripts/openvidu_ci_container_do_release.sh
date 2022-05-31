@@ -391,7 +391,7 @@ case $OPENVIDU_PROJECT in
     fi
 
     pushd openvidu/openvidu-server
-    mvn -Pdependency install || { echo "openvidu-server-ce -> install dependency"; exit 1; }
+    mvn --settings /opt/openvidu-settings.xml -Pdependency install || { echo "openvidu-server-ce -> install dependency"; exit 1; }
     popd
 
     pushd openvidu-server-pro
