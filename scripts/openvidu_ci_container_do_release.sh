@@ -332,16 +332,6 @@ case $OPENVIDU_PROJECT in
       export OPENVIDU_CE_VERSION="${ORIG_VERSION}"
     fi
 
-    if ${KURENTO_JAVA_SNAPSHOT} ; then
-      git clone https://github.com/Kurento/kurento-java.git
-      cd kurento-java && MVN_VERSION="$(grep -oPm1 "(?<=<version>)[^<]+" "pom.xml")"
-      cd ../openvidu && mvn --settings /opt/kurento-snapshot-settings.xml --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion="$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-commons:$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
-      cd ..
-    fi
-
     pushd openvidu
     # Update java-client from parent pom.xml
     mvn versions:set-property -Dproperty=version.openvidu.java.client -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true || { echo "Failed to update version"; exit 1; }
@@ -356,6 +346,16 @@ case $OPENVIDU_PROJECT in
     pushd openvidu/openvidu-server
     mvn versions:set -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true || { echo "Failed to bump version"; exit 1; }
     popd
+
+    if ${KURENTO_JAVA_SNAPSHOT} ; then
+      git clone https://github.com/Kurento/kurento-java.git
+      cd kurento-java && MVN_VERSION="$(grep -oPm1 "(?<=<version>)[^<]+" "pom.xml")"
+      cd ../openvidu && mvn --settings /opt/kurento-snapshot-settings.xml --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion="$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-commons:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
+      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
+      cd ..
+    fi
 
     pushd openvidu
     mvn -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
