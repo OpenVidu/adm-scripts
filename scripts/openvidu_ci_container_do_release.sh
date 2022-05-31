@@ -397,7 +397,7 @@ case $OPENVIDU_PROJECT in
     pushd openvidu-server-pro
     mvn versions:set-property -Dproperty=version.openvidu.server -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true
     mvn versions:set -DnewVersion=$OPENVIDU_PRO_VERSION -DskipTests=true
-    mvn -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
+    mvn --settings /opt/openvidu-settings.xml -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
     pushd openvidu-server-pro/target
