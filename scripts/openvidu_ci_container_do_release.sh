@@ -360,11 +360,9 @@ case $OPENVIDU_PROJECT in
 
     pushd openvidu
     if ${KURENTO_JAVA_SNAPSHOT} ; then
-      mvn --settings /opt/kurento-snapshot-settings.xml -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
-      mvn --settings /opt/kurento-snapshot-settings.xml -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
+      mvn --settings /opt/kurento-snapshot-settings.xml -DskipTests=true clean compile install || { echo "openvidu-ce -> compile and install"; exit 1; }
     else
-      mvn -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
-      mvn -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
+      mvn -DskipTests=true clean compile install || { echo "openvidu-ce -> compile and install"; exit 1; }
     fi
     popd
 
