@@ -123,13 +123,10 @@ case $OPENVIDU_PROJECT in
     if ${KURENTO_JAVA_SNAPSHOT} ; then
       git clone https://github.com/Kurento/kurento-java.git
       cd kurento-java && MVN_VERSION="$(grep -oPm1 "(?<=<version>)[^<]+" "pom.xml")"
-      cd .. && mvn --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion="$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-commons:$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
+      cd .. && mvn --batch-mode --settings /opt/kurento-snapshot-settings.xml -Dmaven.artifact.threads=1 versions:set-property -Dproperty=version.kurento -DnewVersion="$MVN_VERSION"
     fi
 
-    mvn --batch-mode --settings /opt/openvidu-settings.xml -DskipTests=true clean compile package
+    mvn --batch-mode --settings /opt/kurento-snapshot-settings.xml -Dmaven.artifact.threads=1 -DskipTests=true clean compile package
 
     if [[ "${OVERWRITE_VERSION}" == 'false' ]]; then
       HTTP_REQUEST=$(curl --write-out "%{http_code}" --silent --output /dev/null "http://builds.openvidu.io/openvidu/builds/openvidu-server-${OPENVIDU_VERSION}.jar")
@@ -350,16 +347,13 @@ case $OPENVIDU_PROJECT in
     if ${KURENTO_JAVA_SNAPSHOT} ; then
       git clone https://github.com/Kurento/kurento-java.git
       cd kurento-java && MVN_VERSION="$(grep -oPm1 "(?<=<version>)[^<]+" "pom.xml")"
-      cd ../openvidu && mvn --settings /opt/kurento-snapshot-settings.xml --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion="$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-commons:$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-jsonrpc-client-jetty:$MVN_VERSION"
-      mvn dependency:get --settings /opt/kurento-snapshot-settings.xml -DremoteRepositories="kurento-github-public::default::https://maven.pkg.github.com/kurento/*" -Dartifact="org.kurento:kurento-client:$MVN_VERSION"
+      cd ../openvidu && mvn --settings /opt/kurento-snapshot-settings.xml -Dmaven.artifact.threads=1 --batch-mode versions:set-property -Dproperty=version.kurento -DnewVersion="$MVN_VERSION"
       cd ..
     fi
 
     pushd openvidu
-    mvn --settings /opt/openvidu-settings.xml -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
-    mvn --settings /opt/openvidu-settings.xml -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
+    mvn --settings /opt/kurento-snapshot-settings.xml -Dmaven.artifact.threads=1 -DskipTests=true compile || { echo "openvidu-ce -> compile"; exit 1; }
+    mvn --settings /opt/kurento-snapshot-settings.xml -Dmaven.artifact.threads=1 -DskipTests=true install || { echo "openvidu-ce -> install"; exit 1; }
     popd
 
     if [ "${BUILD_OPENVIDU_INSPECTOR}" == true ]; then
@@ -391,13 +385,13 @@ case $OPENVIDU_PROJECT in
     fi
 
     pushd openvidu/openvidu-server
-    mvn --settings /opt/openvidu-settings.xml -Pdependency install || { echo "openvidu-server-ce -> install dependency"; exit 1; }
+    mvn --settings /opt/kurento-snapshot-settings.xml -Dmaven.artifact.threads=1 -Pdependency install || { echo "openvidu-server-ce -> install dependency"; exit 1; }
     popd
 
     pushd openvidu-server-pro
     mvn versions:set-property -Dproperty=version.openvidu.server -DnewVersion=${OPENVIDU_CE_VERSION} -DskipTests=true
     mvn versions:set -DnewVersion=$OPENVIDU_PRO_VERSION -DskipTests=true
-    mvn --settings /opt/openvidu-settings.xml -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
+    mvn --settings /opt/kurento-snapshot-settings.xml -Dmaven.artifact.threads=1 -DskipTests=true clean package || { echo "openvidu-server-pro -> clean package"; exit 1; }
     popd
 
     pushd openvidu-server-pro/target
