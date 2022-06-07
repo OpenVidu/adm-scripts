@@ -21,15 +21,21 @@ if [[ "${NIGHTLY}" == "true" ]]; then
     MEDIASOUP_CONTROLLER_TAG="${7}"
 fi
 
-# Stop and clean all docker images
+# Stop all docker running containers
 set +e
 if [[ -n "$(docker ps -a -q)" ]]; then
     docker ps -a -q | xargs docker rm -f || true
 fi
 
+# Remove all images, but not elasticsearch and kibana
+IMAGES_TO_REMOVE=$(docker images | grep -v -e elasticsearch -v -e kibana | awk 'NR > 1 {print $3}')
+for image in ${IMAGES_TO_REMOVE}; do
+    docker rmi -f "$image"
+done
 
-# Prune docker
-docker system prune --all --volumes --force || true
+# Remove all volumes
+docker volume prune -f
+
 set -e
 
 # Move necessary files from previous version if exist
