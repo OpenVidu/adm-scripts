@@ -12,6 +12,10 @@ set -eu -o pipefail
 #-----------------------------------------------------------------
 OWNER=${1}
 export AWS_DEFAULT_REGION=eu-west-1
+# Check commands before execution to fail on permission errors
+aws ec2 describe-regions > /dev/null
+aws ec2 describe-images --owner "${OWNER}" > /dev/null
+
 declare -a REGIONS=($(aws ec2 describe-regions --output json | jq -r '.Regions[].RegionName' | tr "\\n" " " ))
 for REGION in "${REGIONS[@]}" ; do
     declare -a AMIS=($(aws ec2 describe-images --region "${REGION}" --owner "${OWNER}" | jq -r '.Images[].ImageId' | tr "\\n" " " ))
