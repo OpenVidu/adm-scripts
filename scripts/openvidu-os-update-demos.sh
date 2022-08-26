@@ -64,9 +64,9 @@ mkdir -p $TARGETDIR/basic-videoconference
 cp -rav $WORKDIR/openvidu-tutorials/openvidu-insecure-js/web/* $TARGETDIR/basic-videoconference
 wget https://github.com/OpenVidu/openvidu/releases/download/v${OV_RELEASE}/openvidu-browser-${OV_RELEASE}.js -O $TARGETDIR/basic-videoconference/openvidu-browser-${OV_RELEASE}.js
 
-# Basic Webinar (openvidu-js-java)
+# Basic Webinar (openvidu-roles-java)
 mkdir -p $TARGETDIR/basic-webinar
-wget https://github.com/OpenVidu/openvidu-tutorials/releases/download/v${DEMOS_RELEASE}/openvidu-js-java-${DEMOS_RELEASE}.jar -O $TARGETDIR/basic-webinar/openvidu-js-java.jar
+wget https://github.com/OpenVidu/openvidu-tutorials/releases/download/v${DEMOS_RELEASE}/openvidu-roles-java-${DEMOS_RELEASE}.jar -O $TARGETDIR/basic-webinar/openvidu-roles-java.jar
 
 # Getaroom
 mkdir -p $TARGETDIR/getaroom 

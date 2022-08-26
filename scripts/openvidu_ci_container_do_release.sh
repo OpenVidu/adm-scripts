@@ -206,23 +206,15 @@ case $OPENVIDU_PROJECT in
   # OpenVidu Tutorials
   tutorials)
 
-    echo "## Building openvidu-js-java"
+    echo "## Building openvidu-roles-java"
     [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
-    pushd openvidu-js-java
+    pushd openvidu-roles-java
     pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || { echo "Failed to bump version"; exit 1; }
-    mvn $MAVEN_OPTIONS clean compile package || { echo "Failed to compile openvidu-js-java"; exit 1; }
+    mvn $MAVEN_OPTIONS clean compile package || { echo "Failed to compile openvidu-roles-java"; exit 1; }
     DESC=$(git log -1 --pretty=%B)
     openvidu_github_release.go release --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
     sleep 10
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-js-java-${OPENVIDU_VERSION}.jar --file target/openvidu-js-java-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact"; exit 1; }
-    popd
-
-    echo "## Building openvidu-mvc-java"
-    pushd openvidu-mvc-java
-    pom-vbump.py -i -v $OPENVIDU_VERSION pom.xml || { echo "Failed to bump version"; exit 1; }
-    mvn $MAVEN_OPTIONS clean compile package || { echo "Failed to compile openvidu-mvc-java"; exit 1; }
-    DESC=$(git log -1 --pretty=%B)
-    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag v"$OPENVIDU_VERSION" --name openvidu-mvc-java-${OPENVIDU_VERSION}.jar --file target/openvidu-mvc-java-${OPENVIDU_VERSION}.jar
+    openvidu_github_release.go upload --user openvidu --repo $OPENVIDU_REPO --tag "v$OPENVIDU_VERSION" --name openvidu-roles-java-${OPENVIDU_VERSION}.jar --file target/openvidu-roles-java-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact"; exit 1; }
     popd
 
     ;;
