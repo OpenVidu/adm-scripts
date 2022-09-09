@@ -113,7 +113,7 @@ else
     docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_dependencies.sh" || exit 1
     # Build openvidu call
     pushd openvidu-call
-    docker build -f docker/Dockerfile -t openvidu/openvidu-call:"${OVC_VERSION}" . || exit 1
+    docker build -f docker/Dockerfile.node -t openvidu/openvidu-call:"${OVC_VERSION}" . || exit 1
     docker push openvidu/openvidu-call:"${OVC_VERSION}"
     if [[ "${NIGHTLY}" == "true" ]]; then
       docker tag openvidu/openvidu-call:"${OVC_VERSION}" openvidu/openvidu-call:master
