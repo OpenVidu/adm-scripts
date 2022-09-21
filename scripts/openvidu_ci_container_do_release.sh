@@ -10,8 +10,8 @@ export PATH=$PATH:$ADM_SCRIPTS
 
 OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1)
 
-# USE a different npm cache folder associated to current user to avoid permission problems
-export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
+# Fix permission errors while using npm
+npm config set unsafe-perm true
 
 
 case $OPENVIDU_PROJECT in
