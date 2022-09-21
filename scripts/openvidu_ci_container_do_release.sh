@@ -455,4 +455,4 @@ case $OPENVIDU_PROJECT in
     exit 1
 esac
 
-chown -R root:root "${PWD}"
+chown -R 1001:1001 "${PWD}"
