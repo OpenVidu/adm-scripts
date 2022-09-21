@@ -14,6 +14,9 @@ case $OPENVIDU_PROJECT in
 
   openvidu)
 
+    # Permission denied fix error
+    chown -R 1001:1001 "/root/.npm"
+
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
     echo "## Building OpenVidu Browser"
@@ -61,7 +64,7 @@ case $OPENVIDU_PROJECT in
 
     export OPENVIDU_CALL_VERSION="${OPENVIDU_VERSION}"
     npm-update-dep-ov-components-angular.py || { echo "Faile to update dependencies/bump version"; exit 1; }
-    
+
     npm run lib:build || { echo "Failed to 'npm run lib:build'"; exit 1; }
     pushd dist/openvidu-angular
     npm publish || { echo "Failed to publish openvidu-angular to npm"; exit 1; }
