@@ -15,7 +15,7 @@ OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1
 # This is a workaround to avoid the following error:
 # npm ERR! code EACCES
 chown -R root:root "${PWD}"
-trap "chown -R 1001:1001 ${PWD}" RR
+trap "chown -R 1001:1001 ${PWD}" ERR
 
 case $OPENVIDU_PROJECT in
 
