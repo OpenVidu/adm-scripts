@@ -20,6 +20,8 @@ CONTAINER_HTTP_CERT=/opt/http.crt
 CONTAINER_HTTP_KEY=/opt/http.key
 CONTAINER_EXTRA_RSA_KEY=/opt/id_rsa.key
 
+[ -n "$WORKSPACE" ] && sudo chown -R $(whoami) $WORKSPACE "${PWD}" "${OPENVIDU_ADM_SCRIPTS_HOME}"
+
 docker run \
   --name $BUILD_TAG-JOB_SETUP-$(date +"%s") \
   --rm \
