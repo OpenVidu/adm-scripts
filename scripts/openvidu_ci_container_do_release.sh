@@ -15,7 +15,6 @@ OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1
 # This is a workaround to avoid the following error:
 # npm ERR! code EACCES
 chown -R root:root "${PWD}"
-trap "chown -R 1001:1001 ${PWD}" ERR
 
 case $OPENVIDU_PROJECT in
 
@@ -72,7 +71,6 @@ case $OPENVIDU_PROJECT in
     npm run lib:build || { echo "Failed to 'npm run lib:build'"; exit 1; }
     pushd dist/openvidu-angular
     # npm publish || { echo "Failed to publish openvidu-angular to npm"; exit 1; }
-    popd
     popd
 
     # openvidu-webcomponent
@@ -454,5 +452,3 @@ case $OPENVIDU_PROJECT in
     echo "No project specified"
     exit 1
 esac
-
-chown -R 1001:1001 "${PWD}"
