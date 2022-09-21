@@ -10,6 +10,12 @@ export PATH=$PATH:$ADM_SCRIPTS
 
 OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1)
 
+# *sigh*, NPM Infers the user which is running the command by looking at the files it is using...
+# As this scrupts run as root, we need to change the ownership of the files to the current user
+# This is a workaround to avoid the following error:
+# npm ERR! code EACCES
+chown -R root:root "${PWD}"
+
 case $OPENVIDU_PROJECT in
 
   openvidu)
