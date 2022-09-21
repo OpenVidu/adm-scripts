@@ -62,6 +62,7 @@ case $OPENVIDU_PROJECT in
     export OPENVIDU_CALL_VERSION="${OPENVIDU_VERSION}"
     npm-update-dep-ov-components-angular.py || { echo "Faile to update dependencies/bump version"; exit 1; }
 
+    sleep infinity
     npm run lib:build || { echo "Failed to 'npm run lib:build'"; exit 1; }
     pushd dist/openvidu-angular
     npm publish || { echo "Failed to publish openvidu-angular to npm"; exit 1; }
