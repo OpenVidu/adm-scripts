@@ -10,10 +10,6 @@ export PATH=$PATH:$ADM_SCRIPTS
 
 OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1)
 
-# Fix permission errors while using npm
-npm config set unsafe-perm true
-
-
 case $OPENVIDU_PROJECT in
 
   openvidu)
@@ -66,6 +62,7 @@ case $OPENVIDU_PROJECT in
     export OPENVIDU_CALL_VERSION="${OPENVIDU_VERSION}"
     npm-update-dep-ov-components-angular.py || { echo "Faile to update dependencies/bump version"; exit 1; }
 
+    sudo chown -R 1001:1001 "/root/.npm"
     npm run lib:build || { echo "Failed to 'npm run lib:build'"; exit 1; }
     pushd dist/openvidu-angular
     npm publish || { echo "Failed to publish openvidu-angular to npm"; exit 1; }
