@@ -454,3 +454,5 @@ case $OPENVIDU_PROJECT in
     echo "No project specified"
     exit 1
 esac
+
+chown -R root:root "${PWD}"
