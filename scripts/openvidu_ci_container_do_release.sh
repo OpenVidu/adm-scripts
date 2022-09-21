@@ -10,12 +10,13 @@ export PATH=$PATH:$ADM_SCRIPTS
 
 OPENVIDU_REPO=$(echo "$OPENVIDU_GIT_REPOSITORY" | cut -d"/" -f2 | cut -d"." -f 1)
 
+# USE a different npm cache folder associated to current user to avoid permission problems
+export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
+
+
 case $OPENVIDU_PROJECT in
 
   openvidu)
-
-    # Permission denied fix error
-    chown -R 1001:1001 "/root/.npm"
 
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
