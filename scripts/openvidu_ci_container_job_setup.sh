@@ -100,7 +100,7 @@ docker run \
 status=$?
 
 # Change worspace ownership to avoid permission errors caused by docker usage of root
-[ -n "$WORKSPACE" ] && sudo chown -R $(whoami) $WORKSPACE "${PWD}"
+[ -n "$WORKSPACE" ] && sudo chown -R $(whoami) $WORKSPACE "${PWD}" "${OPENVIDU_ADM_SCRIPTS_HOME}"
 
 exit $status
 
