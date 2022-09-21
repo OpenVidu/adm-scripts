@@ -77,12 +77,14 @@ case $OPENVIDU_PROJECT in
     npm run webcomponent:build || { echo "Failed to 'npm run webcomponent:build'"; exit 1; }
     zip -r --junk-paths dist/openvidu-webcomponent/openvidu-webcomponent-${OPENVIDU_VERSION}.zip dist/openvidu-webcomponent
 
-    # Github release: commit and push
-    git commit -a -m "Update to version v$OPENVIDU_VERSION"
-    git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
+    popd
 
-    DESC="Release v$OPENVIDU_VERSION"
-    openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
+    # Github release: commit and push
+    # git commit -a -m "Update to version v$OPENVIDU_VERSION"
+    # git push origin HEAD:master || { echo "Failed to push to Github"; exit 1; }
+    #
+    # DESC="Release v$OPENVIDU_VERSION"
+    # openvidu_github_release.go release --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --description "$DESC" || { echo "Failed to make the release"; exit 1; }
     sleep 10
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-server-${OPENVIDU_VERSION}.jar --file openvidu-server/target/openvidu-server-${OPENVIDU_VERSION}.jar || { echo "Failed to upload the artifact to Github"; exit 1; }
     openvidu_github_release.go upload --user openvidu --repo "$OPENVIDU_REPO" --tag "v$OPENVIDU_VERSION" --name openvidu-browser-${OPENVIDU_VERSION}.js --file openvidu-browser/static/js/openvidu-browser-${OPENVIDU_VERSION}.js || { echo "Failed to upload the artifact to Github"; exit 1; }
