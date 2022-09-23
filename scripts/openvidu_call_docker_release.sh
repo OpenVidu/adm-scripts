@@ -1,6 +1,8 @@
 #!/bin/bash -xe
 set -eu -o pipefail
 
+export PATH=$PATH:$ADM_SCRIPTS
+
 echo "##################### EXECUTE: openvidu_ci_container_build #####################"
 
 [ -n "${OVC_VERSION}" ] || exit 1
@@ -104,9 +106,7 @@ fi
 docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
 
 if [[ "${RELEASE}" == 'true' ]]; then
-    pushd openvidu-call/docker
-    chmod u+x run.sh
-    ./run.sh "${OVC_VERSION}"
+    openvidu_call_build.sh "${OVC_VERSION}"
     popd
 else
     # Execute update dependencies script
