@@ -20,6 +20,8 @@ case $OPENVIDU_PROJECT in
 
   openvidu)
 
+    sleep infinity
+
     # Openvidu Browser
     [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
     echo "## Building OpenVidu Browser"
