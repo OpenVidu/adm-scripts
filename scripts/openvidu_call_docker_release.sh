@@ -106,6 +106,7 @@ fi
 docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
 
 if [[ "${RELEASE}" == 'true' ]]; then
+    pushd openvidu-call/docker
     openvidu_call_build.sh "${OVC_VERSION}"
     popd
 else
