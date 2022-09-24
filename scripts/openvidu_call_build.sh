@@ -17,7 +17,7 @@ printf '\n'
 
 cd ../openvidu-call-front || exit 1
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${RELEASE_VERSION}\"/" package.json
-sed -i "/\"openvidu-angular\":/ s/\"openvidu-angular\":[^,]*/\"openvidu-angular\": \"${RELEASE_VERSION}\"/" package.json
+# sed -i "/\"openvidu-angular\":/ s/\"openvidu-angular\":[^,]*/\"openvidu-angular\": \"${RELEASE_VERSION}\"/" package.json
 cat package.json
 cd ../openvidu-call-back || exit 1
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${RELEASE_VERSION}\"/" package.json
