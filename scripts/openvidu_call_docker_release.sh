@@ -51,11 +51,11 @@ cat package.json
 npm install || { echo "openvidu-node-client -> install"; exit 1; }
 npm run build || { echo "openvidu-node-client -> build"; exit 1; }
 npm pack || { echo "openvidu-node-client -> pack"; exit 1; }
-mv openvidu-node-client-"${OV_NODE_CLIENT_VERSION}".tgz ../../openvidu-call/openvidu-call-back
+mv openvidu-node-client-"${OV_NODE_CLIENT_VERSION}".tgz ../../openvidu-call-back
 popd
 
 # update package.json openvidu-call-back
-pushd openvidu-call/openvidu-call-back
+pushd openvidu-call-back
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
 sed -i "/\"openvidu-node-client\":/ s/\"openvidu-node-client\":[^,]*/\"openvidu-node-client\": \"file:openvidu-node-client-${OV_NODE_CLIENT_VERSION}.tgz\"/" package.json
 cat package.json
@@ -68,7 +68,7 @@ npm install || { echo "openvidu-browser -> install"; exit 1; }
 npm run build || { echo "openvidu-browser -> build"; exit 1; }
 npm pack || { echo "openvidu-browser -> build"; exit 1; }
 cp openvidu-browser-"${OV_BROWSER_VERSION}".tgz ../../openvidu/openvidu-components-angular
-cp openvidu-browser-"${OV_BROWSER_VERSION}".tgz ../../openvidu-call/openvidu-call-front
+cp openvidu-browser-"${OV_BROWSER_VERSION}".tgz ../../openvidu-call-front
 popd
 
 # Build openvidu angular
@@ -82,12 +82,12 @@ cat projects/openvidu-angular/package.json
 npm install || { echo "Failed to 'npm install'"; exit 1; }
 npm run lib:build || { echo "Failed to 'npm run lib:build'"; exit 1; }
 pushd dist/openvidu-angular
-mv openvidu-angular-"${OV_COMP_ANGULAR}".tgz ../../../../openvidu-call/openvidu-call-front
+mv openvidu-angular-"${OV_COMP_ANGULAR}".tgz ../../../../openvidu-call-front
 popd
 popd
 
 # update package.json openvidu-call-front
-pushd openvidu-call/openvidu-call-front
+pushd openvidu-call-front
 sed -i "/\"version\":/ s/\"version\":[^,]*/\"version\": \"${OVC_VERSION}\"/" package.json
 sed -i "s/\"dependencies\": {/\"dependencies\": { \"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\",/" package.json
 sed -i "/\"openvidu-angular\":/ s/\"openvidu-angular\":[^,]*/\"openvidu-angular\": \"file:openvidu-angular-${OV_COMP_ANGULAR}.tgz\"/" package.json
@@ -106,21 +106,19 @@ fi
 docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
 
 if [[ "${RELEASE}" == 'true' ]]; then
-    pushd openvidu-call/docker
+    pushd docker
     openvidu_call_build.sh "${OVC_VERSION}"
     popd
 else
     # Execute update dependencies script
     docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_dependencies.sh" || exit 1
     # Build openvidu call
-    pushd openvidu-call
     docker build -f docker/Dockerfile.node -t openvidu/openvidu-call:"${OVC_VERSION}" . || exit 1
     docker push openvidu/openvidu-call:"${OVC_VERSION}"
     if [[ "${NIGHTLY}" == "true" ]]; then
       docker tag openvidu/openvidu-call:"${OVC_VERSION}" openvidu/openvidu-call:master
       docker push openvidu/openvidu-call:master
     fi
-    popd
 fi
 
 docker logout
