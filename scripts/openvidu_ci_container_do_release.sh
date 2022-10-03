@@ -455,8 +455,6 @@ case $OPENVIDU_PROJECT in
 
     perl -i -pe "s/\"version\":\s*\"\K\S*(?=\")/$OPENVIDU_VERSION/" package.json || (echo "Failed to bump package.json version"; exit 1)
 
-    sleep infinity
-
     git add package.json
     git commit -a -m "Update media-node-controller to version v$OPENVIDU_VERSION"
     git push origin HEAD:master || { echo "Failed to push"; exit 1; }
