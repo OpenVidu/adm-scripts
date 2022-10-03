@@ -450,6 +450,17 @@ case $OPENVIDU_PROJECT in
 
     ;;
 
+  media-node-controller)
+    echo "## Release media-node-controller v${OPENVIDU_VERSION}"
+
+    perl -i -pe "s/\"version\":\s*\"\K\S*(?=\")/$OPENVIDU_VERSION/" package.json || (echo "Failed to bump package.json version"; exit 1)
+
+    git add .
+    git commit -a -m "Update media-node-controller to version v$OPENVIDU_VERSION"
+    git push origin HEAD:master || { echo "Failed to push"; exit 1; }
+
+    ;;
+
   *)
     echo "No project specified"
     exit 1
