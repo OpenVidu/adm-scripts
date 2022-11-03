@@ -19,6 +19,7 @@ if [[ "${NIGHTLY}" == "true" ]]; then
     OPENVIDU_COTURN_TAG="${5}"
     OPENVIDU_CALL_VERSION="${6}"
     MEDIASOUP_CONTROLLER_TAG="${7}"
+    OPENVIDU_PRO_SPEECH_TO_TEXT_TAG="${8}"
 fi
 
 # Stop all docker running containers
@@ -137,6 +138,16 @@ if [[ "${NIGHTLY}" == "true" ]]; then
         # If not exist or is commented, add it to the end
         echo "MEDIASOUP_IMAGE=openvidu/mediasoup-controller:${MEDIASOUP_CONTROLLER_TAG}" >> .env
     fi
+
+    # Replace OPENVIDU_PRO_SPEECH_TO_TEXT_IMAGE
+    if grep -q "^OPENVIDU_PRO_SPEECH_TO_TEXT_IMAGE=*" < .env; then
+        # If variable exists and it is not commented
+        sed -i "s|OPENVIDU_PRO_SPEECH_TO_TEXT_IMAGE=.*|OPENVIDU_PRO_SPEECH_TO_TEXT_IMAGE=openvidu/speech-to-text-service:${OPENVIDU_PRO_SPEECH_TO_TEXT_TAG}|" .env
+    else
+        # If not exist or is commented, add it to the end
+        echo "OPENVIDU_PRO_SPEECH_TO_TEXT_IMAGE=openvidu/speech-to-text-service:${OPENVIDU_PRO_SPEECH_TO_TEXT_TAG}" >> .env
+    fi
+
     docker pull openvidu/openvidu-server-pro:"${OPENVIDU_SERVER_PRO_TAG}"
     docker pull openvidu/openvidu-coturn:"${OPENVIDU_COTURN_TAG}"
     docker pull openvidu/openvidu-proxy:"${OPENVIDU_NGINX_PROXY_TAG}"
