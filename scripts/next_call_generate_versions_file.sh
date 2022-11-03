@@ -63,8 +63,10 @@ MEDIA_NODES_IPS=$(curl -s -u OPENVIDUAPP:"${OV_SECRET}" http://localhost:5443/op
         echo "==================="
         MEDIASOUP_IMAGE=$(curl -s http://"${MEDIA_NODE_IP}":"${MEDIA_NODE_PORT}"/"${MEDIA_NODE_CONTAINERS_PATH}" | grep -oP '"openvidu/mediasoup-controller:(.*?)"' | head -n 1 | tr -d '"' || echo '')
         KMS_IMAGE=$(curl -s http://"${MEDIA_NODE_IP}":"${MEDIA_NODE_PORT}"/"${MEDIA_NODE_CONTAINERS_PATH}" | grep -oP '"kurento/kurento-media-server(.*?)"' | head -n 1 | tr -d '"' || echo '')
+        SPEECH_TO_TEXT_IMAGE=$(curl -s http://"${MEDIA_NODE_IP}":"${MEDIA_NODE_PORT}"/"${MEDIA_NODE_CONTAINERS_PATH}" | grep -oP '"openvidu/speech-to-text-service(.*?)"' | head -n 1 | tr -d '"' || echo '')
         [[ -n "${MEDIASOUP_IMAGE}" ]] && parse_image_info "${MEDIASOUP_IMAGE}"
         [[ -n "${KMS_IMAGE}" ]] && parse_image_info "${KMS_IMAGE}"
+        [[ -n "${SPEECH_TO_TEXT_IMAGE}" ]] && parse_image_info "${SPEECH_TO_TEXT_IMAGE}"
         echo
     done
 } &> "${FILE_NAME_DIRECTORY}"
