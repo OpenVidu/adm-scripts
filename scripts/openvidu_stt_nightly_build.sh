@@ -42,7 +42,8 @@ cp openvidu-browser-"${OV_BROWSER_VERSION}".tgz ../../
 popd
 
 # update package.json at speech-to-text service
-sed -i "s/\"dependencies\": {/\"dependencies\": { \"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\",/" package.json
+sed -i "/\"openvidu-browser\":/ s/\"openvidu-browser\":[^,]*/\"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\"/" package.json
+
 cat package.json
 
 chown -R "${CURRENT_UID}":"${CURRENT_GID}" /workspace
