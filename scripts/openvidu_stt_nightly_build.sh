@@ -43,6 +43,7 @@ popd
 
 # update package.json at speech-to-text service
 sed -i "/\"openvidu-browser\":/ s/\"openvidu-browser\":[^,]*/\"openvidu-browser\": \"file:openvidu-browser-${OV_BROWSER_VERSION}.tgz\"/" package.json
+npm i --package-lock-only
 
 cat package.json
 
