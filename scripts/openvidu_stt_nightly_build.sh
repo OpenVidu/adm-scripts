@@ -60,9 +60,9 @@ docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
 # Execute update dependencies script
 docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_dependencies.sh" || exit 1
 
-sed -i '/^FROM .*/a ENV NODE_OPTIONS="--dns-result-order=ipv4first"' docker/Dockerfile.bin
 # Build openvidu call
-docker build --pull --no-cache --rm=true -f docker/Dockerfile.bin -t openvidu/speech-to-text-service:"${OV_VERSION}" . || exit 1
+# Build speech to text service forcing ipv4, because ipv6 is not supported by our ci
+docker build --pull --no-cache --rm=true --build-arg NODE_OPTIONS='--dns-result-order=ipv4first' -f docker/Dockerfile.bin -t openvidu/speech-to-text-service:"${OV_VERSION}" . || exit 1
 docker push openvidu/speech-to-text-service:"${OV_VERSION}"
 docker tag openvidu/speech-to-text-service:"${OV_VERSION}" openvidu/speech-to-text-service:master
 docker push openvidu/speech-to-text-service:master
