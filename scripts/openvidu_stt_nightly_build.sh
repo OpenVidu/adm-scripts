@@ -60,8 +60,7 @@ docker login -u "$OPENVIDU_DOCKERHUB_USER" -p "$OPENVIDU_DOCKERHUB_PASSWD"
 # Execute update dependencies script
 docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKER_IMAGE}" /bin/bash -c "./update_dependencies.sh" || exit 1
 
-# Build the image forcing ipv4 dns resolution, cause CI does not have a public ipv6 address
-sed -i '/.* AS app-builder$/a ENV NODE_OPTIONS="--dns-result-order=ipv4first"' docker/Dockerfile.bin
+sed -i '/^FROM .*/a ENV NODE_OPTIONS="--dns-result-order=ipv4first"' docker/Dockerfile.bin
 # Build openvidu call
 docker build --pull --no-cache --rm=true -f docker/Dockerfile.bin -t openvidu/speech-to-text-service:"${OV_VERSION}" . || exit 1
 docker push openvidu/speech-to-text-service:"${OV_VERSION}"
