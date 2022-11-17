@@ -33,7 +33,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || { echo "Failed to link npm"; exit 1; }
-    # npm publish || { echo "Failed to publish to npm"; exit 1; }
+    npm publish || { echo "Failed to publish to npm"; exit 1; }
 
     # Active waiting for openvidu-browser NPM library
     CHECK_VERSION_AVAILABILTY="npm show openvidu-browser@$OPENVIDU_VERSION version"
