@@ -33,7 +33,7 @@ case $OPENVIDU_PROJECT in
     VERSION=$OPENVIDU_VERSION npm run browserify-prod || exit 1
 
     npm link || { echo "Failed to link npm"; exit 1; }
-    npm publish || { echo "Failed to publish to npm"; exit 1; }
+    # npm publish || { echo "Failed to publish to npm"; exit 1; }
 
     # Active waiting for openvidu-browser NPM library
     CHECK_VERSION_AVAILABILTY="npm show openvidu-browser@$OPENVIDU_VERSION version"
@@ -62,11 +62,10 @@ case $OPENVIDU_PROJECT in
 
     # openvidu-angular
     pushd openvidu-components-angular
-    npm install || { echo "Failed to 'npm install'"; exit 1; }
-    npm link openvidu-browser
-
     export OPENVIDU_CALL_VERSION="${OPENVIDU_VERSION}"
     npm-update-dep-ov-components-angular.py || { echo "Faile to update dependencies/bump version"; exit 1; }
+    npm install || { echo "Failed to 'npm install'"; exit 1; }
+    npm link openvidu-browser
 
     npm run lib:build || { echo "Failed to 'npm run lib:build'"; exit 1; }
     pushd dist/openvidu-angular
