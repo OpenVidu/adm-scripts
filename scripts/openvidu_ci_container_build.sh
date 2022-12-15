@@ -45,13 +45,10 @@ if [[ "${NIGHTLY}" == "true" ]]; then
   fi
 fi
 
-if [[ "${DOCKER_BUILD_TARGET}" == "none" ]]; then
-  docker build --pull --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
-else
-  docker build --pull --no-cache --rm=true --target=${DOCKER_BUILD_TARGET} -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
-fi
-
-
+docker build --pull --no-cache --rm=true \
+  ${DOCKER_BUILD_TARGET:+--target "$DOCKER_BUILD_TARGET"} \
+  ${BUILD_ARGUMENT:+--build-arg "$BUILD_ARGUMENT"} \
+  -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
 
 for TAG in $(echo $TAGS)
 do

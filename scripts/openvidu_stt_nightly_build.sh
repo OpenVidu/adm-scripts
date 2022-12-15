@@ -7,6 +7,7 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 
 [ -n "${OV_VERSION}" ] || exit 1
 [ -n "${OPENVIDU_BRANCH}" ] || OPENVIDU_BRANCH='master'
+[ -n "${BUILD_BASE_IMAGE}" ] || BUILD_BASE_IMAGE='false'
 
 # Clone OpenVidu Repository to build openvidu-browser and openvidu-node-client
 git clone https://github.com/OpenVidu/openvidu.git
@@ -62,10 +63,18 @@ docker run --rm -v ${PWD}:/workspace -w /workspace "${OPENVIDU_DEVELOPMENT_DOCKE
 
 # Build openvidu call
 # Build speech to text service forcing ipv4, because ipv6 is not supported by our ci
-docker build --pull --no-cache --rm=true --build-arg NODE_OPTIONS='--dns-result-order=ipv4first' -f docker/Dockerfile.bin -t openvidu/speech-to-text-service:"${OV_VERSION}" . || exit 1
-docker push openvidu/speech-to-text-service:"${OV_VERSION}"
-docker tag openvidu/speech-to-text-service:"${OV_VERSION}" openvidu/speech-to-text-service:master
-docker push openvidu/speech-to-text-service:master
+if [[ "${BUILD_BASE_IMAGE}" == false ]]; then
+    docker build --pull --no-cache --rm=true --build-arg NODE_OPTIONS='--dns-result-order=ipv4first' -f docker/Dockerfile.bin -t openvidu/speech-to-text-service:"${OV_VERSION}" . || exit 1
+    docker push openvidu/speech-to-text-service:"${OV_VERSION}"
+    docker tag openvidu/speech-to-text-service:"${OV_VERSION}" openvidu/speech-to-text-service:master
+    docker push openvidu/speech-to-text-service:master
+elif [[ "${BUILD_BASE_IMAGE}" == true ]]; then
+    docker build --pull --no-cache --rm=true --target=app-base --build-arg NODE_OPTIONS='--dns-result-order=ipv4first' -f docker/Dockerfile.bin -t openvidu/speech-to-text-service-base:"${OV_VERSION}" . || exit 1
+    docker push openvidu/speech-to-text-service-base:"${OV_VERSION}"
+    docker tag openvidu/speech-to-text-service-base:"${OV_VERSION}" openvidu/speech-to-text-service-base:master
+    docker push openvidu/speech-to-text-service-base:master
+fi
+
 
 docker logout
 
