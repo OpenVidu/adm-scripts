@@ -5,6 +5,7 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 # Check other env variables
 [ -n "$NIGHTLY" ] || NIGHTLY="false"
 [ -n $PUSH_IMAGES ] || PUSH_IMAGES='no'
+[ -n "$DOCKER_BUILD_TARGET" ] || DOCKER_BUILD_TARGET="none"
 [ -n $DOCKERHUB_REPO ] || exit 1
 [ -n "$LATEST_TAG" ] || LATEST_TAG='yes'
 [ -n "$IMAGE_NAME" ] || exit 1
@@ -44,7 +45,13 @@ if [[ "${NIGHTLY}" == "true" ]]; then
   fi
 fi
 
-docker build --pull --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
+if [[ "${DOCKER_BUILD_TARGET}" == "none" ]]; then
+  docker build --pull --no-cache --rm=true -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
+else
+  docker build --pull --no-cache --rm=true --target=${DOCKER_BUILD_TARGET} -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
+fi
+
+
 
 for TAG in $(echo $TAGS)
 do
