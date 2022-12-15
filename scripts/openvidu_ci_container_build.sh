@@ -5,7 +5,6 @@ echo "##################### EXECUTE: openvidu_ci_container_build ###############
 # Check other env variables
 [ -n "$NIGHTLY" ] || NIGHTLY="false"
 [ -n $PUSH_IMAGES ] || PUSH_IMAGES='no'
-[ -n "$DOCKER_BUILD_TARGET" ] || DOCKER_BUILD_TARGET="none"
 [ -n $DOCKERHUB_REPO ] || exit 1
 [ -n "$LATEST_TAG" ] || LATEST_TAG='yes'
 [ -n "$IMAGE_NAME" ] || exit 1
