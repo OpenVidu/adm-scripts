@@ -21,7 +21,8 @@ RUN apt-get update \
     openssh-client \
     ffmpeg \
     build-essential \
-    gnupg
+    gnupg \
+    dnsutils
 
 # Installing docker
 RUN mkdir -p /etc/apt/keyrings && \
