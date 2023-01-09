@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 LABEL maintainer=carlos.ruizbal@gmail.com
 
@@ -11,19 +11,26 @@ RUN apt-get update \
     jq \
     zip \
     openjdk-11-jdk \
-    python \
+    python3 \
     python3-pip \
     pwgen \
     lsb-release \
     maven \
     awscli \
-    python-lxml \
+    python3-lxml \
     openssh-client \
     ffmpeg \
-    build-essential
+    build-essential \
+    gnupg
+
+# Installing docker
+RUN mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 # Installing nodejs
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
 
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> /root/.bashrc
