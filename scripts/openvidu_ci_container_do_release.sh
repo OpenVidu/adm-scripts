@@ -154,6 +154,10 @@ case $OPENVIDU_PROJECT in
     ;;
   openvidu-java-client)
 
+    echo "Sleeping..."
+    sleep infinity
+    exit 1
+
     echo "## Building openvidu-java-client"
     [ -z "$OPENVIDU_VERSION" ] && { echo "OPENVIDU_VERSION is empty"; exit 1; }
 
