@@ -44,7 +44,7 @@ if [[ "${NIGHTLY}" == "true" ]]; then
   fi
 fi
 
-docker build --pull --no-cache --rm=true \
+docker build --pull --no-cache --rm=true --network=host \
   ${DOCKER_BUILD_TARGET:+--target "$DOCKER_BUILD_TARGET"} \
   ${BUILD_ARGUMENT:+--build-arg "$BUILD_ARGUMENT"} \
   -t $DOCKERHUB_REPO/$IMAGE_NAME -f ${DOCKER_FILE_DIR} . || exit 1
